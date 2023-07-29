@@ -13,7 +13,7 @@ final class LoginModel {
     private(set) var tokenRefreshRequest: DataRequest?
     
     func loginRequest(id: String, pwd: String, success: ((LoginDetail) -> ())?, loginFailure: ((_ reason: Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (ReferenceValues.shared.currentURL?.rawValue ?? "") + "/login"
+        let url = (Server.shared.currentURL?.rawValue ?? "") + "/login"
         print(url)
         let headers: HTTPHeaders = [
             "Content-Type": "application/json"
@@ -76,7 +76,7 @@ final class LoginModel {
     }
     
     func tokenRefreshRequest(success: ((Token) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = ReferenceValues.shared.currentURL?.rawValue ?? "" + "/token/refresh"
+        let url = Server.shared.currentURL?.rawValue ?? "" + "/token/refresh"
         
         let headers: HTTPHeaders = [
             "access": "application/json"
