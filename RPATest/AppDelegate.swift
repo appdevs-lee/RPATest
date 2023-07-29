@@ -15,11 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print(getRefreshToken())
         if !(getRefreshToken() == "") {
-            postTokenRefresh() {
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let vc = storyboard.instantiateViewController(withIdentifier: "TabBarController")
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc, animated: false)
-            }
+//            postTokenRefresh() {
+//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                let vc = storyboard.instantiateViewController(withIdentifier: "TabBarController")
+//                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootVC(vc, animated: false)
+//            }
         } else {
             
         }

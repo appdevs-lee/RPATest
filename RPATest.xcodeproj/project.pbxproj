@@ -20,6 +20,7 @@
 		5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1BB0BC2A08AF590081DBBE /* Server.swift */; };
 		5F1BB0BF2A0A8FE80081DBBE /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1BB0BE2A0A8FE80081DBBE /* Function.swift */; };
 		5FCD8D412A6B9C82000AFC3F /* CompanyEnterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCD8D402A6B9C82000AFC3F /* CompanyEnterViewController.swift */; };
+		5FD8CC9D2A6BADC900D9C6D7 /* CommonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD8CC9C2A6BADC900D9C6D7 /* CommonModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		5F1BB0BC2A08AF590081DBBE /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		5F1BB0BE2A0A8FE80081DBBE /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
 		5FCD8D402A6B9C82000AFC3F /* CompanyEnterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyEnterViewController.swift; sourceTree = "<group>"; };
+		5FD8CC9C2A6BADC900D9C6D7 /* CommonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModel.swift; sourceTree = "<group>"; };
 		68FC532789A4480F0CA48CDE /* Pods-RPATest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.release.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.release.xcconfig"; sourceTree = "<group>"; };
 		BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RPATest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -103,6 +105,7 @@
 		5F1BB0B52A03D6A50081DBBE /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				5FD8CC9C2A6BADC900D9C6D7 /* CommonModel.swift */,
 				5F1BB0B62A03D6B30081DBBE /* Login.swift */,
 			);
 			path = Models;
@@ -242,6 +245,7 @@
 			files = (
 				5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */,
 				5F1BB0B42A03D5300081DBBE /* LoginViewController.swift in Sources */,
+				5FD8CC9D2A6BADC900D9C6D7 /* CommonModel.swift in Sources */,
 				5F1BB09F2A03D1210081DBBE /* AppDelegate.swift in Sources */,
 				5F1BB0A12A03D1210081DBBE /* SceneDelegate.swift in Sources */,
 				5F1BB0B92A03D92E0081DBBE /* UserInfo.swift in Sources */,

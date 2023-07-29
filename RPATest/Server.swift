@@ -12,7 +12,7 @@ enum URL: String {
     case PROD = "http://api.kingbuserp.link"
 }
 
-struct ReferenceValues {
+class ReferenceValues {
     static let shared = ReferenceValues()
     
     var currentURL: URL?
