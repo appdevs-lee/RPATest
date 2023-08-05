@@ -24,6 +24,6 @@ class UserInfo {
 }
 
 func getRefreshToken() -> String {
-    guard let refreshToken = UserDefaults.standard.string(forKey: "refreshToken") else { return ""}
+    guard let refreshToken = UserDefaults.standard.string(forKey: "refreshToken") else { return "" }
     return refreshToken
 }
