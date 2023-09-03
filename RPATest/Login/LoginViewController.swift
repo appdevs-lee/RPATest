@@ -12,7 +12,7 @@ class LoginViewController: UIViewController {
     
     lazy var backGroundView: UIView = {
         let view = UIView()
-        view.isHidden = true
+        view.isHidden = false
         view.backgroundColor = .useRGB(red: 184, green: 0, blue: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -45,6 +45,16 @@ class LoginViewController: UIViewController {
         return progressView
     }()
     
+    lazy var alertLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .useRGB(red: 176, green: 0, blue: 32)
+        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     @IBOutlet weak var idTextField: UITextField!
     @IBOutlet weak var pwdTextField: UITextField!
     
@@ -63,23 +73,41 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func tapLoginButton(_ sender: UIButton) {
-        self.loginRequest(id: self.idTextField.text!, pwd: self.pwdTextField.text!) { info in
-            UserInfo.shared.access = info.access
-            UserInfo.shared.name = info.authenticatedUser.name
-            UserDefaults.standard.set(info.refresh, forKey: "refreshToken")
-            
-            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
-            
-            vc.modalPresentationStyle = .fullScreen
-            self.present(vc, animated: true)
-        } loginFailure: { reason in
-            if reason == 1 {
-                print("아이디 또는 비밀번호가 일치하지 않습니다.")
-            } else if reason == 2 {
-                print("탈퇴 혹은 탈퇴처리된 회원입니다.")
+        self.alertLabel.isHidden = true
+        SupportingMethods.shared.turnCoverView(.on)
+        if self.idTextField.text == "" || self.pwdTextField.text == "" {
+            SupportingMethods.shared.turnCoverView(.off)
+            self.alertLabel.isHidden = false
+            self.alertLabel.text = "아이디와 비밀번호를 입력해주세요."
+        } else {
+            self.loginRequest(id: self.idTextField.text!, pwd: self.pwdTextField.text!) { info in
+                UserInfo.shared.access = info.access
+                UserInfo.shared.name = info.authenticatedUser.name
+                UserDefaults.standard.set(info.authenticatedUser.name, forKey: "name")
+                UserDefaults.standard.set(info.refresh, forKey: "refreshToken")
+                
+                guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
+                
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true) {
+                    SupportingMethods.shared.turnCoverView(.off)
+                }
+            } loginFailure: { reason in
+                SupportingMethods.shared.turnCoverView(.off)
+                self.alertLabel.isHidden = false
+                if reason == 1 {
+                    print("아이디 또는 비밀번호가 일치하지 않습니다.")
+                    self.alertLabel.text = "아이디 또는 비밀번호가 일치하지 않습니다."
+                } else if reason == 2 {
+                    print("탈퇴 혹은 탈퇴처리된 회원입니다.")
+                    self.alertLabel.text = "탈퇴 혹은 탈퇴처리된 회원입니다."
+                } else {
+                    self.alertLabel.text = "관리자에게 문의 바랍니다."
+                }
+            } failure: { errorMessage in
+                SupportingMethods.shared.turnCoverView(.off)
+                print("tapLoginButton loginRequest API error: \(errorMessage)")
             }
-        } failure: { errorMessage in
-            print("tapLoginButton loginRequest API error: \(errorMessage)")
         }
     }
 }
@@ -123,6 +151,7 @@ extension LoginViewController {
     
     func setSubViews() {
         self.view.addSubview(self.backGroundView)
+        self.view.addSubview(self.alertLabel)
         
         self.backGroundView.addSubview(self.logoImageView)
         self.backGroundView.addSubview(self.progressView)
@@ -152,6 +181,12 @@ extension LoginViewController {
             self.progressView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -16),
             self.progressView.heightAnchor.constraint(equalToConstant: 8)
         ])
+        
+        // alertLabel
+        NSLayoutConstraint.activate([
+            self.alertLabel.topAnchor.constraint(equalTo: self.pwdTextField.bottomAnchor, constant: 4),
+            self.alertLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16)
+        ])
     }
 }
 
@@ -175,7 +210,7 @@ extension LoginViewController {
                         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
                         
                         vc.modalPresentationStyle = .fullScreen
-                        self.present(vc, animated: true)
+                        self.present(vc, animated: false)
                     } failure: { errorMessage in
                         print("updateProgressView tokenRefreshRequest API Error: \(errorMessage)")
                     }

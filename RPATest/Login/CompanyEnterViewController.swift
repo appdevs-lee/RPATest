@@ -17,16 +17,20 @@ class CompanyEnterViewController: UIViewController {
     }
 
     @IBAction func tapNextButton(_ sender: UIButton) {
-        UserDefaults.standard.set("Y", forKey: "CompanyCheck")
-        
         if self.companyEnterTextField.text == "dev" {
-            Server.shared.currentURL = .DEV
-            
-            self.dismiss(animated: true)
+            self.dismiss(animated: true) {
+                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
+                
+                Server.shared.currentURL = URL.DEV.rawValue
+                UserDefaults.standard.set(URL.DEV.rawValue, forKey: "currentURL")
+            }
         } else if self.companyEnterTextField.text == "성화투어" {
-            Server.shared.currentURL = .PROD
-            
-            self.dismiss(animated: true)
+            self.dismiss(animated: true) {
+                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
+                
+                Server.shared.currentURL = URL.PROD.rawValue
+                UserDefaults.standard.set(URL.PROD.rawValue, forKey: "currentURL")
+            }
         }
     }
 }

@@ -15,7 +15,9 @@ enum URL: String {
 class Server {
     static let shared = Server()
     
-    var currentURL: URL?
+    var currentURL: String?
     
-    private init() {}
+    private init() {
+        self.currentURL = UserDefaults.standard.string(forKey: "currentURL")
+    }
 }

@@ -394,6 +394,32 @@ extension SupportingMethods {
         
         self.turnCoverView(.off)
     }
+    
+    // String -> Date
+    func convertString(intoDate dateString: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")!
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        return formatter.date(from: dateString)!
+    }
+    
+    // Date -> String
+    func convertDate(intoString date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")!
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        return formatter.string(from: date)
+    }
+    
+    func calculateDate(byValue value: Int, component: Calendar.Component, date: Date? = nil) -> Date {
+        let selectedDate = date != nil ? date : Date()
+        
+        return Calendar.current.date(byAdding: component, value: value, to: selectedDate!)!
+    }
 }
 
 extension CALayer {
@@ -462,4 +488,12 @@ protocol EssentialViewMethods {
     func setSubviews()
     func setLayouts()
     func setViewAfterTransition()
+}
+
+// MARK: - Cell & Header Protocol
+protocol EssentialCellHeaderMethods {
+    func setViewFoundation()
+    func initializeObjects()
+    func setSubviews()
+    func setLayouts()
 }

@@ -15,12 +15,9 @@ class UserInfo {
     var access: String?
     var name: String?
     
-    static func getName() -> String {
-        guard let name = UserDefaults.standard.string(forKey: "name") else { return "" }
-        return name
+    private init() {
+        self.name = UserDefaults.standard.string(forKey: "name")
     }
-    
-    private init() { }
 }
 
 func getRefreshToken() -> String {
