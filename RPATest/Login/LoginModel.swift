@@ -77,11 +77,12 @@ final class LoginModel {
         }
     }
     
-    func tokenRefreshRequest(success: ((Token) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+    func tokenRefreshRequest(success: ((Token) -> ())?, refreshFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/token/refresh"
+        print(url)
         
         let headers: HTTPHeaders = [
-            "access": "application/json"
+            "Content-Type": "application/json"
         ]
         
         let parameters: Parameters = [
@@ -119,8 +120,14 @@ final class LoginModel {
                         }
                         
                     } else { // result == false
-                        print("tokenRefreshRequest failure: \(decodedData.result)")
-                        failure?(decodedData.result)
+                        if let decodedData = try? JSONDecoder().decode(FailureResponse.self, from: data) {
+                            // parsing failure
+                            print("tokenRefreshRequest succeeded: LoginFailure")
+                            refreshFailure?(decodedData.data)
+                        } else {
+                            print("tokenRefreshRequest failure: \(decodedData.result)")
+                            failure?(decodedData.result)
+                        }
                     }
                     
                 } else { // improper structure
@@ -168,4 +175,9 @@ struct Refresh: Codable {
 struct Token: Codable {
     let access: String
     let refresh: String
+}
+
+struct FailureResponse: Codable {
+    let result: String
+    let data: Int
 }

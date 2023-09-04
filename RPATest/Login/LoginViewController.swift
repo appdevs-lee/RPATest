@@ -119,6 +119,7 @@ extension LoginViewController {
             success?(loginDetail)
         } loginFailure: { reason in
             loginFailure?(reason)
+            
         } failure: { errorMessage in
             SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
                 failure?(errorMessage)
@@ -126,9 +127,11 @@ extension LoginViewController {
         }
     }
     
-    func tokenRefreshRequest(success: ((Token) -> ())?, failure: ((String) -> ())?) {
+    func tokenRefreshRequest(success: ((Token) -> ())?, refreshFailure: ((Int) -> ())?, failure: ((String) -> ())?) {
         self.loginModel.tokenRefreshRequest { token in
             success?(token)
+        } refreshFailure: { reason in
+            refreshFailure?(reason)
             
         } failure: { errorMessage in
             SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
@@ -211,6 +214,21 @@ extension LoginViewController {
                         
                         vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: false)
+                    } refreshFailure: { reason in
+                        SupportingMethods.shared.turnCoverView(.off)
+                        
+                        if reason == 1 {
+                            print("유효하지 않은 토큰입니다.")
+                            SupportingMethods.shared.determineAppState(.logout)
+                            
+                        } else if reason == 2 {
+                            print("Token이 미입력되었습니다.")
+                            
+                        } else {
+                            print("관리자에게 문의 바랍니다.")
+                            
+                        }
+                        
                     } failure: { errorMessage in
                         print("updateProgressView tokenRefreshRequest API Error: \(errorMessage)")
                     }

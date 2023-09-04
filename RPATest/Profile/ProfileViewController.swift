@@ -50,6 +50,58 @@ final class ProfileViewController: UIViewController {
         return label
     }()
     
+    lazy var profileView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .useRGB(red: 217, green: 217, blue: 217)
+        view.layer.cornerRadius = 25
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var profileLabel: UIView = {
+        let firstWordinName = UserInfo.shared.name == "" ? "" : String((UserInfo.shared.name?.first)!)
+        let label = UILabel()
+        label.textColor = .useRGB(red: 66, green: 66, blue: 66)
+        label.font = .useFont(ofSize: 20, weight: .Medium)
+        label.text = firstWordinName
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var separateLineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .useRGB(red: 184, green: 0, blue: 0)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var collectionView: UICollectionView = {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 40
+        flowLayout.minimumInteritemSpacing = 40
+        flowLayout.headerReferenceSize = .zero
+        flowLayout.footerReferenceSize = .zero
+        flowLayout.scrollDirection = .vertical
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        collectionView.bounces = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .white
+        collectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: "ProfileCollectionViewCell")
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return collectionView
+    }()
+    
+    let imageString: [String] = ["MyInfo","ToDo","DriveRecord","PhoneBook","DriveWay","Alert","DriveGoal"]
+    let menuString: [String] = ["내 정보", "할 일", "운행기록", "주소록", "노선숙지", "알림", "목표운행량"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -102,6 +154,11 @@ extension ProfileViewController: EssentialViewMethods {
     
     func setSubviews() {
         self.view.addSubview(self.profileInfoStackView)
+        self.view.addSubview(self.separateLineView)
+        self.view.addSubview(self.profileView)
+        self.view.addSubview(self.collectionView)
+        
+        self.profileView.addSubview(self.profileLabel)
     }
     
     func setLayouts() {
@@ -111,6 +168,37 @@ extension ProfileViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.profileInfoStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 32),
             self.profileInfoStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 24)
+        ])
+        
+        // profileView
+        NSLayoutConstraint.activate([
+            self.profileView.widthAnchor.constraint(equalToConstant: 50),
+            self.profileView.heightAnchor.constraint(equalToConstant: 50),
+            self.profileView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -32),
+            self.profileView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 16)
+        ])
+        
+        // profileLabel
+        NSLayoutConstraint.activate([
+            self.profileLabel.centerYAnchor.constraint(equalTo: self.profileView.centerYAnchor),
+            self.profileLabel.centerXAnchor.constraint(equalTo: self.profileView.centerXAnchor)
+            
+        ])
+        
+        // separateLineView
+        NSLayoutConstraint.activate([
+            self.separateLineView.heightAnchor.constraint(equalToConstant: 2),
+            self.separateLineView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 32),
+            self.separateLineView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -32),
+            self.separateLineView.topAnchor.constraint(equalTo: self.profileInfoStackView.bottomAnchor, constant: 24)
+        ])
+        
+        // collectionView
+        NSLayoutConstraint.activate([
+            self.collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.collectionView.topAnchor.constraint(equalTo: self.separateLineView.bottomAnchor, constant: 24),
+            self.collectionView.heightAnchor.constraint(equalToConstant: 250)
         ])
     }
     
@@ -153,4 +241,27 @@ extension ProfileViewController {
 // MARK: - Extension for selector methods
 extension ProfileViewController {
     
+}
+
+// MARK: - Extension for UICollectionViewDelegateFlowLayout, UICollectionViewDataSource
+extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.imageString.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileCollectionViewCell", for: indexPath) as! ProfileCollectionViewCell
+        
+        cell.setCell(imageString: self.imageString[indexPath.row], menuString: self.menuString[indexPath.row])
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 40, height: 55)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 40)
+    }
 }

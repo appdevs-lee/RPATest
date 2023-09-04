@@ -22,6 +22,7 @@
 		5F1BB0B72A03D6B30081DBBE /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1BB0B62A03D6B30081DBBE /* LoginModel.swift */; };
 		5F1BB0B92A03D92E0081DBBE /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1BB0B82A03D92E0081DBBE /* UserInfo.swift */; };
 		5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1BB0BC2A08AF590081DBBE /* Server.swift */; };
+		5F680E9C2AA56CA40047ED65 /* ProfileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F680E9B2AA56CA40047ED65 /* ProfileCollectionViewCell.swift */; };
 		5FCC116D2AA3444300550534 /* DispatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCC116C2AA3444300550534 /* DispatchModel.swift */; };
 		5FCC116F2AA4638500550534 /* DispatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCC116E2AA4638500550534 /* DispatchTableViewCell.swift */; };
 		5FCC11742AA46DD900550534 /* OfficeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCC11732AA46DD900550534 /* OfficeViewController.swift */; };
@@ -56,6 +57,7 @@
 		5F1BB0B62A03D6B30081DBBE /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		5F1BB0B82A03D92E0081DBBE /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		5F1BB0BC2A08AF590081DBBE /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		5F680E9B2AA56CA40047ED65 /* ProfileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCollectionViewCell.swift; sourceTree = "<group>"; };
 		5FCC116C2AA3444300550534 /* DispatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchModel.swift; sourceTree = "<group>"; };
 		5FCC116E2AA4638500550534 /* DispatchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchTableViewCell.swift; sourceTree = "<group>"; };
 		5FCC11732AA46DD900550534 /* OfficeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfficeViewController.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				5FCC11772AA46DE900550534 /* ProfileViewController.swift */,
+				5F680E9B2AA56CA40047ED65 /* ProfileCollectionViewCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -364,6 +367,7 @@
 				5FCC11782AA46DE900550534 /* ProfileViewController.swift in Sources */,
 				5F1A16232A74EECB00132D29 /* ReferenceValues.swift in Sources */,
 				5FD8CC9D2A6BADC900D9C6D7 /* CommonModel.swift in Sources */,
+				5F680E9C2AA56CA40047ED65 /* ProfileCollectionViewCell.swift in Sources */,
 				5FD49D152AA31BBA00208273 /* TemplateViewController.swift in Sources */,
 				5FD49D1B2AA31BFF00208273 /* TemplateCollectionViewCell.swift in Sources */,
 				5F1BB09F2A03D1210081DBBE /* AppDelegate.swift in Sources */,
@@ -527,21 +531,26 @@
 				DEVELOPMENT_TEAM = 3C347T67DV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RPATest/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RPA;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = kr.co.kingbus.RPATest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -556,21 +565,26 @@
 				DEVELOPMENT_TEAM = 3C347T67DV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RPATest/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RPA;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = kr.co.kingbus.RPATest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

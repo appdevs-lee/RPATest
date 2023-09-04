@@ -328,7 +328,7 @@ extension SupportingMethods {
             
         case .logout:
             UserDefaults.standard.removeObject(forKey: "refreshToken")
-            UserDefaults.standard.removeObject(forKey: "CompanyCheck")
+            UserDefaults.standard.removeObject(forKey: "name")
             
             guard let _ = ReferenceValues.firstVC?.presentedViewController as? TabBarController else {
                 ReferenceValues.firstVC?.navigationController?.popToRootViewController(animated: false)
