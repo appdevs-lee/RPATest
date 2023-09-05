@@ -78,7 +78,7 @@ extension DispatchTableViewCell {
 // MARK: - Extension for methods added
 extension DispatchTableViewCell {
     func setCell() {
-        
+        print("수정")
     }
 }
 
