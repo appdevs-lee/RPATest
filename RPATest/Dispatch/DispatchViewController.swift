@@ -399,7 +399,7 @@ extension DispatchViewController {
         self.dateLabel.text = currentDateString
         
         SupportingMethods.shared.turnCoverView(.on)
-        self.loadDailyDispatchRequest(date: "2023-05-01") { dailyInfo in
+        self.loadDailyDispatchRequest(date: currentDateString) { dailyInfo in
             self.dailyDispatchData = dailyInfo.regularly
             
             if !dailyInfo.regularly.isEmpty {
