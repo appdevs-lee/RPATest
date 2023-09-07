@@ -7,5 +7,4 @@ target 'RPATest' do
 
   # Pods for RPATest
   pod 'Alamofire'
-  pod 'FSCalendar'
 end

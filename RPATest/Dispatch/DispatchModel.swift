@@ -6,9 +6,71 @@
 //
 
 import Foundation
+import Alamofire
 
 final class DispatchModel {
+    private(set) var loadDailyDispatchRequest: DataRequest?
     
+    func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
+        print(url)
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadDailyDispatchRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadDailyDispatchRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadDailyDispatchRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadDailyDispatchRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        if let decodedData = try? JSONDecoder().decode(DispatchDaily.self, from: data) {
+                            print("loadDailyDispatchRequest succeeded")
+                            success?(decodedData.data)
+                                                
+                        } else {
+                            print("loadDailyDispatchRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else { // result == false
+                        if let decodedData = try? JSONDecoder().decode(FailureResponse.self, from: data) {
+                            // parsing failure
+                            print("loadDailyDispatchRequest succeeded: LoginFailure")
+                            dispatchFailure?(decodedData.data)
+                        } else {
+                            print("loadDailyDispatchRequest failure: \(decodedData.result)")
+                            failure?(decodedData.result)
+                        }
+                    }
+                    
+                } else { // improper structure
+                    print("loadDailyDispatchRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("loadDailyDispatchRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
 }
 
 struct DispatchMonthly: Codable {
@@ -28,7 +90,7 @@ struct DispatchDaily: Codable {
 }
 
 struct DispatchDailyItem: Codable {
-    let regularly: [Int]
+    let regularly: [DispatchRegularlyItem]
     let order: [Int]
 }
 

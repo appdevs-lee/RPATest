@@ -151,6 +151,9 @@ final class DispatchViewController: UIViewController {
         return tableView
     }()
     
+    var dispatchModel = DispatchModel()
+    var dailyDispatchData: [DispatchRegularlyItem] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -168,6 +171,7 @@ final class DispatchViewController: UIViewController {
         super.viewWillAppear(animated)
         
 //        self.setViewAfterTransition()
+        self.setData()
     }
     
 //    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -251,6 +255,18 @@ extension DispatchViewController: EssentialViewMethods {
             self.buttonStackView.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor)
         ])
         
+        // dispatchCheckButton
+        NSLayoutConstraint.activate([
+            self.dispatchCheckButton.widthAnchor.constraint(equalToConstant: 75),
+            self.dispatchCheckButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
+        // dispatchMonthlyInfoButton
+        NSLayoutConstraint.activate([
+            self.dispatchMonthlyInfoButton.widthAnchor.constraint(equalToConstant: 75),
+            self.dispatchMonthlyInfoButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
         // noDataStackView
         NSLayoutConstraint.activate([
             self.noDataStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -295,11 +311,49 @@ extension DispatchViewController: EssentialViewMethods {
         
         self.navigationItem.titleView = self.setUpNavigationTitle()
     }
+    
+    func setData() {
+        self.loadDailyDispatchRequest(date: self.dateLabel.text!) { dailyInfo in
+            self.dailyDispatchData = dailyInfo.regularly
+            
+            if !dailyInfo.regularly.isEmpty {
+                self.noDataStackView.isHidden = true
+            } else {
+                self.noDataStackView.isHidden = false
+            }
+
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
+        } failure: { errorMessage in
+            print("setData loadDaliyDispatchRequest API Error: \(errorMessage)")
+        }
+
+    }
 }
 
 // MARK: - Extension for methods added
 extension DispatchViewController {
-    
+    func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.loadDailyDispatchRequest(date: date) { dailyInfo in
+            success?(dailyInfo)
+            
+        } dispatchFailure: { reason in
+            if reason == 1 {
+                print("날짜 입력이 잘못되었습니다.")
+            }
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -311,6 +365,26 @@ extension DispatchViewController {
         let currentDateString = SupportingMethods.shared.convertDate(intoString: beforeDate)
         
         self.dateLabel.text = currentDateString
+        
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDailyDispatchRequest(date: currentDateString) { dailyInfo in
+            self.dailyDispatchData = dailyInfo.regularly
+            
+            if !dailyInfo.regularly.isEmpty {
+                self.noDataStackView.isHidden = true
+            } else {
+                self.noDataStackView.isHidden = false
+            }
+
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                SupportingMethods.shared.turnCoverView(.off)
+            }
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("setData loadDaliyDispatchRequest API Error: \(errorMessage)")
+        }
     }
     
     @objc func tappedMoveDayAfterButton(_ sender: UIButton) {
@@ -323,6 +397,26 @@ extension DispatchViewController {
         print(afterDate)
         print(currentDateString)
         self.dateLabel.text = currentDateString
+        
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDailyDispatchRequest(date: currentDateString) { dailyInfo in
+            self.dailyDispatchData = dailyInfo.regularly
+            
+            if !dailyInfo.regularly.isEmpty {
+                self.noDataStackView.isHidden = true
+            } else {
+                self.noDataStackView.isHidden = false
+            }
+
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                SupportingMethods.shared.turnCoverView(.off)
+            }
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("setData loadDaliyDispatchRequest API Error: \(errorMessage)")
+        }
     }
     
     @objc func tappedPushDispatchMonthlyInfoButton(_ sender: UIButton) {
@@ -336,10 +430,16 @@ extension DispatchViewController {
 
 extension DispatchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return self.dailyDispatchData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchTableViewCell", for: indexPath) as! DispatchTableViewCell
+        
+        cell.setCell(info: self.dailyDispatchData[indexPath.row])
+        
+        cell.selectionStyle = .none
+        
+        return cell
     }
 }
