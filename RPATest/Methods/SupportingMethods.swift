@@ -357,7 +357,6 @@ extension SupportingMethods {
             guard let _ = ReferenceValues.firstVC?.presentedViewController as? TabBarController else {
                 ReferenceValues.firstVC?.navigationController?.popToRootViewController(animated: false)
                 
-                ReferenceValues.firstVC?.backGroundView.isHidden = false
                 ReferenceValues.firstVC?.setUpProgressView()
                 
                 return

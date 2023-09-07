@@ -23,6 +23,7 @@ final class ProfileCollectionViewCell: UICollectionViewCell {
     lazy var menuImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage()
+        imageView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
@@ -32,6 +33,7 @@ final class ProfileCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .useRGB(red: 66, green: 66, blue: 66)
         label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.setContentHuggingPriority(.defaultLow, for: .vertical)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label

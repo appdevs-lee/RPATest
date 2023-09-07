@@ -80,8 +80,8 @@ final class ProfileViewController: UIViewController {
     
     lazy var collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.minimumLineSpacing = 40
-        flowLayout.minimumInteritemSpacing = 40
+        flowLayout.minimumLineSpacing = 10
+        flowLayout.minimumInteritemSpacing = 10
         flowLayout.headerReferenceSize = .zero
         flowLayout.footerReferenceSize = .zero
         flowLayout.scrollDirection = .vertical
@@ -258,10 +258,10 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 40, height: 55)
+        return CGSize(width: 80, height: 80)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 40)
+        return UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
     }
 }

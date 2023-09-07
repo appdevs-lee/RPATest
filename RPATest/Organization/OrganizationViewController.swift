@@ -9,6 +9,23 @@ import UIKit
 
 final class OrganizationViewController: UIViewController {
     
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        tableView.bounces = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.register(OrganizationTableViewCell.self, forCellReuseIdentifier: "OrganizationTableViewCell")
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.sectionHeaderTopPadding = 0
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tableView
+    }()
+    
+    var nameDatas: [String] = ["김성태", "최정이", "문병근", "고영이", "김형주"]
+    var positionDatas: [String] = ["대표이사", "이사/기획본부", "총괄책임/기획본부", "대리/기획본부", "부장/운행지원부"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -60,15 +77,18 @@ extension OrganizationViewController: EssentialViewMethods {
     }
     
     func setSubviews() {
-        
+        self.view.addSubview(self.tableView)
     }
     
     func setLayouts() {
-        //let safeArea = self.view.safeAreaLayoutGuide
+        let safeArea = self.view.safeAreaLayoutGuide
         
-        //
+        // tableView
         NSLayoutConstraint.activate([
-            
+            self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
     }
     
@@ -111,4 +131,19 @@ extension OrganizationViewController {
 // MARK: - Extension for selector methods
 extension OrganizationViewController {
     
+}
+
+// MARK: - Extension for UITableViewDelegate, UITableViewDataSource
+extension OrganizationViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.nameDatas.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "OrganizationTableViewCell", for: indexPath) as! OrganizationTableViewCell
+        
+        cell.setCell(nameData: self.nameDatas[indexPath.row], positionData: self.positionDatas[indexPath.row])
+        
+        return cell
+    }
 }
