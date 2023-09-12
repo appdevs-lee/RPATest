@@ -100,7 +100,7 @@ extension TemplateViewController: EssentialViewMethods {
         
         self.navigationItem.titleView = self.setUpNavigationTitle()
         self.navigationItem.title = "킹버스"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
     }
 }
 

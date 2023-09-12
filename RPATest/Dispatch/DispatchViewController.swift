@@ -399,7 +399,7 @@ extension DispatchViewController {
         self.dateLabel.text = currentDateString
         
         SupportingMethods.shared.turnCoverView(.on)
-        self.loadDailyDispatchRequest(date: currentDateString) { dailyInfo in
+        self.loadDailyDispatchRequest(date: "2023-05-01") { dailyInfo in
             self.dailyDispatchData = dailyInfo.regularly
             
             if !dailyInfo.regularly.isEmpty {
@@ -421,6 +421,10 @@ extension DispatchViewController {
     
     @objc func tappedPushDispatchMonthlyInfoButton(_ sender: UIButton) {
         print("tappedPushDispatchMonthlyInfoButton")
+        
+        let vc = DispatchMonthlyViewController()
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func tappedPushDispatchCheckButton(_ sender: UIButton) {

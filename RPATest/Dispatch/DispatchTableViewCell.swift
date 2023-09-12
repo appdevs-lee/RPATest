@@ -163,6 +163,7 @@ final class DispatchTableViewCell: UITableViewCell {
     
     lazy var detailMapButton: UIButton = {
         let button = UIButton()
+        button.layer.cornerRadius = 7
         button.setTitle("노선상세", for: .normal)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.addTarget(self, action: #selector(tappedDetailMapButton(_:)), for: .touchUpInside)
@@ -173,8 +174,8 @@ final class DispatchTableViewCell: UITableViewCell {
     lazy var driveCheckButton: UIButton = {
         let button = UIButton()
 //        button.isHidden = true
-        button.layer.cornerRadius = 16
-        button.setTitle("출발", for: .normal)
+        button.layer.cornerRadius = 7
+        button.setTitle("기상", for: .normal)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.addTarget(self, action: #selector(tappedDriveCheckButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -277,16 +278,16 @@ extension DispatchTableViewCell {
         // driveCheckButton
         NSLayoutConstraint.activate([
             self.driveCheckButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.driveCheckButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.driveCheckButton.trailingAnchor.constraint(equalTo: self.detailMapButton.leadingAnchor, constant: -16),
             self.driveCheckButton.topAnchor.constraint(equalTo: self.firstStackView.bottomAnchor, constant: 10),
             self.driveCheckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4),
-            self.driveCheckButton.widthAnchor.constraint(equalToConstant: 30)
+            self.driveCheckButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
         // detailMapButton
         NSLayoutConstraint.activate([
             self.detailMapButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.detailMapButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.detailMapButton.centerYAnchor.constraint(equalTo: self.driveCheckButton.centerYAnchor),
             self.detailMapButton.widthAnchor.constraint(equalToConstant: 75),
             self.detailMapButton.heightAnchor.constraint(equalToConstant: 30)
         ])
