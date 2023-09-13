@@ -1,13 +1,13 @@
 //
-//  DispatchTableViewCell.swift
+//  DispatchCheckTableViewCell.swift
 //  RPATest
 //
-//  Created by 이주성 on 2023/09/03.
+//  Created by Awesomepia on 2023/09/13.
 //
 
 import UIKit
 
-final class DispatchTableViewCell: UITableViewCell {
+final class DispatchCheckTableViewCell: UITableViewCell {
     
     lazy var driveImageView: UIImageView = {
         let imageView = UIImageView()
@@ -25,6 +25,17 @@ final class DispatchTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
+    }()
+    
+    lazy var detailMapButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 7
+        button.setTitle("노선상세", for: .normal)
+        button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        button.addTarget(self, action: #selector(tappedDetailMapButton(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
     }()
     
     lazy var firstStackView: UIStackView = {
@@ -163,30 +174,41 @@ final class DispatchTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var detailMapButton: UIButton = {
+    lazy var buttonStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.checkButton, self.denyButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        stackView.isHidden = true
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    lazy var checkButton: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 7
-        button.setTitle("노선상세", for: .normal)
+        button.setTitle("확인", for: .normal)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
-        button.addTarget(self, action: #selector(tappedDetailMapButton(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tappedCheckButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    lazy var driveCheckButton: UIButton = {
+    lazy var denyButton: UIButton = {
         let button = UIButton()
-//        button.isHidden = true
         button.layer.cornerRadius = 7
-        button.setTitle("기상", for: .normal)
+        button.setTitle("거부", for: .normal)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
-        button.addTarget(self, action: #selector(tappedDriveCheckButton(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tappedDenyButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    
+    var firstStackViewBottomConstraint: NSLayoutConstraint!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -216,7 +238,7 @@ final class DispatchTableViewCell: UITableViewCell {
 }
 
 // MARK: Extension for essential methods
-extension DispatchTableViewCell {
+extension DispatchCheckTableViewCell {
     // Set view foundation
     func setCellFoundation() {
         self.selectionStyle = .none
@@ -242,15 +264,15 @@ extension DispatchTableViewCell {
     func setSubviews() {
         self.addSubview(self.driveImageView)
         self.addSubview(self.driveTitleLabel)
+        self.addSubview(self.detailMapButton)
         self.addSubview(self.firstStackView)
         self.addSubview(self.secondStackView)
-        self.addSubview(self.driveCheckButton)
-        self.addSubview(self.detailMapButton)
+        self.addSubview(self.buttonStackView)
     }
     
     // Set layouts
     func setLayouts() {
-//        let safeArea = self.safeAreaLayoutGuide
+        //let safeArea = self.safeAreaLayoutGuide
         
         // driveImageView
         NSLayoutConstraint.activate([
@@ -266,10 +288,19 @@ extension DispatchTableViewCell {
             self.driveTitleLabel.centerYAnchor.constraint(equalTo: self.driveImageView.centerYAnchor)
         ])
         
+        // detailMapButton
+        NSLayoutConstraint.activate([
+            self.detailMapButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.detailMapButton.centerYAnchor.constraint(equalTo: self.driveImageView.centerYAnchor),
+            self.detailMapButton.widthAnchor.constraint(equalToConstant: 75),
+            self.detailMapButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
         // firstStackView
         NSLayoutConstraint.activate([
             self.firstStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             self.firstStackView.topAnchor.constraint(equalTo: self.driveImageView.bottomAnchor, constant: 8),
+            self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
         ])
         
         // secondStackView
@@ -278,28 +309,27 @@ extension DispatchTableViewCell {
             self.secondStackView.centerYAnchor.constraint(equalTo: self.firstStackView.centerYAnchor)
         ])
         
-        // driveCheckButton
+        // buttonStackView
         NSLayoutConstraint.activate([
-            self.driveCheckButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.driveCheckButton.trailingAnchor.constraint(equalTo: self.detailMapButton.leadingAnchor, constant: -16),
-            self.driveCheckButton.topAnchor.constraint(equalTo: self.firstStackView.bottomAnchor, constant: 10),
-            self.driveCheckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4),
-            self.driveCheckButton.heightAnchor.constraint(equalToConstant: 30)
+            self.buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
         ])
         
-        // detailMapButton
+        // checkButton
         NSLayoutConstraint.activate([
-            self.detailMapButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.detailMapButton.centerYAnchor.constraint(equalTo: self.driveCheckButton.centerYAnchor),
-            self.detailMapButton.widthAnchor.constraint(equalToConstant: 75),
-            self.detailMapButton.heightAnchor.constraint(equalToConstant: 30)
+            self.checkButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
+        // denyButton
+        NSLayoutConstraint.activate([
+            self.denyButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
     }
 }
 
 // MARK: - Extension for methods added
-extension DispatchTableViewCell {
+extension DispatchCheckTableViewCell {
     func setCell(info: DispatchRegularlyItem) {
         self.driveTitleLabel.text = info.route
         
@@ -314,16 +344,49 @@ extension DispatchTableViewCell {
         } else {
             self.driveImageView.image = UIImage(named: "Arrival")
         }
+        
+        if info.maplink == "" {
+            self.detailMapButton.isHidden = true
+        } else {
+            self.detailMapButton.isHidden = false
+        }
+        
+        if info.checkRegularlyConnect.connectCheck == "1" {
+            self.buttonStackView.isHidden = true
+            
+            NSLayoutConstraint.deactivate([
+                self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
+            ])
+            
+            NSLayoutConstraint.activate([
+                self.firstStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
+            ])
+        } else {
+            self.buttonStackView.isHidden = false
+            
+            NSLayoutConstraint.deactivate([
+                self.firstStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
+            ])
+            
+            NSLayoutConstraint.activate([
+                self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
+            ])
+        }
     }
 }
 
 // MARK: - Extension for selectors added
-extension DispatchTableViewCell {
-    @objc func tappedDriveCheckButton(_ sender: UIButton) {
-        
-    }
-    
+extension DispatchCheckTableViewCell {
     @objc func tappedDetailMapButton(_ sender: UIButton) {
         
     }
+    
+    @objc func tappedCheckButton(_ sender: UIButton) {
+        
+    }
+    
+    @objc func tappedDenyButton(_ sender: UIButton) {
+        
+    }
+    
 }

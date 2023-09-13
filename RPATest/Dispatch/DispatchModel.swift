@@ -10,10 +10,11 @@ import Alamofire
 
 final class DispatchModel {
     private(set) var loadDailyDispatchRequest: DataRequest?
+    private(set) var loadMonthlyDispatchRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
-        print(url)
+        
         let headers: HTTPHeaders = [
             "access": "application/json",
             "Authorization": UserInfo.shared.access!
@@ -46,6 +47,7 @@ final class DispatchModel {
                                                 
                         } else {
                             print("loadDailyDispatchRequest failure: API 성공, Parsing 실패")
+                            print(decodedData)
                             failure?("API 성공, Parsing 실패")
                         }
                         
@@ -71,6 +73,68 @@ final class DispatchModel {
             }
         }
     }
+    
+    func loadMonthlyDispatchRequest(month: String, success: ((DispatchMonthlyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/monthly/\(month)"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadMonthlyDispatchRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadMonthlyDispatchRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadMonthlyDispatchRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadMonthlyDispatchRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        if let decodedData = try? JSONDecoder().decode(DispatchMonthly.self, from: data) {
+                            print("loadMonthlyDispatchRequest succeeded")
+                            success?(decodedData.data)
+                                                
+                        } else {
+                            print("loadMonthlyDispatchRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else { // result == false
+                        if let decodedData = try? JSONDecoder().decode(FailureResponse.self, from: data) {
+                            // parsing failure
+                            print("loadMonthlyDispatchRequest succeeded: LoginFailure")
+                            dispatchFailure?(decodedData.data)
+                        } else {
+                            print("loadMonthlyDispatchRequest failure: \(decodedData.result)")
+                            failure?(decodedData.result)
+                        }
+                    }
+                    
+                } else { // improper structure
+                    print("loadMonthlyDispatchRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("loadMonthlyDispatchRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
 }
 
 struct DispatchMonthly: Codable {
@@ -80,8 +144,14 @@ struct DispatchMonthly: Codable {
 
 struct DispatchMonthlyItem: Codable {
     let order: [Int]
-    let regularly_c: [Int]
-    let regularly_t: [Int]
+    let attendance: [Int]
+    let leaveWork: [Int]
+    
+    enum CodingKeys: String, CodingKey {
+        case order
+        case attendance = "regularly_c"
+        case leaveWork = "regularly_t"
+    }
 }
 
 struct DispatchDaily: Codable {
@@ -91,7 +161,7 @@ struct DispatchDaily: Codable {
 
 struct DispatchDailyItem: Codable {
     let regularly: [DispatchRegularlyItem]
-    let order: [Int]
+    let order: [DispatchRegularlyItem]?
 }
 
 struct DispatchRegularlyItem: Codable {

@@ -406,11 +406,11 @@ extension SupportingMethods {
     }
     
     // Date -> String
-    func convertDate(intoString date: Date) -> String {
+    func convertDate(intoString date: Date, _ dateFormat: String = "yyyy-MM-dd") -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(abbreviation: "KST")!
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = dateFormat
         
         return formatter.string(from: date)
     }

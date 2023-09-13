@@ -112,7 +112,7 @@ final class DispatchViewController: UIViewController {
         stackView.spacing = 16
         stackView.alignment = .fill
         stackView.distribution = .fill
-//        stackView.isHidden = true
+        stackView.isHidden = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -313,6 +313,7 @@ extension DispatchViewController: EssentialViewMethods {
     }
     
     func setData() {
+        SupportingMethods.shared.turnCoverView(.on)
         self.loadDailyDispatchRequest(date: self.dateLabel.text!) { dailyInfo in
             self.dailyDispatchData = dailyInfo.regularly
             
@@ -324,9 +325,11 @@ extension DispatchViewController: EssentialViewMethods {
 
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                SupportingMethods.shared.turnCoverView(.off)
             }
             
         } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
             print("setData loadDaliyDispatchRequest API Error: \(errorMessage)")
         }
 
@@ -345,6 +348,24 @@ extension DispatchViewController {
             }
             SupportingMethods.shared.turnCoverView(.off)
             
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
+    
+    func loadMonthlyDispatchRequest(month: String, success: ((DispatchMonthlyItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.loadMonthlyDispatchRequest(month: month) { monthlyItem in
+            success?(monthlyItem)
+            
+        } dispatchFailure: { reason in
+            if reason == 1 {
+                print("날짜가 틀림")
+            }
         } failure: { errorMessage in
             SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
                 failure?(errorMessage)
@@ -422,9 +443,29 @@ extension DispatchViewController {
     @objc func tappedPushDispatchMonthlyInfoButton(_ sender: UIButton) {
         print("tappedPushDispatchMonthlyInfoButton")
         
-        let vc = DispatchMonthlyViewController()
+        let currentMonth = SupportingMethods.shared.convertDate(intoString: Date(), "yyyy-MM")
+        print(currentMonth)
         
-        self.navigationController?.pushViewController(vc, animated: true)
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadMonthlyDispatchRequest(month: currentMonth) { item in
+            
+            let vc = DispatchMonthlyViewController(item: item)
+            
+            for index in 0..<item.attendance.count {
+                if item.attendance[index] != 0 {
+                    let date: String = index < 9 ? currentMonth + "-0\(index + 1)" : currentMonth + "-\(index + 1)"
+                    vc.eventsArray.append(date)
+                }
+            }
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("calendarCurrentPageDidChange loadMonthlyDispatchRequest API Error: \(errorMessage)")
+            
+        }
     }
     
     @objc func tappedPushDispatchCheckButton(_ sender: UIButton) {

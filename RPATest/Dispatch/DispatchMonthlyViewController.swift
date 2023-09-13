@@ -50,6 +50,20 @@ final class DispatchMonthlyViewController: UIViewController {
         return calendar
     }()
     
+    let dispatchModel = DispatchModel()
+    var eventsArray: [String] = []
+    var item: DispatchMonthlyItem?
+    
+    init(item: DispatchMonthlyItem? = nil) {
+        self.item = item
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -150,7 +164,24 @@ extension DispatchMonthlyViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension DispatchMonthlyViewController {
-    
+    func loadMonthlyDispatchRequest(month: String, success: ((DispatchMonthlyItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.loadMonthlyDispatchRequest(month: month) { monthlyItem in
+            success?(monthlyItem)
+            
+        } dispatchFailure: { reason in
+            if reason == 1 {
+                print("날짜가 틀림")
+            }
+            SupportingMethods.shared.turnCoverView(.off)
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -161,6 +192,60 @@ extension DispatchMonthlyViewController {
 }
 
 // MARK: - Extension for FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance
-extension DispatchMonthlyViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
+extension DispatchMonthlyViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance, UIScrollViewDelegate {
+    
+    func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
+        let currentMonth = SupportingMethods.shared.convertDate(intoString: calendar.currentPage, "yyyy-MM")
+
+        self.eventsArray = []
+        
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadMonthlyDispatchRequest(month: currentMonth) { item in
+            self.item = item
+            
+            for index in 0..<item.attendance.count {
+                if item.attendance[index] != 0 {
+                    let date: String = index < 9 ? currentMonth + "-0\(index + 1)" : currentMonth + "-\(index + 1)"
+                    self.eventsArray.append(date)
+                }
+            }
+            
+            SupportingMethods.shared.turnCoverView(.off)
+            print(self.eventsArray)
+            
+            DispatchQueue.main.async {
+                self.calendar.reloadData()
+            }
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("calendarCurrentPageDidChange loadMonthlyDispatchRequest API Error: \(errorMessage)")
+            
+        }
+    }
+    
+    // 날짜 밑 문자열 표시
+    func calendar(_ calendar: FSCalendar, subtitleFor date: Date) -> String? {
+        var subTitle: String?
+        let index = Int(SupportingMethods.shared.convertDate(intoString: date, "dd"))! - 1
+        
+        if self.eventsArray.contains(SupportingMethods.shared.convertDate(intoString: date)) {
+            subTitle = "출\(self.item?.attendance[index] ?? 0)퇴\(self.item?.leaveWork[index] ?? 0)일\(self.item?.order[index] ?? 0)"
+        }
+        
+        return subTitle
+        
+    }
+    
+    // 날짜 선택 시
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        let selectedDate = SupportingMethods.shared.convertDate(intoString: date)
+        if self.eventsArray.contains(selectedDate) {
+            let vc = DispatchCheckViewController(date: selectedDate)
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     
 }
