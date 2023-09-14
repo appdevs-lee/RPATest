@@ -17,3 +17,11 @@ final class CommonModel {
         return companyCheck
     }
 }
+
+extension Int {
+    func formatterStyle(_ numberStyle: NumberFormatter.Style) -> String? {
+        let numberFommater: NumberFormatter = NumberFormatter()
+        numberFommater.numberStyle = numberStyle
+        return numberFommater.string(for: self)
+    }
+}

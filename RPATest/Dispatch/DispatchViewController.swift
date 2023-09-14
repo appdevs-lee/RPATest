@@ -37,6 +37,7 @@ final class DispatchViewController: UIViewController {
     
     lazy var leftButton: UIButton = {
         let button = UIButton()
+        button.isHidden = true
         button.setImage(UIImage(named: "DayLeftButton"), for: .normal)
         button.addTarget(self, action: #selector(tappedMoveDayBeforeButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -46,6 +47,7 @@ final class DispatchViewController: UIViewController {
     
     lazy var rightButton: UIButton = {
         let button = UIButton()
+//        button.isHidden = true
         button.setImage(UIImage(named: "DayRightButton"), for: .normal)
         button.addTarget(self, action: #selector(tappedMoveDayAfterButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -98,6 +100,7 @@ final class DispatchViewController: UIViewController {
         let button = UIButton()
         button.setTitle("운행수락", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.isHidden = true
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.addTarget(self, action: #selector(tappedPushDispatchCheckButton(_:)), for: .touchUpInside)
@@ -375,6 +378,23 @@ extension DispatchViewController {
         }
 
     }
+    
+    func checkPatchDispatchRequest(checkType: String, time: String, regularlyId: String, orderId: String, success: ((CheckDriveItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.checkPatchDispatchRequest(checkType: checkType, time: time, regularlyId: regularlyId, orderId: orderId) { item in
+            success?(item)
+            
+        } dispatchFailure: { reason in
+            print(reason)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+        }
+
+        
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -473,6 +493,7 @@ extension DispatchViewController {
     }
 }
 
+// MARK: - Extension for UITableViewDelegate, UITableViewDataSource
 extension DispatchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dailyDispatchData.count
@@ -482,9 +503,22 @@ extension DispatchViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchTableViewCell", for: indexPath) as! DispatchTableViewCell
         
         cell.setCell(info: self.dailyDispatchData[indexPath.row])
+        cell.delegate = self
         
         cell.selectionStyle = .none
         
         return cell
+    }
+}
+
+// MARK: - Extension for DispatchDelegate
+extension DispatchViewController: DispatchDelegate {
+    func tapDriveCheckButton(current: String) {
+        
+    }
+    
+    func tapDetailMapButton(mapLink: String) {
+        guard let url = URL(string: mapLink) else { return }
+        UIApplication.shared.open(url)
     }
 }

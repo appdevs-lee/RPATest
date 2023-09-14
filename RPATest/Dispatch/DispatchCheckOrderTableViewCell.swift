@@ -1,18 +1,13 @@
 //
-//  DispatchTableViewCell.swift
+//  DispatchCheckOrderTableViewCell.swift
 //  RPATest
 //
-//  Created by 이주성 on 2023/09/03.
+//  Created by Awesomepia on 2023/09/14.
 //
 
 import UIKit
 
-protocol DispatchDelegate: NSObjectProtocol {
-    func tapDetailMapButton(mapLink: String)
-    func tapDriveCheckButton(current: String)
-}
-
-final class DispatchTableViewCell: UITableViewCell {
+final class DispatchCheckOrderTableViewCell: UITableViewCell {
     
     lazy var driveImageView: UIImageView = {
         let imageView = UIImageView()
@@ -30,6 +25,17 @@ final class DispatchTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
+    }()
+    
+    lazy var detailMapButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 7
+        button.setTitle("노선상세", for: .normal)
+        button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        button.addTarget(self, action: #selector(tappedDetailMapButton(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
     }()
     
     lazy var firstStackView: UIStackView = {
@@ -169,42 +175,40 @@ final class DispatchTableViewCell: UITableViewCell {
     }()
     
     lazy var buttonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [self.driveCheckButton, self.detailMapButton])
+        let stackView = UIStackView(arrangedSubviews: [self.checkButton, self.denyButton])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.alignment = .fill
-        stackView.distribution = .fill
+        stackView.distribution = .fillEqually
+        stackView.isHidden = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
     }()
     
-    lazy var detailMapButton: UIButton = {
+    lazy var checkButton: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 7
-        button.setTitle("노선상세", for: .normal)
+        button.setTitle("확인", for: .normal)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
-        button.addTarget(self, action: #selector(tappedDetailMapButton(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tappedCheckButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    lazy var driveCheckButton: UIButton = {
+    lazy var denyButton: UIButton = {
         let button = UIButton()
-//        button.isHidden = true
         button.layer.cornerRadius = 7
-        button.setTitle("기상", for: .normal)
+        button.setTitle("거부", for: .normal)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
-        button.addTarget(self, action: #selector(tappedDriveCheckButton(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tappedDenyButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    weak var delegate: DispatchDelegate?
-    var info: DispatchRegularlyItem?
-    let dispatchModel = DispatchModel()
+    var firstStackViewBottomConstraint: NSLayoutConstraint!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -234,7 +238,7 @@ final class DispatchTableViewCell: UITableViewCell {
 }
 
 // MARK: Extension for essential methods
-extension DispatchTableViewCell {
+extension DispatchCheckOrderTableViewCell {
     // Set view foundation
     func setCellFoundation() {
         self.selectionStyle = .none
@@ -260,6 +264,7 @@ extension DispatchTableViewCell {
     func setSubviews() {
         self.addSubview(self.driveImageView)
         self.addSubview(self.driveTitleLabel)
+        self.addSubview(self.detailMapButton)
         self.addSubview(self.firstStackView)
         self.addSubview(self.secondStackView)
         self.addSubview(self.buttonStackView)
@@ -267,7 +272,7 @@ extension DispatchTableViewCell {
     
     // Set layouts
     func setLayouts() {
-//        let safeArea = self.safeAreaLayoutGuide
+        //let safeArea = self.safeAreaLayoutGuide
         
         // driveImageView
         NSLayoutConstraint.activate([
@@ -283,10 +288,19 @@ extension DispatchTableViewCell {
             self.driveTitleLabel.centerYAnchor.constraint(equalTo: self.driveImageView.centerYAnchor)
         ])
         
+        // detailMapButton
+        NSLayoutConstraint.activate([
+            self.detailMapButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.detailMapButton.centerYAnchor.constraint(equalTo: self.driveImageView.centerYAnchor),
+            self.detailMapButton.widthAnchor.constraint(equalToConstant: 75),
+            self.detailMapButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
         // firstStackView
         NSLayoutConstraint.activate([
             self.firstStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             self.firstStackView.topAnchor.constraint(equalTo: self.driveImageView.bottomAnchor, constant: 8),
+            self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
         ])
         
         // secondStackView
@@ -299,111 +313,80 @@ extension DispatchTableViewCell {
         NSLayoutConstraint.activate([
             self.buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             self.buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.buttonStackView.topAnchor.constraint(equalTo: self.firstStackView.bottomAnchor, constant: 10),
             self.buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
         ])
         
-        // driveCheckButton
+        // checkButton
         NSLayoutConstraint.activate([
-            self.driveCheckButton.heightAnchor.constraint(equalToConstant: 30)
+            self.checkButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
-        // detailMapButton
+        // denyButton
         NSLayoutConstraint.activate([
-            self.detailMapButton.widthAnchor.constraint(equalToConstant: 75),
-            self.detailMapButton.heightAnchor.constraint(equalToConstant: 30)
+            self.denyButton.heightAnchor.constraint(equalToConstant: 30)
         ])
-        
     }
 }
 
 // MARK: - Extension for methods added
-extension DispatchTableViewCell {
-    func setCell(info: DispatchRegularlyItem) {
-        self.info = info
-        self.driveTitleLabel.text = info.route
-        
-        self.startTimeLabel.text = "\(info.departureDate.split(separator: " ").last!)"
-        self.passengerCountLabel.text = "00명"
-        
-        self.arrivalTimeLabel.text = "\(info.arrivalDate.split(separator: " ").last!)"
-        self.busNumberCountLabel.text = info.busId
-        
-        if info.workType == "출근" {
-            self.driveImageView.image = UIImage(named: "Start")
-        } else {
-            self.driveImageView.image = UIImage(named: "Arrival")
-        }
-        
-        if info.maplink == "" {
-            self.detailMapButton.isHidden = true
-        } else {
-            self.detailMapButton.isHidden = false
-        }
-        
-    }
-}
-
-// MARK: - Extension for methods added
-extension DispatchTableViewCell {
-    func checkPatchDispatchRequest(checkType: String, time: String, regularlyId: String, orderId: String, success: ((CheckDriveItem) -> ())?, failure: ((String) -> ())?) {
-        self.dispatchModel.checkPatchDispatchRequest(checkType: checkType, time: time, regularlyId: regularlyId, orderId: orderId) { item in
-            success?(item)
-            
-        } dispatchFailure: { reason in
-            print(reason)
-            
-        } failure: { errorMessage in
-            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
-                failure?(errorMessage)
-                
-            }
-        }
-
-        
+extension DispatchCheckOrderTableViewCell {
+    func setCell(info: DispatchOrderItem) {
+//        self.driveTitleLabel.text = info.route
+//        
+//        self.startTimeLabel.text = "\(info.departureDate.split(separator: " ").last!)"
+//        self.passengerCountLabel.text = "00명"
+//        
+//        self.arrivalTimeLabel.text = "\(info.arrivalDate.split(separator: " ").last!)"
+//        self.busNumberCountLabel.text = info.busId
+//        
+//        if info.workType == "출근" {
+//            self.driveImageView.image = UIImage(named: "Start")
+//        } else {
+//            self.driveImageView.image = UIImage(named: "Arrival")
+//        }
+//        
+//        if info.maplink == "" {
+//            self.detailMapButton.isHidden = true
+//        } else {
+//            self.detailMapButton.isHidden = false
+//        }
+//        
+//        if info.checkRegularlyConnect.connectCheck == "1" {
+//            self.buttonStackView.isHidden = true
+//            
+//            NSLayoutConstraint.deactivate([
+//                self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
+//            ])
+//            
+//            NSLayoutConstraint.activate([
+//                self.firstStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
+//            ])
+//        } else {
+//            self.buttonStackView.isHidden = false
+//            
+//            NSLayoutConstraint.deactivate([
+//                self.firstStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
+//            ])
+//            
+//            NSLayoutConstraint.activate([
+//                self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
+//            ])
+//        }
     }
 }
 
 // MARK: - Extension for selectors added
-extension DispatchTableViewCell {
-    @objc func tappedDriveCheckButton(_ sender: UIButton) {
-        var checkType: String = ""
-        if self.driveCheckButton.titleLabel?.text == "기상" {
-            checkType = "기상"
-        } else if self.driveCheckButton.titleLabel?.text == "운행 시작" {
-            checkType = "운행"
-        } else if self.driveCheckButton.titleLabel?.text == "출발지 도착" {
-            checkType = "출발지"
-        }
+extension DispatchCheckOrderTableViewCell {
+    @objc func tappedDetailMapButton(_ sender: UIButton) {
         
-        guard let info = self.info else { return }
-        
-        SupportingMethods.shared.turnCoverView(.on)
-        self.checkPatchDispatchRequest(checkType: checkType, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(info.id)", orderId: "") { item in
-            switch checkType {
-            case "기상":
-                self.driveCheckButton.setTitle("운행 시작", for: .normal)
-            case "운행":
-                self.driveCheckButton.setTitle("출발지 도착", for: .normal)
-            default:
-                self.driveCheckButton.setTitle("안전 운행하세요", for: .normal)
-                self.driveCheckButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
-                self.driveCheckButton.isEnabled = false
-            }
-            
-            SupportingMethods.shared.turnCoverView(.off)
-        } failure: { errorMessage in
-            SupportingMethods.shared.turnCoverView(.off)
-            print("tappedDriveCheckButton checkPatchDispatchRequest API Error: \(errorMessage)")
-            
-        }
-        
-        self.delegate?.tapDriveCheckButton(current: (self.driveCheckButton.titleLabel?.text!)!)
     }
     
-    @objc func tappedDetailMapButton(_ sender: UIButton) {
-        guard let info = self.info else { return }
+    @objc func tappedCheckButton(_ sender: UIButton) {
         
-        self.delegate?.tapDetailMapButton(mapLink: info.maplink)
     }
+    
+    @objc func tappedDenyButton(_ sender: UIButton) {
+        
+    }
+    
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum URL: String {
+enum ServerURL: String {
     case DEV = "http://34.121.50.23:8000"
     case PROD = "http://api.kingbuserp.link"
 }

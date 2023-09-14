@@ -46,6 +46,7 @@ final class DispatchCheckViewController: UIViewController {
         tableView.bounces = false
         tableView.showsVerticalScrollIndicator = false
         tableView.register(DispatchCheckTableViewCell.self, forCellReuseIdentifier: "DispatchCheckTableViewCell")
+//        tableView.register(DispatchCheckOrderTableViewCell.self, forCellReuseIdentifier: "DispatchCheckOrderTableViewCell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.sectionHeaderTopPadding = 0
@@ -56,7 +57,8 @@ final class DispatchCheckViewController: UIViewController {
     
     var date: String?
     let dispatchModel = DispatchModel()
-    var dailyItems: [DispatchRegularlyItem] = []
+    var regularlyItem: [DispatchRegularlyItem] = []
+    var orderItem: [DispatchOrderItem] = []
     
     init(date: String?) {
         self.date = date
@@ -116,7 +118,7 @@ extension DispatchCheckViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(dateReload), name: Notification.Name("DispatchCheckComplete"), object: nil)
     }
     
     func setSubviews() {
@@ -177,7 +179,8 @@ extension DispatchCheckViewController: EssentialViewMethods {
     func setData() {
         SupportingMethods.shared.turnCoverView(.on)
         self.loadDailyDispatchRequest(date: self.date!) { item in
-            self.dailyItems = item.regularly
+            self.orderItem = item.order
+            self.regularlyItem = item.regularly
             
             if !item.regularly.isEmpty {
                 self.noDataStackView.isHidden = true
@@ -218,6 +221,20 @@ extension DispatchCheckViewController {
         }
 
     }
+    
+    func checkDispatchRequest(check: String, regularlyId: String, orderId: String, success: (() -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.checkDispatchRequest(check: check, regularlyId: regularlyId, orderId: orderId) {
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -225,21 +242,57 @@ extension DispatchCheckViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    @objc func dateReload() {
+        self.setData()
+    }
 }
 
 // MARK: - Extension for UITableViewDelegate, UITableViewDataSource
 extension DispatchCheckViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dailyItems.count
+        let count = self.regularlyItem.count
+        return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchCheckTableViewCell", for: indexPath) as! DispatchCheckTableViewCell
         
-        cell.setCell(info: self.dailyItems[indexPath.row])
+        cell.setCell(info: self.regularlyItem[indexPath.row])
+        cell.delegate = self
         
         cell.selectionStyle = .none
         
         return cell
+    }
+}
+
+// MARK: - Extension for DispatchDailyDelegate
+extension DispatchCheckViewController: DispatchDailyDelegate {
+    func tapDetailMapButton(mapLink: String) {
+        guard let url = URL(string: mapLink) else { return }
+        UIApplication.shared.open(url)
+    }
+    
+    func tapCheckButton(info: DispatchRegularlyItem) {
+        let vc = DispatchCheckPopViewController(regularlyItem: info)
+        
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        
+        self.present(vc, animated: true)
+    }
+    
+    func tapDenyButton(info: DispatchRegularlyItem) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.checkDispatchRequest(check: "0", regularlyId: "\(info.id)", orderId: "") {
+            self.setData()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("tapDenyButton checkDispatchRequest API Error: \(errorMessage)")
+            
+        }
+
     }
 }

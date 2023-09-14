@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		053C55D42AA9AB86006A6D93 /* OrganizationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053C55D32AA9AB86006A6D93 /* OrganizationTableViewCell.swift */; };
+		057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */; };
+		057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */; };
+		057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */; };
 		057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */; };
 		057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */; };
 		16E2C467A0658AD11CAC6652 /* Pods_RPATest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */; };
@@ -45,6 +48,9 @@
 
 /* Begin PBXFileReference section */
 		053C55D32AA9AB86006A6D93 /* OrganizationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationTableViewCell.swift; sourceTree = "<group>"; };
+		057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckOrderTableViewCell.swift; sourceTree = "<group>"; };
+		057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckPopViewController.swift; sourceTree = "<group>"; };
+		057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckDenyViewController.swift; sourceTree = "<group>"; };
 		057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckViewController.swift; sourceTree = "<group>"; };
 		057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckTableViewCell.swift; sourceTree = "<group>"; };
 		06EE240AA4CC2BD5297F34A3 /* Pods-RPATest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.debug.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.debug.xcconfig"; sourceTree = "<group>"; };
@@ -221,7 +227,10 @@
 				5FCC116E2AA4638500550534 /* DispatchTableViewCell.swift */,
 				5F6B62EF2AAF364A001FEED2 /* DispatchMonthlyViewController.swift */,
 				057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */,
+				057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */,
+				057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */,
 				057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */,
+				057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */,
 			);
 			path = Dispatch;
 			sourceTree = "<group>";
@@ -387,6 +396,8 @@
 				057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */,
 				5F1BB09F2A03D1210081DBBE /* AppDelegate.swift in Sources */,
 				5FD49D192AA31BEE00208273 /* TemplateHeaderFooterView.swift in Sources */,
+				057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */,
+				057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */,
 				5F1BB0A12A03D1210081DBBE /* SceneDelegate.swift in Sources */,
 				5FCC11762AA46DE200550534 /* OrganizationViewController.swift in Sources */,
 				5FCC116D2AA3444300550534 /* DispatchModel.swift in Sources */,
@@ -395,6 +406,7 @@
 				5F1BB0B72A03D6B30081DBBE /* LoginModel.swift in Sources */,
 				5FD49D102AA31A7700208273 /* DispatchViewController.swift in Sources */,
 				5F1A16212A74EDF100132D29 /* SupportingMethods.swift in Sources */,
+				057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */,
 				5FD49D172AA31BCA00208273 /* TemplateTableViewCell.swift in Sources */,
 				5FCD8D412A6B9C82000AFC3F /* CompanyEnterViewController.swift in Sources */,
 			);

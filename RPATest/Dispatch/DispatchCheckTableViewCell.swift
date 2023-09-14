@@ -7,6 +7,12 @@
 
 import UIKit
 
+protocol DispatchDailyDelegate: NSObjectProtocol {
+    func tapDetailMapButton(mapLink: String)
+    func tapCheckButton(info: DispatchRegularlyItem)
+    func tapDenyButton(info: DispatchRegularlyItem)
+}
+
 final class DispatchCheckTableViewCell: UITableViewCell {
     
     lazy var driveImageView: UIImageView = {
@@ -208,7 +214,9 @@ final class DispatchCheckTableViewCell: UITableViewCell {
         return button
     }()
     
-    var firstStackViewBottomConstraint: NSLayoutConstraint!
+    weak var delegate: DispatchDailyDelegate?
+    var info: DispatchRegularlyItem?
+    var mapLink: String = ""
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -331,7 +339,9 @@ extension DispatchCheckTableViewCell {
 // MARK: - Extension for methods added
 extension DispatchCheckTableViewCell {
     func setCell(info: DispatchRegularlyItem) {
-        self.driveTitleLabel.text = info.route
+        self.info = info
+        self.mapLink = info.maplink
+        self.driveTitleLabel.text = "\(info.group) - \(info.route)" 
         
         self.startTimeLabel.text = "\(info.departureDate.split(separator: " ").last!)"
         self.passengerCountLabel.text = "00명"
@@ -351,7 +361,7 @@ extension DispatchCheckTableViewCell {
             self.detailMapButton.isHidden = false
         }
         
-        if info.checkRegularlyConnect.connectCheck == "1" {
+        if info.checkRegularlyConnect.connectCheck == "1" || info.checkRegularlyConnect.connectCheck == "0" {
             self.buttonStackView.isHidden = true
             
             NSLayoutConstraint.deactivate([
@@ -378,15 +388,15 @@ extension DispatchCheckTableViewCell {
 // MARK: - Extension for selectors added
 extension DispatchCheckTableViewCell {
     @objc func tappedDetailMapButton(_ sender: UIButton) {
-        
+        self.delegate?.tapDetailMapButton(mapLink: self.mapLink)
     }
     
     @objc func tappedCheckButton(_ sender: UIButton) {
-        
+        self.delegate?.tapCheckButton(info: self.info!)
     }
     
     @objc func tappedDenyButton(_ sender: UIButton) {
-        
+        self.delegate?.tapDenyButton(info: self.info!)
     }
     
 }

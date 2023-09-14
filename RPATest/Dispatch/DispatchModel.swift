@@ -11,6 +11,8 @@ import Alamofire
 final class DispatchModel {
     private(set) var loadDailyDispatchRequest: DataRequest?
     private(set) var loadMonthlyDispatchRequest: DataRequest?
+    private(set) var checkDispatchRequest: DataRequest?
+    private(set) var checkPatchDispatchRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -20,6 +22,7 @@ final class DispatchModel {
             "Authorization": UserInfo.shared.access!
         ]
         
+        print(UserInfo.shared.access!)
         self.loadDailyDispatchRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
         
         self.loadDailyDispatchRequest?.responseData { response in
@@ -135,6 +138,127 @@ final class DispatchModel {
         }
     }
     
+    func checkDispatchRequest(check: String, refusal: String = "", regularlyId: String, orderId: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/connect/check"
+        print(url)
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "check": check,
+            "refusal": refusal,
+            "regularly_id": regularlyId,
+            "order_id": orderId
+        ]
+        
+        self.checkDispatchRequest = AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.checkDispatchRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("checkDispatchRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("checkDispatchRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(Temporary.self, from: data) {
+                    success?()
+                    
+                } else { // improper structure
+                    print("checkDispatchRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("checkDispatchRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+        
+    }
+    
+    func checkPatchDispatchRequest(checkType: String, time: String, regularlyId: String, orderId: String, success: ((CheckDriveItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/check"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "check_type": checkType,
+            "time": time,
+            "regularly_id": regularlyId,
+            "order_id": orderId
+        ]
+        
+        self.checkPatchDispatchRequest = AF.request(url, method: .patch, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.checkPatchDispatchRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("checkPatchDispatchRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("checkPatchDispatchRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        if let decodedData = try? JSONDecoder().decode(CheckDrive.self, from: data) {
+                            print("checkPatchDispatchRequest succeeded")
+                            success?(decodedData.data)
+                                                
+                        } else {
+                            print("checkPatchDispatchRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else { // result == false
+                        if let decodedData = try? JSONDecoder().decode(FailureResponse.self, from: data) {
+                            // parsing failure
+                            print("checkPatchDispatchRequest succeeded: LoginFailure")
+                            dispatchFailure?(decodedData.data)
+                        } else {
+                            print("checkPatchDispatchRequest failure: \(decodedData.result)")
+                            failure?(decodedData.result)
+                        }
+                    }
+                    
+                } else { // improper structure
+                    print("checkPatchDispatchRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("checkPatchDispatchRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+        
+        
+    }
+    
 }
 
 struct DispatchMonthly: Codable {
@@ -161,7 +285,32 @@ struct DispatchDaily: Codable {
 
 struct DispatchDailyItem: Codable {
     let regularly: [DispatchRegularlyItem]
-    let order: [DispatchRegularlyItem]?
+    let order: [DispatchOrderItem]
+}
+
+struct CheckDrive: Codable {
+    let result: String
+    let data: CheckDriveItem
+}
+
+struct CheckDriveItem: Codable {
+    let id: Int
+    let wakeTime: String
+    let driveTime: String
+    let departureTime: String
+    let connectCheck: String
+    let regularlyId: Int
+    let orderId: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case wakeTime = "wake_time"
+        case driveTime = "drive_time"
+        case departureTime = "departure_time"
+        case connectCheck = "connect_check"
+        case regularlyId = "regularly_id"
+        case orderId = "order_id"
+    }
 }
 
 struct DispatchRegularlyItem: Codable {
@@ -204,6 +353,56 @@ struct DispatchRegularlyItem: Codable {
     }
 }
 
+struct DispatchOrderItem: Codable {
+    let id: Int
+    let operationType: String
+    let busType: String
+    let busCount: String
+    let price: String // 계약금액
+    let driverAllowance: String //  기사수당
+    let costType: String
+    let customer: String
+    let customerPhone: String
+    let collectionType: String
+    let paymentMethod: String
+    let VAT: String
+    let option: String
+    let ticketingInfo: String
+    let orderType: String
+    let checkOrderConnect: CheckRegularlyConnect
+    let references: String // 참조사항
+    let departure: String // 출발지
+    let arrival: String // 도착지
+    let departureDate: String // 출발일자
+    let arrivalDate: String // 도착일자
+    let busId: String // 버스번호
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case operationType = "operation_type"
+        case busType = "bus_type"
+        case busCount = "bus_cnt"
+        case price
+        case driverAllowance = "driver_allowance"
+        case costType = "cost_type"
+        case customer
+        case customerPhone = "customer_phone"
+        case collectionType = "collection_type"
+        case paymentMethod = "payment_method"
+        case VAT
+        case option
+        case ticketingInfo = "ticketing_info"
+        case orderType = "order_type"
+        case checkOrderConnect = "check_order_connect"
+        case references
+        case departure
+        case arrival
+        case departureDate = "departure_date"
+        case arrivalDate = "arrival_date"
+        case busId = "bus_id"
+    }
+}
+
 struct CheckRegularlyConnect: Codable {
     let wakeTime: String
     let driveTime: String
@@ -217,3 +416,9 @@ struct CheckRegularlyConnect: Codable {
         case connectCheck = "connect_check"
     }
 }
+
+struct Temporary: Codable {
+    let success: Bool
+}
+
+
