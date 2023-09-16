@@ -44,6 +44,7 @@
 		5FD8CC9D2A6BADC900D9C6D7 /* CommonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD8CC9C2A6BADC900D9C6D7 /* CommonModel.swift */; };
 		5FE29CBE2A7E142A000748FC /* AlertPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE29CBD2A7E142A000748FC /* AlertPopViewController.swift */; };
 		5FE29CC22A7E1588000748FC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE29CC12A7E1588000748FC /* TabBarController.swift */; };
+		5FE36A4C2AB57B6A006399BE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5FE36A4B2AB57B6A006399BE /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,6 +87,8 @@
 		5FD8CC9C2A6BADC900D9C6D7 /* CommonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModel.swift; sourceTree = "<group>"; };
 		5FE29CBD2A7E142A000748FC /* AlertPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPopViewController.swift; sourceTree = "<group>"; };
 		5FE29CC12A7E1588000748FC /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		5FE36A4B2AB57B6A006399BE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5FE36A4D2AB58902006399BE /* RPATest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RPATest.entitlements; sourceTree = "<group>"; };
 		68FC532789A4480F0CA48CDE /* Pods-RPATest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.release.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.release.xcconfig"; sourceTree = "<group>"; };
 		BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RPATest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -154,10 +157,12 @@
 		5F1BB09D2A03D1210081DBBE /* RPATest */ = {
 			isa = PBXGroup;
 			children = (
+				5FE36A4D2AB58902006399BE /* RPATest.entitlements */,
 				5F1BB09E2A03D1210081DBBE /* AppDelegate.swift */,
 				5F1BB0A02A03D1210081DBBE /* SceneDelegate.swift */,
 				5F1BB0A72A03D1220081DBBE /* Assets.xcassets */,
 				5F1BB0AC2A03D1220081DBBE /* Info.plist */,
+				5FE36A4B2AB57B6A006399BE /* GoogleService-Info.plist */,
 				5FD49D112AA31B5D00208273 /* Template */,
 				5F1A161D2A74EDBC00132D29 /* Methods */,
 				5FE29CC02A7E154E000748FC /* Common */,
@@ -327,6 +332,7 @@
 				5F1BB0A82A03D1220081DBBE /* Assets.xcassets in Resources */,
 				5F1BB0A62A03D1210081DBBE /* Main.storyboard in Resources */,
 				5F1A161B2A74EA6300132D29 /* PretendardVariable.ttf in Resources */,
+				5FE36A4C2AB57B6A006399BE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,6 +560,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = RPATest/RPATest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3C347T67DV;
@@ -589,6 +596,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = RPATest/RPATest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3C347T67DV;

@@ -86,11 +86,16 @@ class LoginViewController: UIViewController {
                 UserDefaults.standard.set(info.authenticatedUser.name, forKey: "name")
                 UserDefaults.standard.set(info.refresh, forKey: "refreshToken")
                 
-                guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
-                
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true) {
+                self.sendFCMTokenRequest(fcmToken: UserInfo.shared.fcmToken ?? "") {
+                    guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
+                    
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: false) {
+                        SupportingMethods.shared.turnCoverView(.off)
+                    }
+                } failure: { errorMessage in
                     SupportingMethods.shared.turnCoverView(.off)
+                    print("sendFCMTokenRequest API Error: \(errorMessage)")
                 }
             } loginFailure: { reason in
                 SupportingMethods.shared.turnCoverView(.off)
@@ -141,15 +146,29 @@ extension LoginViewController {
 
     }
     
+    func sendFCMTokenRequest(fcmToken: String, success: (() -> ())?, failure: ((String) -> ())?) {
+        self.loginModel.sendFCMTokenRequest(fcmToken: fcmToken) { item in
+            print("FCM Token: \(item.token)")
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
+    
     func setUpProgressView() {
         self.progressView.isHidden = false
         self.progressView.progress = 0.0
-        self.progressView.progressTintColor = UIColor.white
-        self.progressView.progressViewStyle = .bar
         
         self.progressBarTimer?.invalidate()
         self.progressBarTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(LoginViewController.updateProgressView), userInfo: nil, repeats: true)
-        
+        self.progressView.progressTintColor = UIColor.white
+        self.progressView.progressViewStyle = .bar
     }
     
     func setSubViews() {
@@ -210,10 +229,17 @@ extension LoginViewController {
                         UserInfo.shared.access = "Bearer " + tokenData.access
                         UserDefaults.standard.set(tokenData.refresh, forKey: "refreshToken")
                         
-                        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
-                        
-                        vc.modalPresentationStyle = .fullScreen
-                        self.present(vc, animated: false)
+                        self.sendFCMTokenRequest(fcmToken: UserInfo.shared.fcmToken ?? "") {
+                            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
+                            
+                            vc.modalPresentationStyle = .fullScreen
+                            self.present(vc, animated: false) {
+                                SupportingMethods.shared.turnCoverView(.off)
+                            }
+                        } failure: { errorMessage in
+                            SupportingMethods.shared.turnCoverView(.off)
+                            print("sendFCMTokenRequest API Error: \(errorMessage)")
+                        }
                     } refreshFailure: { reason in
                         SupportingMethods.shared.turnCoverView(.off)
                         

@@ -331,7 +331,7 @@ extension SupportingMethods {
             UserDefaults.standard.removeObject(forKey: "name")
             
             guard let _ = ReferenceValues.firstVC?.presentedViewController as? TabBarController else {
-                ReferenceValues.firstVC?.navigationController?.popToRootViewController(animated: false)
+                ReferenceValues.firstVC?.dismiss(animated: true)
                 
                 return
             }
@@ -342,7 +342,7 @@ extension SupportingMethods {
         case .networkError:
             ReferenceValues.firstVC?.backGroundView.isHidden = false
             guard let _ = ReferenceValues.firstVC?.presentedViewController as? TabBarController else {
-                ReferenceValues.firstVC?.navigationController?.popToRootViewController(animated: false)
+                ReferenceValues.firstVC?.dismiss(animated: true)
                 
                 ReferenceValues.firstVC?.setUpProgressView()
                 
@@ -355,7 +355,7 @@ extension SupportingMethods {
         case .serverError:
             ReferenceValues.firstVC?.backGroundView.isHidden = false
             guard let _ = ReferenceValues.firstVC?.presentedViewController as? TabBarController else {
-                ReferenceValues.firstVC?.navigationController?.popToRootViewController(animated: false)
+                ReferenceValues.firstVC?.dismiss(animated: true)
                 
                 ReferenceValues.firstVC?.setUpProgressView()
                 

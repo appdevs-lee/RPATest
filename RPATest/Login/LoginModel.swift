@@ -11,6 +11,7 @@ import Alamofire
 final class LoginModel {
     private(set) var loginRequest: DataRequest?
     private(set) var tokenRefreshRequest: DataRequest?
+    private(set) var sendFCMTokenRequest: DataRequest?
     
     func loginRequest(id: String, pwd: String, success: ((LoginDetail) -> ())?, loginFailure: ((_ reason: Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/login"
@@ -142,6 +143,65 @@ final class LoginModel {
         }
     }
     
+    func sendFCMTokenRequest(fcmToken: String, success: ((FCMTokenItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/notification"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "token": UserInfo.shared.fcmToken!
+        ]
+        
+        self.sendFCMTokenRequest = AF.request(url, method: .patch, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.sendFCMTokenRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("sendFCMTokenRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("sendFCMTokenRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        if let decodedData = try? JSONDecoder().decode(FCMToken.self, from: data) {
+                            print("sendFCMTokenRequest succeeded")
+                            success?(decodedData.data)
+                            
+                        } else {
+                            print("sendFCMTokenRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else { // result == false
+                        print("sendFCMTokenRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else { // improper structure
+                    print("sendFCMTokenRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("sendFCMTokenRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
 }
 
 struct Login: Codable {
@@ -180,4 +240,13 @@ struct Token: Codable {
 struct FailureResponse: Codable {
     let result: String
     let data: Int
+}
+
+struct FCMToken: Codable {
+    let result: String
+    let data: FCMTokenItem
+}
+
+struct FCMTokenItem: Codable {
+    let token: String
 }

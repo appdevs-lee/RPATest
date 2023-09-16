@@ -14,6 +14,7 @@ class UserInfo {
     var password: String?
     var access: String?
     var name: String?
+    var fcmToken: String?
     
     private init() {
         self.name = UserDefaults.standard.string(forKey: "name")

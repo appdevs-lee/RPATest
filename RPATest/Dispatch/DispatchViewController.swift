@@ -318,6 +318,7 @@ extension DispatchViewController: EssentialViewMethods {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationItem.titleView = self.setUpNavigationTitle()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "search")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(rightBarButtonItem(_:)))
     }
     
     func setData() {
@@ -404,6 +405,10 @@ extension DispatchViewController {
 
 // MARK: - Extension for selector methods
 extension DispatchViewController {
+    @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
+        
+    }
+    
     @objc func tappedMoveDayBeforeButton(_ sender: UIButton) {
         print("Day Before")
         let currentDate = SupportingMethods.shared.convertString(intoDate: self.dateLabel.text!)

@@ -8,7 +8,8 @@ target 'RPATest' do
   # Pods for RPATest
   pod 'Alamofire'
   pod 'FSCalendar'
-
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Messaging'
 end
 
 post_install do |installer|
