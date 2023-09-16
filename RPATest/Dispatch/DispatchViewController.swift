@@ -159,6 +159,11 @@ final class DispatchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Pop Slide
+        if self.navigationController?.viewControllers.first === self  {
+            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        }
 
         self.setViewFoundation()
         self.initializeObjects()
@@ -520,5 +525,18 @@ extension DispatchViewController: DispatchDelegate {
     func tapDetailMapButton(mapLink: String) {
         guard let url = URL(string: mapLink) else { return }
         UIApplication.shared.open(url)
+    }
+}
+
+// MARK: - Extension for UIGestureRecognizerDelegate
+extension DispatchViewController: UIGestureRecognizerDelegate {
+    // For swipe gesture
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    // For swipe gesture, prevent working on the root view of navigation controller
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.navigationController!.viewControllers.count > 1 ? true : false
     }
 }

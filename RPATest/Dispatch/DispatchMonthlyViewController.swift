@@ -211,7 +211,6 @@ extension DispatchMonthlyViewController: FSCalendarDelegate, FSCalendarDataSourc
             }
             
             SupportingMethods.shared.turnCoverView(.off)
-            print(self.eventsArray)
             
             DispatchQueue.main.async {
                 self.calendar.reloadData()
@@ -246,6 +245,4 @@ extension DispatchMonthlyViewController: FSCalendarDelegate, FSCalendarDataSourc
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
-    
-    
 }
