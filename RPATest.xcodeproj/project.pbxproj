@@ -14,6 +14,7 @@
 		057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */; };
 		057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */; };
 		0582C5A82AB8218D0045CBCB /* DispatchSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0582C5A72AB8218D0045CBCB /* DispatchSearchViewController.swift */; };
+		0582C5AA2AB842BF0045CBCB /* DispatchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */; };
 		16E2C467A0658AD11CAC6652 /* Pods_RPATest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */; };
 		5F1A16182A74E23400132D29 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F1A16162A74E23400132D29 /* Pretendard-Bold.otf */; };
 		5F1A16192A74E23400132D29 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F1A16172A74E23400132D29 /* Pretendard-Medium.otf */; };
@@ -56,6 +57,7 @@
 		057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckViewController.swift; sourceTree = "<group>"; };
 		057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckTableViewCell.swift; sourceTree = "<group>"; };
 		0582C5A72AB8218D0045CBCB /* DispatchSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSearchViewController.swift; sourceTree = "<group>"; };
+		0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCategoryViewController.swift; sourceTree = "<group>"; };
 		06EE240AA4CC2BD5297F34A3 /* Pods-RPATest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.debug.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.debug.xcconfig"; sourceTree = "<group>"; };
 		5F1A16162A74E23400132D29 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		5F1A16172A74E23400132D29 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				0582C5A72AB8218D0045CBCB /* DispatchSearchViewController.swift */,
+				0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -424,6 +427,7 @@
 				5F1A16232A74EECB00132D29 /* ReferenceValues.swift in Sources */,
 				5FD8CC9D2A6BADC900D9C6D7 /* CommonModel.swift in Sources */,
 				5F680E9C2AA56CA40047ED65 /* ProfileCollectionViewCell.swift in Sources */,
+				0582C5AA2AB842BF0045CBCB /* DispatchCategoryViewController.swift in Sources */,
 				5FD49D152AA31BBA00208273 /* TemplateViewController.swift in Sources */,
 				5FD49D1B2AA31BFF00208273 /* TemplateCollectionViewCell.swift in Sources */,
 				057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */,

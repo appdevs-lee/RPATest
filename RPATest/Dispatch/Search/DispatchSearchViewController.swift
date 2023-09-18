@@ -95,6 +95,10 @@ extension DispatchSearchViewController: EssentialViewMethods {
     func setViewAfterTransition() {
         //self.navigationController?.setNavigationBarHidden(false, animated: true)
         //self.tabBarController?.tabBar.isHidden = false
+        
+        let vc = DispatchCategoryViewController(groupList: self.groupList)
+        
+        self.present(vc, animated: true)
     }
     
     private func setUpNavigationTitle() -> UIImageView {
