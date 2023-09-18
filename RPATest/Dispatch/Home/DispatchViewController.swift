@@ -401,12 +401,35 @@ extension DispatchViewController {
 
         
     }
+    
+    func loadDispatchGroupListRequest(success: (([DispatchSearchItemGroupList]) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.loadDispatchGroupListRequest { groupList in
+            success?(groupList)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+        
+    }
 }
 
 // MARK: - Extension for selector methods
 extension DispatchViewController {
     @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDispatchGroupListRequest { groupList in
+            let vc = DispatchSearchViewController(groupList: groupList)
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+            SupportingMethods.shared.turnCoverView(.off)
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
+        }
     }
     
     @objc func tappedMoveDayBeforeButton(_ sender: UIButton) {

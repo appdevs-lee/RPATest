@@ -13,6 +13,7 @@ final class DispatchModel {
     private(set) var loadMonthlyDispatchRequest: DataRequest?
     private(set) var checkDispatchRequest: DataRequest?
     private(set) var checkPatchDispatchRequest: DataRequest?
+    private(set) var loadDispatchGroupListRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -259,6 +260,62 @@ final class DispatchModel {
         
     }
     
+    func loadDispatchGroupListRequest(success: (([DispatchSearchItemGroupList]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/regularly/group"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadDispatchGroupListRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadDispatchGroupListRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadDispatchGroupListRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadDispatchGroupListRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        if let decodedData = try? JSONDecoder().decode(DispatchSearch.self, from: data) {
+                            print("loadDispatchGroupListRequest succeeded")
+                            success?(decodedData.data.groupList)
+                                                
+                        } else {
+                            print("loadDispatchGroupListRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else { // result == false
+                        print("loadDispatchGroupListRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                        
+                    }
+                    
+                } else { // improper structure
+                    print("loadDispatchGroupListRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("loadDispatchGroupListRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
 }
 
 struct DispatchMonthly: Codable {
@@ -421,4 +478,20 @@ struct Temporary: Codable {
     let success: Bool
 }
 
+struct DispatchSearch: Codable {
+    let result: String
+    let data: DispatchSearchItem
+}
 
+struct DispatchSearchItem: Codable {
+    let groupList: [DispatchSearchItemGroupList]
+    
+    enum CodingKeys: String, CodingKey {
+        case groupList = "group_list"
+    }
+}
+
+struct DispatchSearchItemGroupList: Codable {
+    let id: Int
+    let name: String
+}
