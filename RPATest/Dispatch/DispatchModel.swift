@@ -14,6 +14,7 @@ final class DispatchModel {
     private(set) var checkDispatchRequest: DataRequest?
     private(set) var checkPatchDispatchRequest: DataRequest?
     private(set) var loadDispatchGroupListRequest: DataRequest?
+    private(set) var loadDispatchPathRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -316,6 +317,68 @@ final class DispatchModel {
         }
     }
     
+    func loadDispatchPathRequest(page: Int, search: String, id: Int, success: ((DispatchPathItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/regularly"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "page": page,
+            "search": search,
+            "group": id
+        ]
+        
+        self.loadDispatchPathRequest = AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadDispatchPathRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadDispatchPathRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadDispatchPathRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        if let decodedData = try? JSONDecoder().decode(DispatchPath.self, from: data) {
+                            print("loadDispatchPathRequest succeeded")
+                            success?(decodedData.data)
+                                                
+                        } else {
+                            print("loadDispatchPathRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else { // result == false
+                        print("loadDispatchPathRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                        
+                    }
+                    
+                } else { // improper structure
+                    print("loadDispatchPathRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("loadDispatchPathRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
 }
 
 struct DispatchMonthly: Codable {
@@ -495,3 +558,105 @@ struct DispatchSearchItemGroupList: Codable {
     let id: Int
     let name: String
 }
+
+struct DispatchPath: Codable {
+    let result: String
+    let data: DispatchPathItem
+}
+
+struct DispatchPathItem: Codable {
+    let count: Int
+    let next: String?
+    let regularlyList: [DispatchPathRegularlyList]
+    
+    enum CodingKeys: String, CodingKey {
+        case count
+        case next
+        case regularlyList = "regularly_list"
+    }
+}
+
+struct DispatchPathRegularlyList: Codable {
+    let id: Int
+    let know: String
+    let references: String
+    let departure: String
+    let arrival: String
+    let departureTime: String
+    let arrivalTime: String
+    let price: String
+    let driverAllowance: String
+    let number1: String
+    let number2: String
+    let num1: String
+    let num2: String
+    let week: String
+    let workType: String
+    let route: String
+    let location: String
+    let detailedRoute : String
+    let maplink: String
+    let use: String
+    let group: Int
+    let creator: Int
+    
+    enum CodingKeys: String ,CodingKey {
+        case id
+        case know
+        case references
+        case departure
+        case arrival
+        case departureTime = "departure_time"
+        case arrivalTime = "arrival_time"
+        case price
+        case driverAllowance = "driver_allowance"
+        case number1
+        case number2
+        case num1
+        case num2
+        case week
+        case workType = "work_type"
+        case route
+        case location
+        case detailedRoute = "detailed_route"
+        case maplink
+        case use
+        case group
+        case creator
+    }
+}
+
+/*
+ "result": "true",
+ "data": {
+     "count": 44,
+     "next": "http://34.121.50.23:8000/dispatch/regularly?group=&page=2&search=",
+     "previous": null,
+     "regularly_list": [
+         {
+             "id": 886,
+             "know": "true",
+             "references": "과천농협(06:15),법정공휴일 다음날은 월요일과 동일하게 운행",
+             "departure": "과천1(과천농협)",
+             "arrival": "남양연구소출근",
+             "departure_time": "06:15",
+             "arrival_time": "07:15",
+             "price": "164000",
+             "driver_allowance": "15000",
+             "number1": "1",
+             "number2": "0",
+             "num1": 1,
+             "num2": 0,
+             "week": "월",
+             "work_type": "출근",
+             "route": "과천1",
+             "location": "",
+             "detailed_route": "과천농협(06:15)",
+             "maplink": "http://kko.to/fxqRwtmjBT",
+             "use": "사용",
+             "pub_date": "2023-05-01T10:59:17.259323",
+             "updated_at": "2023-07-20T13:00:29.340872",
+             "group": 32,
+             "creator": 86
+         },
+ */

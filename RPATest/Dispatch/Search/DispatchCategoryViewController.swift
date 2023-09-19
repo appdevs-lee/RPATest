@@ -9,6 +9,30 @@ import UIKit
 
 final class DispatchCategoryViewController: UIViewController {
     
+    lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "검색할 노선 그룹을 선택해주세요."
+        label.textColor = .useRGB(red: 66, green: 66, blue: 66)
+        label.font = .useFont(ofSize: 16, weight: .Bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        tableView.bounces = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.register(DispatchCategoryTableViewCell.self, forCellReuseIdentifier: "DispatchCategoryTableViewCell")
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.sectionHeaderTopPadding = 0
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tableView
+    }()
+    
     init(groupList: [DispatchSearchItemGroupList]) {
         self.groupList = groupList
         
@@ -29,6 +53,8 @@ final class DispatchCategoryViewController: UIViewController {
 //            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
 //        }
         
+        print(self.groupList)
+        
         self.setViewFoundation()
         self.initializeObjects()
         self.setDelegates()
@@ -36,7 +62,6 @@ final class DispatchCategoryViewController: UIViewController {
         self.setNotificationCenters()
         self.setSubviews()
         self.setLayouts()
-        self.setUpNavigationItem()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,15 +102,25 @@ extension DispatchCategoryViewController: EssentialViewMethods {
     }
     
     func setSubviews() {
-        
+        self.view.addSubview(self.titleLabel)
+        self.view.addSubview(self.tableView)
     }
     
     func setLayouts() {
-        //let safeArea = self.view.safeAreaLayoutGuide
+        let safeArea = self.view.safeAreaLayoutGuide
         
-        //
+        // titleLabel
         NSLayoutConstraint.activate([
-            
+            self.titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 12),
+            self.titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
+        ])
+        
+        // tableView
+        NSLayoutConstraint.activate([
+            self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
+            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
     }
     
@@ -117,7 +152,7 @@ extension DispatchCategoryViewController: EssentialViewMethods {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationItem.titleView = self.setUpNavigationTitle()
-        self.navigationItem.title = "킹버스"
+//        self.navigationItem.title = "킹버스"
 //        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
     }
 }
@@ -131,5 +166,30 @@ extension DispatchCategoryViewController {
 extension DispatchCategoryViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
         
+    }
+}
+
+// MARK: - Extension for UITableViewDelegate, UITableViewDataSource
+extension DispatchCategoryViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.groupList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchCategoryTableViewCell", for: indexPath) as! DispatchCategoryTableViewCell
+        
+        cell.setCell(group: self.groupList[indexPath.row])
+        
+        cell.selectionStyle = .none
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let group = self.groupList[indexPath.row]
+        
+        self.dismiss(animated: true) {
+            NotificationCenter.default.post(name: Notification.Name("SendGroup"), object: nil, userInfo: ["group": group])
+        }
     }
 }

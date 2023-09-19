@@ -9,6 +9,51 @@ import UIKit
 
 final class DispatchSearchViewController: UIViewController {
     
+    lazy var noDataStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.noDataImageView, self.noDataLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.isHidden = true
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    lazy var noDataImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "NoDataImage")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return imageView
+    }()
+    
+    lazy var noDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "검색 결과가 없습니다"
+        label.font = .useFont(ofSize: 14, weight: .Bold)
+        label.textColor = .useRGB(red: 189, green: 189, blue: 189)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        tableView.bounces = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.register(DispatchSearchTableViewCell.self, forCellReuseIdentifier: "DispatchSearchTableViewCell")
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.sectionHeaderTopPadding = 0
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tableView
+    }()
+    
     init(groupList: [DispatchSearchItemGroupList]) {
         self.groupList = groupList
         
@@ -22,6 +67,11 @@ final class DispatchSearchViewController: UIViewController {
     let dispatchModel = DispatchModel()
     let searchController = UISearchController(searchResultsController: nil)
     var groupList: [DispatchSearchItemGroupList] = []
+    var group: DispatchSearchItemGroupList?
+    var search: String = ""
+    var page: Int = 1
+    
+    var pathList: [DispatchPathRegularlyList] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +96,10 @@ final class DispatchSearchViewController: UIViewController {
         super.viewWillAppear(animated)
         
         self.setViewAfterTransition()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.searchController.searchBar.resignFirstResponder()
     }
     
 //    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -76,19 +130,29 @@ extension DispatchSearchViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(addGroupData(_:)), name: Notification.Name("SendGroup"), object: nil)
     }
     
     func setSubviews() {
-        
+        self.view.addSubview(self.tableView)
+        self.view.addSubview(self.noDataStackView)
     }
     
     func setLayouts() {
-        //let safeArea = self.view.safeAreaLayoutGuide
+        let safeArea = self.view.safeAreaLayoutGuide
         
-        //
+        // tableView
         NSLayoutConstraint.activate([
-            
+            self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        ])
+        
+        // noDataStackView
+        NSLayoutConstraint.activate([
+            self.noDataStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.noDataStackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
         ])
     }
     
@@ -152,13 +216,99 @@ extension DispatchSearchViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension DispatchSearchViewController {
+    func loadDispatchPathRequest(page: Int, search: String, success: ((DispatchPathItem) -> ())?, failure: ((String) -> ())?) {
+        guard let id = self.group?.id else {
+            SupportingMethods.shared.turnCoverView(.off)
+            return
+        }
+        self.dispatchModel.loadDispatchPathRequest(page: page, search: search, id: id) { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+    }
     
+    func loadDispatchPathRequestAtBeginning() {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDispatchPathRequest(page: 1, search: self.search) { item in
+            self.page = 1
+            self.pathList = item.regularlyList
+            
+            self.tableView.reloadData()
+            
+            if self.pathList.isEmpty {
+                self.noDataStackView.isHidden = false
+            } else {
+                self.noDataStackView.isHidden = true
+            }
+            
+            DispatchQueue.main.async {
+                SupportingMethods.shared.turnCoverView(.off)
+            }
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("loadDispatchPathRequestAtBeginning API Error: \(errorMessage)")
+        }
+    }
+    
+    func loadDispatchPathRequest(page: Int) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDispatchPathRequest(page: page, search: self.search) { item in
+            self.page = page
+            
+            let list = item.regularlyList
+            self.pathList.append(contentsOf: list)
+            
+            if !list.isEmpty {
+                self.tableView.reloadData()
+            }
+            
+            if self.pathList.isEmpty {
+                self.noDataStackView.isHidden = false
+            } else {
+                self.noDataStackView.isHidden = true
+            }
+            
+            DispatchQueue.main.async {
+                SupportingMethods.shared.turnCoverView(.off)
+            }
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("loadDispatchPathRequest API Error: \(errorMessage)")
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
 extension DispatchSearchViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
+        
+    }
+    
+    @objc func addGroupData(_ noti: Notification) {
+        
+        SupportingMethods.shared.turnCoverView(.on)
+        guard let group = noti.userInfo?["group"] as? DispatchSearchItemGroupList else {
+            SupportingMethods.shared.turnCoverView(.off)
+            return
+        }
+        
+        self.group = group
+        self.searchController.searchBar.placeholder = "\(group.name)에서 검색합니다."
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            SupportingMethods.shared.turnCoverView(.off)
+        }
+        
     }
 }
 
@@ -176,12 +326,19 @@ extension DispatchSearchViewController: UIGestureRecognizerDelegate {
 }
 
 extension DispatchSearchViewController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
+        let vc = DispatchCategoryViewController(groupList: self.groupList)
+        
+        self.present(vc, animated: true)
+    }
+    
     func updateSearchResults(for searchController: UISearchController) {
         
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
+        self.search = searchBar.text ?? ""
+        self.loadDispatchPathRequestAtBeginning()
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -192,6 +349,31 @@ extension DispatchSearchViewController: UISearchBarDelegate, UISearchControllerD
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         print("searchBarCancelButtonClicked")
+        
+    }
+}
+
+// MARK: - Extension for UITableViewDelegate, UITableViewDataSource
+extension DispatchSearchViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.pathList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchSearchTableViewCell", for: indexPath) as! DispatchSearchTableViewCell
+        
+        cell.setCell()
+        
+        cell.selectionStyle = .none
+        
+        if indexPath.row == self.pathList.count - 1 {
+            self.loadDispatchPathRequest(page: self.page + 1)
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
     }
 }
