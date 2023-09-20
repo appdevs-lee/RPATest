@@ -47,7 +47,7 @@ final class DispatchViewController: UIViewController {
     
     lazy var rightButton: UIButton = {
         let button = UIButton()
-//        button.isHidden = true
+        button.isHidden = true
         button.setImage(UIImage(named: "DayRightButton"), for: .normal)
         button.addTarget(self, action: #selector(tappedMoveDayAfterButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false

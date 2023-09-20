@@ -393,7 +393,7 @@ final class DispatchModel {
             "regularly_id": id
         ]
         
-        self.pathKnowRequest = AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        self.pathKnowRequest = AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
         
         self.pathKnowRequest?.responseData { response in
             switch response.result {
@@ -453,7 +453,7 @@ final class DispatchModel {
             "regularly_id": id
         ]
         
-        self.pathKnowDeleteRequest = AF.request(url, method: .delete, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        self.pathKnowDeleteRequest = AF.request(url, method: .delete, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
         
         self.pathKnowDeleteRequest?.responseData { response in
             switch response.result {
@@ -465,12 +465,12 @@ final class DispatchModel {
                     return
                 }
                 
-//                guard statusCode >= 200 && statusCode < 300 else {
-//                    print("pathKnowDeleteRequest failure: statusCode(\(statusCode))")
-//                    failure?("statusCodeError")
-//                    
-//                    return
-//                }
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("pathKnowDeleteRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
                 
                 if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
                     if decodedData.result == "true" { // result == true

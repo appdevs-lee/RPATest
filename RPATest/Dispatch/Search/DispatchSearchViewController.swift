@@ -418,10 +418,9 @@ extension DispatchSearchViewController: DispatchSearchDelegate {
                 button.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
                 button.setTitle("노선숙지 취소", for: .normal)
                 
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    SupportingMethods.shared.turnCoverView(.off)
-                }
+                SupportingMethods.shared.turnCoverView(.off)
+                self.loadDispatchPathRequestAtBeginning()
+                
             } failure: { errorMessage in
                 SupportingMethods.shared.turnCoverView(.off)
                 print("tapPathKnowButton pathKnowRequest API Error: \(errorMessage)")
@@ -439,10 +438,8 @@ extension DispatchSearchViewController: DispatchSearchDelegate {
                 button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
                 button.setTitle("노선숙지 완료", for: .normal)
                 
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    SupportingMethods.shared.turnCoverView(.off)
-                }
+                SupportingMethods.shared.turnCoverView(.off)
+                self.loadDispatchPathRequestAtBeginning()
             } failure: { errorMessage in
                 SupportingMethods.shared.turnCoverView(.off)
                 print("tapPathKnowDeleteButton pathKnowDeleteRequest API Error: \(errorMessage)")

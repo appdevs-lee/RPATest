@@ -43,10 +43,24 @@ final class DispatchSearchTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    lazy var allStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.leftStackView, self.rightStackView])
+        stackView.axis = .horizontal
+        stackView.spacing = 15
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
     lazy var leftStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [self.departureLabel, self.driveDayLabel])
         stackView.axis = .vertical
         stackView.spacing = 4
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -74,6 +88,9 @@ final class DispatchSearchTableViewCell: UITableViewCell {
         let stackView = UIStackView(arrangedSubviews: [self.arrivalLabel, self.driveTimeLabel])
         stackView.axis = .vertical
         stackView.spacing = 4
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -139,6 +156,7 @@ final class DispatchSearchTableViewCell: UITableViewCell {
     
     lazy var pathKnowRequestButton: UIButton = {
         let button = UIButton()
+        button.addTarget(self, action: #selector(tappedPathKnowButton(_:)), for: .touchUpInside)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 14, weight: .Bold)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
@@ -206,8 +224,7 @@ extension DispatchSearchTableViewCell {
         self.addSubview(self.titleLabel)
         self.addSubview(self.pathKnowBadgeImageView)
         self.addSubview(self.kakaoMapButton)
-        self.addSubview(self.leftStackView)
-        self.addSubview(self.rightStackView)
+        self.addSubview(self.allStackView)
         self.addSubview(self.driverAllowanceLabel)
         self.addSubview(self.precautionsLabel)
         self.addSubview(self.detailedRouteLabel)
@@ -239,24 +256,18 @@ extension DispatchSearchTableViewCell {
             self.kakaoMapButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
-        // leftStackView
+        // allStackView
         NSLayoutConstraint.activate([
-            self.leftStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.leftStackView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 10)
-        ])
-        
-        // rightStackView
-        NSLayoutConstraint.activate([
-            self.rightStackView.leadingAnchor.constraint(equalTo: self.leftStackView.trailingAnchor, constant: 24),
-            self.rightStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.rightStackView.centerYAnchor.constraint(equalTo: self.leftStackView.centerYAnchor)
+            self.allStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.allStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.allStackView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 10)
         ])
         
         // driverAllowanceLabel
         NSLayoutConstraint.activate([
             self.driverAllowanceLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             self.driverAllowanceLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.driverAllowanceLabel.topAnchor.constraint(equalTo: self.leftStackView.bottomAnchor, constant: 5)
+            self.driverAllowanceLabel.topAnchor.constraint(equalTo: self.allStackView.bottomAnchor, constant: 5)
         ])
         
         // precautionsLabel
@@ -310,13 +321,11 @@ extension DispatchSearchTableViewCell {
         self.detailedRouteTextView.text = searchResult.detailedRoute
         
         if searchResult.know == "true"{
-            self.pathKnowRequestButton.addTarget(self, action: #selector(tappedPathKnowDeleteButton(_:)), for: .touchUpInside)
             self.pathKnowRequestButton.setTitle("노선숙지 취소", for: .normal)
             self.pathKnowRequestButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
             self.pathKnowBadgeImageView.isHidden = false
             
         } else {
-            self.pathKnowRequestButton.addTarget(self, action: #selector(tappedPathKnowButton(_:)), for: .touchUpInside)
             self.pathKnowRequestButton.setTitle("노선숙지 완료", for: .normal)
             self.pathKnowRequestButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
             self.pathKnowBadgeImageView.isHidden = true
@@ -333,13 +342,17 @@ extension DispatchSearchTableViewCell {
 // MARK: - Extension for selectors added
 extension DispatchSearchTableViewCell {
     @objc func tappedPathKnowButton(_ sender: UIButton) {
-        guard let id = self.searchResult?.id else { return }
-        self.delegate?.tapPathKnowButton(id: id, button: self.pathKnowRequestButton)
+        if self.searchResult?.know == "true" {
+            guard let id = self.searchResult?.id else { return }
+            self.delegate?.tapPathKnowDeleteButton(id: id, button: self.pathKnowRequestButton)
+        } else {
+            guard let id = self.searchResult?.id else { return }
+            self.delegate?.tapPathKnowButton(id: id, button: self.pathKnowRequestButton)
+        }
     }
     
     @objc func tappedPathKnowDeleteButton(_ sender: UIButton) {
-        guard let id = self.searchResult?.id else { return }
-        self.delegate?.tapPathKnowDeleteButton(id: id, button: self.pathKnowRequestButton)
+        
     }
     
     @objc func tappedKakaoMapButton(_ sender: UIButton) {
