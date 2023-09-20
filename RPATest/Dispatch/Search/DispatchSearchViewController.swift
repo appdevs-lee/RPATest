@@ -70,6 +70,7 @@ final class DispatchSearchViewController: UIViewController {
     var group: DispatchSearchItemGroupList?
     var search: String = ""
     var page: Int = 1
+    var nextRequest: String?
     
     var pathList: [DispatchPathRegularlyList] = []
     
@@ -238,6 +239,7 @@ extension DispatchSearchViewController {
         self.loadDispatchPathRequest(page: 1, search: self.search) { item in
             self.page = 1
             self.pathList = item.regularlyList
+            self.nextRequest = item.next
             
             self.tableView.reloadData()
             
@@ -261,6 +263,7 @@ extension DispatchSearchViewController {
         SupportingMethods.shared.turnCoverView(.on)
         self.loadDispatchPathRequest(page: page, search: self.search) { item in
             self.page = page
+            self.nextRequest = item.next
             
             let list = item.regularlyList
             self.pathList.append(contentsOf: list)
@@ -283,6 +286,33 @@ extension DispatchSearchViewController {
             print("loadDispatchPathRequest API Error: \(errorMessage)")
         }
 
+    }
+    
+    func pathKnowRequest(id: Int, success: ((DispatchPathKnowItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.pathKnowRequest(id: id) { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
+    
+    func pathKnowDeleteRequest(id: Int, success: (() -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.pathKnowDeleteRequest(id: id) { 
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
     }
 }
 
@@ -361,12 +391,14 @@ extension DispatchSearchViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchSearchTableViewCell", for: indexPath) as! DispatchSearchTableViewCell
+        let searchResult = self.pathList[indexPath.row]
         
-        cell.setCell()
+        cell.setCell(searchResult: searchResult)
+        cell.delegate = self
         
         cell.selectionStyle = .none
         
-        if indexPath.row == self.pathList.count - 1 {
+        if indexPath.row == self.pathList.count - 1 && self.nextRequest != nil {
             self.loadDispatchPathRequest(page: self.page + 1)
         }
         
@@ -375,5 +407,54 @@ extension DispatchSearchViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+    }
+}
+
+extension DispatchSearchViewController: DispatchSearchDelegate {
+    func tapPathKnowButton(id: Int, button: UIButton) {
+        let vc = AlertPopViewController(.normalTwoButton(messageTitle: "노선 숙지가 완료되었습니까?", messageContent: "", leftButtonTitle: "취소", leftAction: { }, rightButtonTitle: "확인", rightAction: {
+            SupportingMethods.shared.turnCoverView(.on)
+            self.pathKnowRequest(id: id) { item in
+                button.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                button.setTitle("노선숙지 취소", for: .normal)
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    SupportingMethods.shared.turnCoverView(.off)
+                }
+            } failure: { errorMessage in
+                SupportingMethods.shared.turnCoverView(.off)
+                print("tapPathKnowButton pathKnowRequest API Error: \(errorMessage)")
+                
+            }
+        }))
+        
+        self.present(vc, animated: false)
+    }
+    
+    func tapPathKnowDeleteButton(id: Int, button: UIButton) {
+        let vc = AlertPopViewController(.normalTwoButton(messageTitle: "노선 숙지를 취소하시겠습니까?", messageContent: "", leftButtonTitle: "취소", leftAction: { }, rightButtonTitle: "확인", rightAction: {
+            SupportingMethods.shared.turnCoverView(.on)
+            self.pathKnowDeleteRequest(id: id) {
+                button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+                button.setTitle("노선숙지 완료", for: .normal)
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    SupportingMethods.shared.turnCoverView(.off)
+                }
+            } failure: { errorMessage in
+                SupportingMethods.shared.turnCoverView(.off)
+                print("tapPathKnowDeleteButton pathKnowDeleteRequest API Error: \(errorMessage)")
+                
+            }
+        }))
+        
+        self.present(vc, animated: false)
+    }
+    
+    func tapKakaoMapButton(mapLink: String) {
+        guard let url = URL(string: mapLink) else { return }
+        UIApplication.shared.open(url)
     }
 }

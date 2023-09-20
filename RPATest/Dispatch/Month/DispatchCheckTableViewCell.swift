@@ -341,7 +341,7 @@ extension DispatchCheckTableViewCell {
     func setCell(info: DispatchRegularlyItem) {
         self.info = info
         self.mapLink = info.maplink
-        self.driveTitleLabel.text = "\(info.group) - \(info.route)" 
+        self.driveTitleLabel.text = "\(info.group) - \(info.route)"
         
         self.startTimeLabel.text = "\(info.departureDate.split(separator: " ").last!)"
         self.passengerCountLabel.text = "00명"

@@ -15,6 +15,8 @@ final class DispatchModel {
     private(set) var checkPatchDispatchRequest: DataRequest?
     private(set) var loadDispatchGroupListRequest: DataRequest?
     private(set) var loadDispatchPathRequest: DataRequest?
+    private(set) var pathKnowRequest: DataRequest?
+    private(set) var pathKnowDeleteRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -379,6 +381,119 @@ final class DispatchModel {
         }
     }
     
+    func pathKnowRequest(id: Int, success: ((DispatchPathKnowItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/regularly/know"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "regularly_id": id
+        ]
+        
+        self.pathKnowRequest = AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.pathKnowRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("pathKnowRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("pathKnowRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        if let decodedData = try? JSONDecoder().decode(DispatchPathKnow.self, from: data) {
+                            print("pathKnowRequest succeeded")
+                            success?(decodedData.data)
+                                                
+                        } else {
+                            print("pathKnowRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else { // result == false
+                        print("pathKnowRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                        
+                    }
+                    
+                } else { // improper structure
+                    print("pathKnowRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("pathKnowRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    func pathKnowDeleteRequest(id: Int, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/regularly/know"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "regularly_id": id
+        ]
+        
+        self.pathKnowDeleteRequest = AF.request(url, method: .delete, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.pathKnowDeleteRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("pathKnowDeleteRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+//                guard statusCode >= 200 && statusCode < 300 else {
+//                    print("pathKnowDeleteRequest failure: statusCode(\(statusCode))")
+//                    failure?("statusCodeError")
+//                    
+//                    return
+//                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        success?()
+                        
+                    } else { // result == false
+                        print("pathKnowDeleteRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                        
+                    }
+                    
+                } else { // improper structure
+                    print("pathKnowDeleteRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("pathKnowDeleteRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
 }
 
 struct DispatchMonthly: Codable {
@@ -588,8 +703,8 @@ struct DispatchPathRegularlyList: Codable {
     let driverAllowance: String
     let number1: String
     let number2: String
-    let num1: String
-    let num2: String
+    let num1: Int
+    let num2: Int
     let week: String
     let workType: String
     let route: String
@@ -597,7 +712,6 @@ struct DispatchPathRegularlyList: Codable {
     let detailedRoute : String
     let maplink: String
     let use: String
-    let group: Int
     let creator: Int
     
     enum CodingKeys: String ,CodingKey {
@@ -621,42 +735,23 @@ struct DispatchPathRegularlyList: Codable {
         case detailedRoute = "detailed_route"
         case maplink
         case use
-        case group
         case creator
     }
 }
 
-/*
- "result": "true",
- "data": {
-     "count": 44,
-     "next": "http://34.121.50.23:8000/dispatch/regularly?group=&page=2&search=",
-     "previous": null,
-     "regularly_list": [
-         {
-             "id": 886,
-             "know": "true",
-             "references": "과천농협(06:15),법정공휴일 다음날은 월요일과 동일하게 운행",
-             "departure": "과천1(과천농협)",
-             "arrival": "남양연구소출근",
-             "departure_time": "06:15",
-             "arrival_time": "07:15",
-             "price": "164000",
-             "driver_allowance": "15000",
-             "number1": "1",
-             "number2": "0",
-             "num1": 1,
-             "num2": 0,
-             "week": "월",
-             "work_type": "출근",
-             "route": "과천1",
-             "location": "",
-             "detailed_route": "과천농협(06:15)",
-             "maplink": "http://kko.to/fxqRwtmjBT",
-             "use": "사용",
-             "pub_date": "2023-05-01T10:59:17.259323",
-             "updated_at": "2023-07-20T13:00:29.340872",
-             "group": 32,
-             "creator": 86
-         },
- */
+struct DispatchPathKnow: Codable {
+    let result: String
+    let data: DispatchPathKnowItem
+}
+
+struct DispatchPathKnowItem: Codable {
+    let id: Int
+    let regularlyId: Int
+    let driverId: Int
+    
+    enum CodingKeys: String ,CodingKey {
+        case id
+        case regularlyId = "regularly_id"
+        case driverId = "driver_id"
+    }
+}
