@@ -1,17 +1,24 @@
 //
-//  OfficeViewController.swift
+//  CheckPermissionViewController.swift
 //  RPATest
 //
-//  Created by 이주성 on 2023/09/03.
+//  Created by Awesomepia on 2023/09/21.
 //
 
 import UIKit
 
-final class OfficeViewController: UIViewController {
+final class CheckPermissionViewController: UIViewController {
+    
+    let commonModel = CommonModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Pop Slide
+//        if self.navigationController?.viewControllers.first === self  {
+//            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+//        }
+        
         self.setViewFoundation()
         self.initializeObjects()
         self.setDelegates()
@@ -32,13 +39,27 @@ final class OfficeViewController: UIViewController {
 //        return .portrait
 //    }
     
+    @IBAction func tapCheckButton(_ sender: UIButton) {
+        self.commonModel.registerForPushNotifications {
+            self.commonModel.checkAlbumPermission { result in
+                print(result)
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true) {
+                        UserDefaults.standard.set("Check", forKey: "CheckPermission")
+                        NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
+                    }
+                }
+            }
+        }
+    }
+    
     deinit {
             print("----------------------------------- TemplateViewController is disposed -----------------------------------")
     }
 }
 
 // MARK: Extension for essential methods
-extension OfficeViewController: EssentialViewMethods {
+extension CheckPermissionViewController: EssentialViewMethods {
     func setViewFoundation() {
         
     }
@@ -100,15 +121,19 @@ extension OfficeViewController: EssentialViewMethods {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationItem.titleView = self.setUpNavigationTitle()
+        self.navigationItem.title = "킹버스"
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
     }
 }
 
 // MARK: - Extension for methods added
-extension OfficeViewController {
+extension CheckPermissionViewController {
     
 }
 
 // MARK: - Extension for selector methods
-extension OfficeViewController {
-    
+extension CheckPermissionViewController {
+    @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
+        
+    }
 }

@@ -10,6 +10,26 @@
 		053C55D42AA9AB86006A6D93 /* OrganizationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053C55D32AA9AB86006A6D93 /* OrganizationTableViewCell.swift */; };
 		055C2E6E2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055C2E6D2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift */; };
 		055C2E702AB9577E00726CD7 /* DispatchSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055C2E6F2AB9577E00726CD7 /* DispatchSearchTableViewCell.swift */; };
+		056A34502ABBC53C00829750 /* OfficeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A344F2ABBC53C00829750 /* OfficeModel.swift */; };
+		056A34522ABBCC4200829750 /* CheckPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34512ABBCC4200829750 /* CheckPermissionViewController.swift */; };
+		056A34542ABBDAA700829750 /* OfficeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34532ABBDAA700829750 /* OfficeCollectionViewCell.swift */; };
+		056A34582ABBDE9C00829750 /* NoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34572ABBDE9C00829750 /* NoticeViewController.swift */; };
+		056A345A2ABBE1D700829750 /* NoticeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34592ABBE1D700829750 /* NoticeTableViewCell.swift */; };
+		056A345C2ABBF6D400829750 /* NoticeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A345B2ABBF6D400829750 /* NoticeModel.swift */; };
+		056A345E2ABC054700829750 /* NoticeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A345D2ABC054700829750 /* NoticeDetailViewController.swift */; };
+		056A34602ABC071200829750 /* NoticeDetailTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A345F2ABC071200829750 /* NoticeDetailTitleTableViewCell.swift */; };
+		056A34622ABC072F00829750 /* NoticeDetailTextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34612ABC072F00829750 /* NoticeDetailTextTableViewCell.swift */; };
+		056A34652ABC0EF000829750 /* InspectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34642ABC0EF000829750 /* InspectionViewController.swift */; };
+		056A34672ABC0FED00829750 /* InspectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34662ABC0FED00829750 /* InspectionTableViewCell.swift */; };
+		056A34692ABC13CC00829750 /* InspectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34682ABC13CC00829750 /* InspectionModel.swift */; };
+		056A346B2ABC193B00829750 /* InspectionCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A346A2ABC193B00829750 /* InspectionCreateViewController.swift */; };
+		056A346D2ABC1D4400829750 /* AddingContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A346C2ABC1D4400829750 /* AddingContentCell.swift */; };
+		056A346F2ABC1D7300829750 /* IndexPathButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A346E2ABC1D7300829750 /* IndexPathButton.swift */; };
+		056A34712ABC317F00829750 /* InspectionVehicleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34702ABC317F00829750 /* InspectionVehicleListViewController.swift */; };
+		056A34732ABC31B400829750 /* InspectionVehicleListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34722ABC31B400829750 /* InspectionVehicleListTableViewCell.swift */; };
+		056A34762ABC393700829750 /* ConsultingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34752ABC393700829750 /* ConsultingModel.swift */; };
+		056A34782ABC394600829750 /* ConsultingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34772ABC394600829750 /* ConsultingTableViewCell.swift */; };
+		056A347A2ABC394E00829750 /* ConsultingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34792ABC394E00829750 /* ConsultingViewController.swift */; };
 		057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */; };
 		057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */; };
 		057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */; };
@@ -55,6 +75,26 @@
 		053C55D32AA9AB86006A6D93 /* OrganizationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationTableViewCell.swift; sourceTree = "<group>"; };
 		055C2E6D2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCategoryTableViewCell.swift; sourceTree = "<group>"; };
 		055C2E6F2AB9577E00726CD7 /* DispatchSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSearchTableViewCell.swift; sourceTree = "<group>"; };
+		056A344F2ABBC53C00829750 /* OfficeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfficeModel.swift; sourceTree = "<group>"; };
+		056A34512ABBCC4200829750 /* CheckPermissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckPermissionViewController.swift; sourceTree = "<group>"; };
+		056A34532ABBDAA700829750 /* OfficeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfficeCollectionViewCell.swift; sourceTree = "<group>"; };
+		056A34572ABBDE9C00829750 /* NoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeViewController.swift; sourceTree = "<group>"; };
+		056A34592ABBE1D700829750 /* NoticeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeTableViewCell.swift; sourceTree = "<group>"; };
+		056A345B2ABBF6D400829750 /* NoticeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeModel.swift; sourceTree = "<group>"; };
+		056A345D2ABC054700829750 /* NoticeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeDetailViewController.swift; sourceTree = "<group>"; };
+		056A345F2ABC071200829750 /* NoticeDetailTitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeDetailTitleTableViewCell.swift; sourceTree = "<group>"; };
+		056A34612ABC072F00829750 /* NoticeDetailTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeDetailTextTableViewCell.swift; sourceTree = "<group>"; };
+		056A34642ABC0EF000829750 /* InspectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionViewController.swift; sourceTree = "<group>"; };
+		056A34662ABC0FED00829750 /* InspectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionTableViewCell.swift; sourceTree = "<group>"; };
+		056A34682ABC13CC00829750 /* InspectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionModel.swift; sourceTree = "<group>"; };
+		056A346A2ABC193B00829750 /* InspectionCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionCreateViewController.swift; sourceTree = "<group>"; };
+		056A346C2ABC1D4400829750 /* AddingContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingContentCell.swift; sourceTree = "<group>"; };
+		056A346E2ABC1D7300829750 /* IndexPathButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexPathButton.swift; sourceTree = "<group>"; };
+		056A34702ABC317F00829750 /* InspectionVehicleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionVehicleListViewController.swift; sourceTree = "<group>"; };
+		056A34722ABC31B400829750 /* InspectionVehicleListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionVehicleListTableViewCell.swift; sourceTree = "<group>"; };
+		056A34752ABC393700829750 /* ConsultingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsultingModel.swift; sourceTree = "<group>"; };
+		056A34772ABC394600829750 /* ConsultingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsultingTableViewCell.swift; sourceTree = "<group>"; };
+		056A34792ABC394E00829750 /* ConsultingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsultingViewController.swift; sourceTree = "<group>"; };
 		057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckOrderTableViewCell.swift; sourceTree = "<group>"; };
 		057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckPopViewController.swift; sourceTree = "<group>"; };
 		057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckDenyViewController.swift; sourceTree = "<group>"; };
@@ -113,6 +153,53 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		056A34552ABBDE4400829750 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				5FCC11732AA46DD900550534 /* OfficeViewController.swift */,
+				056A34532ABBDAA700829750 /* OfficeCollectionViewCell.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		056A34562ABBDE6000829750 /* Notice */ = {
+			isa = PBXGroup;
+			children = (
+				056A345B2ABBF6D400829750 /* NoticeModel.swift */,
+				056A34572ABBDE9C00829750 /* NoticeViewController.swift */,
+				056A34592ABBE1D700829750 /* NoticeTableViewCell.swift */,
+				056A345D2ABC054700829750 /* NoticeDetailViewController.swift */,
+				056A345F2ABC071200829750 /* NoticeDetailTitleTableViewCell.swift */,
+				056A34612ABC072F00829750 /* NoticeDetailTextTableViewCell.swift */,
+			);
+			path = Notice;
+			sourceTree = "<group>";
+		};
+		056A34632ABC0EDE00829750 /* Inspection */ = {
+			isa = PBXGroup;
+			children = (
+				056A34682ABC13CC00829750 /* InspectionModel.swift */,
+				056A34642ABC0EF000829750 /* InspectionViewController.swift */,
+				056A34662ABC0FED00829750 /* InspectionTableViewCell.swift */,
+				056A346A2ABC193B00829750 /* InspectionCreateViewController.swift */,
+				056A346C2ABC1D4400829750 /* AddingContentCell.swift */,
+				056A34702ABC317F00829750 /* InspectionVehicleListViewController.swift */,
+				056A34722ABC31B400829750 /* InspectionVehicleListTableViewCell.swift */,
+				056A346E2ABC1D7300829750 /* IndexPathButton.swift */,
+			);
+			path = Inspection;
+			sourceTree = "<group>";
+		};
+		056A34742ABC38BF00829750 /* Consulting */ = {
+			isa = PBXGroup;
+			children = (
+				056A34752ABC393700829750 /* ConsultingModel.swift */,
+				056A34792ABC394E00829750 /* ConsultingViewController.swift */,
+				056A34772ABC394600829750 /* ConsultingTableViewCell.swift */,
+			);
+			path = Consulting;
+			sourceTree = "<group>";
+		};
 		0582C5A42AB8215E0045CBCB /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -222,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				5F1BB0B62A03D6B30081DBBE /* LoginModel.swift */,
+				056A34512ABBCC4200829750 /* CheckPermissionViewController.swift */,
 				5FCD8D402A6B9C82000AFC3F /* CompanyEnterViewController.swift */,
 				5F1BB0B32A03D5300081DBBE /* LoginViewController.swift */,
 			);
@@ -249,7 +337,11 @@
 		5FCC11722AA46D9300550534 /* Office */ = {
 			isa = PBXGroup;
 			children = (
-				5FCC11732AA46DD900550534 /* OfficeViewController.swift */,
+				056A344F2ABBC53C00829750 /* OfficeModel.swift */,
+				056A34552ABBDE4400829750 /* Home */,
+				056A34562ABBDE6000829750 /* Notice */,
+				056A34632ABC0EDE00829750 /* Inspection */,
+				056A34742ABC38BF00829750 /* Consulting */,
 			);
 			path = Office;
 			sourceTree = "<group>";
@@ -425,32 +517,52 @@
 				055C2E6E2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift in Sources */,
 				5FCC11742AA46DD900550534 /* OfficeViewController.swift in Sources */,
 				5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */,
+				056A34522ABBCC4200829750 /* CheckPermissionViewController.swift in Sources */,
 				5FE29CC22A7E1588000748FC /* TabBarController.swift in Sources */,
 				5FE29CBE2A7E142A000748FC /* AlertPopViewController.swift in Sources */,
 				5F1BB0B42A03D5300081DBBE /* LoginViewController.swift in Sources */,
 				057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */,
 				5FCC116F2AA4638500550534 /* DispatchTableViewCell.swift in Sources */,
+				056A34782ABC394600829750 /* ConsultingTableViewCell.swift in Sources */,
 				5FCC11782AA46DE900550534 /* ProfileViewController.swift in Sources */,
 				5F1A16232A74EECB00132D29 /* ReferenceValues.swift in Sources */,
+				056A34652ABC0EF000829750 /* InspectionViewController.swift in Sources */,
+				056A347A2ABC394E00829750 /* ConsultingViewController.swift in Sources */,
 				5FD8CC9D2A6BADC900D9C6D7 /* CommonModel.swift in Sources */,
 				5F680E9C2AA56CA40047ED65 /* ProfileCollectionViewCell.swift in Sources */,
+				056A34762ABC393700829750 /* ConsultingModel.swift in Sources */,
 				0582C5AA2AB842BF0045CBCB /* DispatchCategoryViewController.swift in Sources */,
+				056A345C2ABBF6D400829750 /* NoticeModel.swift in Sources */,
 				5FD49D152AA31BBA00208273 /* TemplateViewController.swift in Sources */,
+				056A34582ABBDE9C00829750 /* NoticeViewController.swift in Sources */,
+				056A34712ABC317F00829750 /* InspectionVehicleListViewController.swift in Sources */,
+				056A34672ABC0FED00829750 /* InspectionTableViewCell.swift in Sources */,
+				056A346D2ABC1D4400829750 /* AddingContentCell.swift in Sources */,
 				5FD49D1B2AA31BFF00208273 /* TemplateCollectionViewCell.swift in Sources */,
 				057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */,
 				5F1BB09F2A03D1210081DBBE /* AppDelegate.swift in Sources */,
+				056A345E2ABC054700829750 /* NoticeDetailViewController.swift in Sources */,
+				056A346B2ABC193B00829750 /* InspectionCreateViewController.swift in Sources */,
 				5FD49D192AA31BEE00208273 /* TemplateHeaderFooterView.swift in Sources */,
 				055C2E702AB9577E00726CD7 /* DispatchSearchTableViewCell.swift in Sources */,
 				057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */,
 				057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */,
+				056A346F2ABC1D7300829750 /* IndexPathButton.swift in Sources */,
+				056A34542ABBDAA700829750 /* OfficeCollectionViewCell.swift in Sources */,
+				056A34602ABC071200829750 /* NoticeDetailTitleTableViewCell.swift in Sources */,
+				056A34622ABC072F00829750 /* NoticeDetailTextTableViewCell.swift in Sources */,
+				056A34692ABC13CC00829750 /* InspectionModel.swift in Sources */,
 				5F1BB0A12A03D1210081DBBE /* SceneDelegate.swift in Sources */,
 				5FCC11762AA46DE200550534 /* OrganizationViewController.swift in Sources */,
 				5FCC116D2AA3444300550534 /* DispatchModel.swift in Sources */,
 				5F1BB0B92A03D92E0081DBBE /* UserInfo.swift in Sources */,
+				056A345A2ABBE1D700829750 /* NoticeTableViewCell.swift in Sources */,
 				053C55D42AA9AB86006A6D93 /* OrganizationTableViewCell.swift in Sources */,
 				0582C5A82AB8218D0045CBCB /* DispatchSearchViewController.swift in Sources */,
 				5F1BB0B72A03D6B30081DBBE /* LoginModel.swift in Sources */,
+				056A34502ABBC53C00829750 /* OfficeModel.swift in Sources */,
 				5FD49D102AA31A7700208273 /* DispatchViewController.swift in Sources */,
+				056A34732ABC31B400829750 /* InspectionVehicleListTableViewCell.swift in Sources */,
 				5F1A16212A74EDF100132D29 /* SupportingMethods.swift in Sources */,
 				057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */,
 				5FD49D172AA31BCA00208273 /* TemplateTableViewCell.swift in Sources */,
@@ -602,7 +714,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = RPATest/RPATest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3C347T67DV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RPATest/Info.plist;
@@ -638,7 +750,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = RPATest/RPATest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3C347T67DV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RPATest/Info.plist;

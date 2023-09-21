@@ -70,6 +70,7 @@ class LoginViewController: UIViewController {
         
         self.setSubViews()
         self.setLayouts()
+        NotificationCenter.default.addObserver(self, selector: #selector(presentCompanyEnterView), name: Notification.Name("PermissionComplete"), object: nil)
     }
     
     @IBAction func tapLoginButton(_ sender: UIButton) {
@@ -81,7 +82,7 @@ class LoginViewController: UIViewController {
             self.alertLabel.text = "아이디와 비밀번호를 입력해주세요."
         } else {
             self.loginRequest(id: self.idTextField.text!, pwd: self.pwdTextField.text!) { info in
-                UserInfo.shared.access = info.access
+                UserInfo.shared.access = "Bearer " + info.access
                 UserInfo.shared.name = info.authenticatedUser.name
                 UserDefaults.standard.set(info.authenticatedUser.name, forKey: "name")
                 UserDefaults.standard.set(info.refresh, forKey: "refreshToken")
@@ -214,6 +215,16 @@ extension LoginViewController {
 
 // MARK: - Extension for Selectors Added
 extension LoginViewController {
+    @objc func presentCompanyEnterView() {
+        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "CompanyEnterViewController") else { return }
+        
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: false) {
+            self.backGroundView.isHidden = true
+            self.progressView.progress = 0
+        }
+    }
+    
     @objc func updateProgressView() {
         self.progressView.progress += 0.01
         self.progressView.setProgress(self.progressView.progress, animated: true)
@@ -263,12 +274,19 @@ extension LoginViewController {
                 }
                 
             } else {
-                guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "CompanyEnterViewController") else { return }
-                
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: false) {
-                    self.backGroundView.isHidden = true
-                    self.progressView.progress = 0
+                if self.commonModel.getPermissionCheck() == "Check" {
+                    guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "CompanyEnterViewController") else { return }
+                    
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: false) {
+                        self.backGroundView.isHidden = true
+                        self.progressView.progress = 0
+                    }
+                } else {
+                    guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "CheckPermissionViewController") else { return }
+                    
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: false)
                 }
             }
         }

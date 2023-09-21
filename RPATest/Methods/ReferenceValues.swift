@@ -37,4 +37,11 @@ extension ReferenceValues {
     struct Velocity {
         static let hideBottomView: CGFloat = 650
     }
+    
+    struct TextCount {
+        struct Comment {
+            static let comment: Int = 150
+            static let subComment: Int = 150
+        }
+    }
 }

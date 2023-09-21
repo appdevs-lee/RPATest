@@ -359,7 +359,14 @@ extension DispatchSearchViewController: UISearchBarDelegate, UISearchControllerD
     func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
         let vc = DispatchCategoryViewController(groupList: self.groupList)
         
-        self.present(vc, animated: true)
+        self.present(vc, animated: true) {
+            self.pathList = []
+            self.searchController.searchBar.text = ""
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -373,6 +380,11 @@ extension DispatchSearchViewController: UISearchBarDelegate, UISearchControllerD
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         print("searchBarShouldBeginEditing")
+        self.pathList = []
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
         
         return true
     }

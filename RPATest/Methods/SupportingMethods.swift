@@ -7,10 +7,17 @@
 
 import Foundation
 import UIKit
+import Photos
+import PhotosUI
 
 enum CoverViewState {
     case on
     case off
+}
+
+enum PickerType {
+    case image
+    case video
 }
 
 class SupportingMethods {
@@ -420,6 +427,106 @@ extension SupportingMethods {
         
         return Calendar.current.date(byAdding: component, value: value, to: selectedDate!)!
     }
+    
+    // MARK: About time
+    func makeDateFormatter(_ format: String) -> DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR") //Locale.current
+        dateFormatter.timeZone = TimeZone(abbreviation: "KST")!
+        dateFormatter.dateFormat = format
+        
+        return dateFormatter
+    }
+    
+    func calculatePassedTime(_ targetDate: Date?) -> String? {
+        guard let targetDate = targetDate else {
+            return nil
+        }
+        
+        let now: Int = Int(Date().timeIntervalSince1970)
+        let target = Int(targetDate.timeIntervalSince1970)
+        let seconds = now - target // time interval between now and target time
+        
+        if seconds < 3600 { // 1시간 미만
+            let minutes = seconds / 60
+            if minutes <= 0 {
+                return "방금전"
+                
+            } else {
+                return "\(minutes)분 전"
+            }
+            
+        } else if seconds >= 3600 && seconds < 3600 * 24 { // 1시간 이상 1일(24시간) 미만
+            let hours = seconds / 3600
+            return "\(hours)시간 전"
+            
+        } else if seconds >= 3600 * 24 && seconds < 3600 * 24 * 7 { // 1일 이상 1주일(7일) 미만
+            let days = seconds / (3600 * 24)
+            return "\(days)일 전"
+            
+        } else { // 1주일(7일) 이상
+            let dateFormatter = self.makeDateFormatter("yy.MM.dd")
+            return dateFormatter.string(from: targetDate)
+        }
+    }
+    
+    // MARK: Manage contents (photo / movie)
+    func gatherDataFromPickedContents(index: Int, pickerType: PickerType, pickedResults: [String:PHPickerResult], selectedIdentifiers: [String], contentsMetaData: [String:PHAsset], contentsData: [String:Data], success: ((_ pickedResults: [String:PHPickerResult], _ selectedIdentifiers: [String], _ contentsData: [String:Data], _ contentMetaData: [String:PHAsset]) -> ())?, failure: (() -> ())?) {
+        var index = index
+        let count = selectedIdentifiers.count
+        var contentsData = contentsData
+        
+        guard index < count else {
+            DispatchQueue.main.async {
+                success?(pickedResults, selectedIdentifiers, contentsData, contentsMetaData)
+            }
+            
+            return
+        }
+        
+        if pickerType == .image {
+            if let itemProvider = (pickedResults[selectedIdentifiers[index]])?.itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                    if let self = self, let image = image as? UIImage, let imageData = image.fixedOrientaion.jpegData(compressionQuality: 0.1) {
+                        DispatchQueue.main.async {
+                            contentsData.updateValue(imageData, forKey: selectedIdentifiers[index])
+                            
+                            index += 1
+                            self.gatherDataFromPickedContents(index: index, pickerType: pickerType, pickedResults: pickedResults, selectedIdentifiers: selectedIdentifiers, contentsMetaData: contentsMetaData, contentsData: contentsData, success: success, failure: failure)
+                        }
+                        
+                    } else {
+                        DispatchQueue.main.async {
+                            failure?()
+                        }
+                    }
+                }
+                
+            } else if let itemProvider = (pickedResults[selectedIdentifiers[index]])?.itemProvider, itemProvider.hasItemConformingToTypeIdentifier(UTType.webP.identifier) {
+                itemProvider.loadDataRepresentation(forTypeIdentifier: UTType.webP.identifier) { data, error in
+                    if let data = data, let _ = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            contentsData.updateValue(data, forKey: selectedIdentifiers[index])
+                            
+                            index += 1
+                            self.gatherDataFromPickedContents(index: index, pickerType: pickerType, pickedResults: pickedResults, selectedIdentifiers: selectedIdentifiers, contentsMetaData: contentsMetaData, contentsData: contentsData, success: success, failure: failure)
+                        }
+                        
+                    } else {
+                        DispatchQueue.main.async {
+                            failure?()
+                        }
+                    }
+                }
+                
+            } else {
+                DispatchQueue.main.async {
+                    failure?()
+                }
+            }
+            
+        }
+    }
 }
 
 extension CALayer {
@@ -477,6 +584,66 @@ extension UIColor {
         return UIColor(red: red / CGFloat(255), green: green / CGFloat(255), blue: blue / CGFloat(255), alpha: alpha)
     }
 }
+
+extension UIImage {
+    var fixedOrientaion: UIImage {
+        if self.imageOrientation == .up {
+                return self
+            }
+        
+            var transform: CGAffineTransform = CGAffineTransform.identity
+            switch self.imageOrientation {
+            case .down, .downMirrored:
+                transform = transform.translatedBy(x: self.size.width, y: self.size.height)
+                transform = transform.rotated(by: CGFloat(Double.pi))
+                
+            case .left, .leftMirrored:
+                transform = transform.translatedBy(x: self.size.width, y: 0)
+                transform = transform.rotated(by: CGFloat(Double.pi / 2))
+                
+            case .right, .rightMirrored:
+                transform = transform.translatedBy(x: 0, y: self.size.height)
+                transform = transform.rotated(by: CGFloat(-(Double.pi / 2)))
+            default: // .up, .upMirrored
+                break
+            }
+
+            switch self.imageOrientation {
+            case .upMirrored, .downMirrored:
+                //transform.translatedBy(x: self.size.width, y: 0)
+                //transform.scaledBy(x: -1, y: 1)
+                CGAffineTransformTranslate(transform, size.width, 0)
+                CGAffineTransformScale(transform, -1, 1)
+                
+            case .leftMirrored, .rightMirrored:
+                //transform.translatedBy(x: self.size.height, y: 0)
+                //transform.scaledBy(x: -1, y: 1)
+                CGAffineTransformTranslate(transform, size.height, 0)
+                CGAffineTransformScale(transform, -1, 1)
+                
+            default: // .up, .down, .left, .right
+                break
+            }
+
+            let ctx:CGContext = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height), bitsPerComponent: (self.cgImage)!.bitsPerComponent, bytesPerRow: 0, space: (self.cgImage)!.colorSpace!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+
+            ctx.concatenate(transform)
+
+            switch self.imageOrientation {
+            case .left, .leftMirrored, .right, .rightMirrored:
+                ctx.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.height, height: self.size.width))
+                
+            default:
+                ctx.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+            }
+
+            let cgimg:CGImage = ctx.makeImage()!
+            let img:UIImage = UIImage(cgImage: cgimg)
+
+            return img
+    }
+}
+
 
 // MARK: - View Protocol
 protocol EssentialViewMethods {

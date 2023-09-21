@@ -13,8 +13,8 @@ final class ProfileCollectionViewCell: UICollectionViewCell {
         let stackView = UIStackView(arrangedSubviews: [self.menuImageView, self.menuLabel])
         stackView.axis = .vertical
         stackView.spacing = 12
-        stackView.alignment = .fill
-        stackView.distribution = .fill
+        stackView.alignment = .center
+        stackView.distribution = .equalCentering
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView

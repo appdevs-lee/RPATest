@@ -18,14 +18,14 @@ class CompanyEnterViewController: UIViewController {
 
     @IBAction func tapNextButton(_ sender: UIButton) {
         if self.companyEnterTextField.text == "dev" {
-            self.dismiss(animated: true) {
+            self.dismiss(animated: false) {
                 UserDefaults.standard.set("Y", forKey: "CompanyCheck")
                 
                 Server.shared.currentURL = ServerURL.DEV.rawValue
                 UserDefaults.standard.set(ServerURL.DEV.rawValue, forKey: "currentURL")
             }
         } else if self.companyEnterTextField.text == "성화투어" {
-            self.dismiss(animated: true) {
+            self.dismiss(animated: false) {
                 UserDefaults.standard.set("Y", forKey: "CompanyCheck")
                 
                 Server.shared.currentURL = ServerURL.PROD.rawValue
