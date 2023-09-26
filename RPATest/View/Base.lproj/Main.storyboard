@@ -244,7 +244,7 @@
         <!--배차-->
         <scene sceneID="JgF-KQ-ypZ">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="85a-wu-RGL" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavigationViewController" automaticallyAdjustsScrollViewInsets="NO" id="85a-wu-RGL" customClass="NavigationViewController" customModule="RPATest" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="배차" image="dispatch" selectedImage="selectedDispatch" id="5mY-L2-Ba2"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="XIf-kr-yyt">

@@ -210,7 +210,7 @@ extension DispatchViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(dispatchCheck(_:)), name: Notification.Name("LoginDispatchCheck"), object: nil)
     }
     
     func setSubviews() {
@@ -523,6 +523,17 @@ extension DispatchViewController {
     
     @objc func tappedPushDispatchCheckButton(_ sender: UIButton) {
         print("tappedPushDispatchCheckButton")
+    }
+    
+    @objc func dispatchCheck(_ noti: Notification) {
+        guard let dateString = noti.userInfo?["dateString"] as? String else { return }
+        
+        let vc = DispatchHomeCheckViewController(date: dateString)
+        
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overFullScreen
+        
+        self.present(vc, animated: true)
     }
 }
 

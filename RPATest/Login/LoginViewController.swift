@@ -58,8 +58,9 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var idTextField: UITextField!
     @IBOutlet weak var pwdTextField: UITextField!
     
-    var loginModel = LoginModel()
-    var commonModel = CommonModel()
+    let loginModel = LoginModel()
+    let commonModel = CommonModel()
+    let dispatchModel = DispatchModel()
     
     var progressBarTimer: Timer?
     
@@ -88,11 +89,42 @@ class LoginViewController: UIViewController {
                 UserDefaults.standard.set(info.refresh, forKey: "refreshToken")
                 
                 self.sendFCMTokenRequest(fcmToken: UserInfo.shared.fcmToken ?? "") {
-                    guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
-                    
-                    vc.modalPresentationStyle = .fullScreen
-                    self.present(vc, animated: false) {
+                    self.loadDailyDispatchRequest { items in
+                        var isDispatchCheck: Bool = true
+                        
+                        for item in items.regularly {
+                            if item.checkRegularlyConnect.connectCheck == "" {
+                                isDispatchCheck = false
+                                break
+                            }
+                        }
+                        
+                        if !isDispatchCheck {
+                            for item in items.order {
+                                if item.checkOrderConnect.connectCheck == "" {
+                                    isDispatchCheck = false
+                                    break
+                                }
+                            }
+                        }
+                        
+                        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
+                        
+                        vc.modalPresentationStyle = .fullScreen
+                        self.present(vc, animated: false) {
+                            if !isDispatchCheck {
+                                let afterDate = SupportingMethods.shared.calculateDate(byValue: 1, component: .day, date: Date())
+                                let dateString = SupportingMethods.shared.convertDate(intoString: afterDate)
+                                
+                                NotificationCenter.default.post(name: Notification.Name("LoginDispatchCheck"), object: nil, userInfo: ["dateString": dateString])
+                            }
+                            SupportingMethods.shared.turnCoverView(.off)
+                        }
+                        
+                    } failure: { errorMessage in
                         SupportingMethods.shared.turnCoverView(.off)
+                        print("loadDailyDispatchRequest API Errpr \(errorMessage)")
+                        
                     }
                 } failure: { errorMessage in
                     SupportingMethods.shared.turnCoverView(.off)
@@ -136,6 +168,7 @@ extension LoginViewController {
     func tokenRefreshRequest(success: ((Token) -> ())?, refreshFailure: ((Int) -> ())?, failure: ((String) -> ())?) {
         self.loginModel.tokenRefreshRequest { token in
             success?(token)
+            
         } refreshFailure: { reason in
             refreshFailure?(reason)
             
@@ -151,6 +184,30 @@ extension LoginViewController {
         self.loginModel.sendFCMTokenRequest(fcmToken: fcmToken) { item in
             print("FCM Token: \(item.token)")
             success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
+    
+    func loadDailyDispatchRequest(success: ((DispatchDailyItem) -> ())?, failure: ((String) -> ())?) {
+        let afterDate = SupportingMethods.shared.calculateDate(byValue: 1, component: .day, date: Date())
+        let dateString = SupportingMethods.shared.convertDate(intoString: afterDate)
+        
+        self.dispatchModel.loadDailyDispatchRequest(date: dateString) { item in
+            success?(item)
+            
+        } dispatchFailure: { reason in
+            if reason == 1 {
+                print("날짜 입력이 잘못되었습니다.")
+            }
+            
+            SupportingMethods.shared.turnCoverView(.off)
             
         } failure: { errorMessage in
             SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
@@ -241,11 +298,44 @@ extension LoginViewController {
                         UserDefaults.standard.set(tokenData.refresh, forKey: "refreshToken")
                         
                         self.sendFCMTokenRequest(fcmToken: UserInfo.shared.fcmToken ?? "") {
-                            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
-                            
-                            vc.modalPresentationStyle = .fullScreen
-                            self.present(vc, animated: false) {
+                            self.loadDailyDispatchRequest { items in
+                                var isDispatchCheck: Bool = true
+                                
+                                for item in items.regularly {
+                                    if item.checkRegularlyConnect.connectCheck == "" {
+                                        isDispatchCheck = false
+                                        break
+                                    }
+                                }
+                                
+                                if !isDispatchCheck {
+                                    for item in items.order {
+                                        if item.checkOrderConnect.connectCheck == "" {
+                                            isDispatchCheck = false
+                                            break
+                                        }
+                                    }
+                                }
+                                
+                                guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
+                                
+                                vc.modalPresentationStyle = .fullScreen
+                                self.present(vc, animated: false) {
+                                    if !isDispatchCheck {
+                                        let afterDate = SupportingMethods.shared.calculateDate(byValue: 1, component: .day, date: Date())
+                                        let dateString = SupportingMethods.shared.convertDate(intoString: afterDate)
+                                        
+                                        NotificationCenter.default.post(name: Notification.Name("LoginDispatchCheck"), object: nil, userInfo: ["dateString": dateString])
+                                        
+                                        SupportingMethods.shared.showAlertNoti(title: "다음날 배차 수락이 완료되지 않았습니다. 배차 수락 화면으로 이동합니다.")
+                                    }
+                                    SupportingMethods.shared.turnCoverView(.off)
+                                }
+                                
+                            } failure: { errorMessage in
                                 SupportingMethods.shared.turnCoverView(.off)
+                                print("loadDailyDispatchRequest API Errpr \(errorMessage)")
+                                
                             }
                         } failure: { errorMessage in
                             SupportingMethods.shared.turnCoverView(.off)

@@ -542,7 +542,7 @@ extension InspectionCreateViewController {
         self.loadVehicleListRequest { item in
             let vc = InspectionVehicleListViewController(vehicleList: item)
             
-            self.navigationController?.pushViewController(vc, animated: true)
+            self.present(vc, animated: true)
             SupportingMethods.shared.turnCoverView(.off)
         } failure: { errorMessage in
             SupportingMethods.shared.turnCoverView(.off)

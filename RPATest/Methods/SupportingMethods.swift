@@ -45,7 +45,7 @@ class SupportingMethods {
     }()
     
     private lazy var notiImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "notiImage"))
+        let imageView = UIImageView(image: UIImage(named: "notiIcon"))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
