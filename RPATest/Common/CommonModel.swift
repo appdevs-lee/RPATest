@@ -26,6 +26,7 @@ enum CommentType: String {
 
 final class CommonModel {
     private(set) var writeRequest: DataRequest?
+    private(set) var serverInspectionRequest: DataRequest?
     
     func writeRequest(type: CommentType, content: String, vehicleId: Int?, imageData: [Data]?, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         var subApiString = ""
@@ -96,6 +97,61 @@ final class CommonModel {
                 
             case .failure(let error): // error
                 print("writeRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    func serverInspectionRequest(success: ((String) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/maintenance"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json"
+        ]
+        
+        self.serverInspectionRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.serverInspectionRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("serverInspectionRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("serverInspectionRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" { // result == true
+                        if let decodedData = try? JSONDecoder().decode(ServerInspection.self, from: data) {
+                            print("serverInspectionRequest succeeded")
+                            success?(decodedData.data)
+                                                
+                        } else {
+                            print("serverInspectionRequest failure: API 성공, Parsing 실패")
+                            print(decodedData)
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else { // result == false
+                        print("serverInspectionRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else { // improper structure
+                    print("serverInspectionRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("serverInspectionRequest error: \(error.localizedDescription)")
                 failure?(error.localizedDescription)
             }
         }

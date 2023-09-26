@@ -12,6 +12,7 @@
 		055C2E702AB9577E00726CD7 /* DispatchSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055C2E6F2AB9577E00726CD7 /* DispatchSearchTableViewCell.swift */; };
 		0561E7212AC29D3D00787B77 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0561E7202AC29D3C00787B77 /* NavigationViewController.swift */; };
 		0561E7232AC2A32100787B77 /* DispatchHomeCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0561E7222AC2A32100787B77 /* DispatchHomeCheckViewController.swift */; };
+		0561E7252AC2BB3400787B77 /* ServerInspectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0561E7242AC2BB3400787B77 /* ServerInspectionViewController.swift */; };
 		056A34502ABBC53C00829750 /* OfficeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A344F2ABBC53C00829750 /* OfficeModel.swift */; };
 		056A34522ABBCC4200829750 /* CheckPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34512ABBCC4200829750 /* CheckPermissionViewController.swift */; };
 		056A34542ABBDAA700829750 /* OfficeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34532ABBDAA700829750 /* OfficeCollectionViewCell.swift */; };
@@ -79,6 +80,7 @@
 		055C2E6F2AB9577E00726CD7 /* DispatchSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSearchTableViewCell.swift; sourceTree = "<group>"; };
 		0561E7202AC29D3C00787B77 /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		0561E7222AC2A32100787B77 /* DispatchHomeCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchHomeCheckViewController.swift; sourceTree = "<group>"; };
+		0561E7242AC2BB3400787B77 /* ServerInspectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInspectionViewController.swift; sourceTree = "<group>"; };
 		056A344F2ABBC53C00829750 /* OfficeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfficeModel.swift; sourceTree = "<group>"; };
 		056A34512ABBCC4200829750 /* CheckPermissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckPermissionViewController.swift; sourceTree = "<group>"; };
 		056A34532ABBDAA700829750 /* OfficeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfficeCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -379,6 +381,7 @@
 				5FD8CC9C2A6BADC900D9C6D7 /* CommonModel.swift */,
 				5FE29CC12A7E1588000748FC /* TabBarController.swift */,
 				0561E7202AC29D3C00787B77 /* NavigationViewController.swift */,
+				0561E7242AC2BB3400787B77 /* ServerInspectionViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				5F6B62F02AAF364A001FEED2 /* DispatchMonthlyViewController.swift in Sources */,
 				055C2E6E2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift in Sources */,
 				5FCC11742AA46DD900550534 /* OfficeViewController.swift in Sources */,
+				0561E7252AC2BB3400787B77 /* ServerInspectionViewController.swift in Sources */,
 				5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */,
 				056A34522ABBCC4200829750 /* CheckPermissionViewController.swift in Sources */,
 				5FE29CC22A7E1588000748FC /* TabBarController.swift in Sources */,
