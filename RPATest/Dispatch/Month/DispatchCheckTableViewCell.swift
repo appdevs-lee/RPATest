@@ -44,12 +44,44 @@ final class DispatchCheckTableViewCell: UITableViewCell {
         return button
     }()
     
+    lazy var mainStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.contentBackGroundView, self.buttonStackView])
+        stackView.axis = .vertical
+        stackView.spacing = 4
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    lazy var contentBackGroundView: UIView = {
+        let view = UIView()
+        view.addSubview(self.contentStackView)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var contentStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.firstStackView, self.secondStackView])
+        stackView.axis = .horizontal
+        stackView.spacing = 28
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
     lazy var firstStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [self.startStackView, self.passengerStackView])
         stackView.axis = .vertical
         stackView.spacing = 4
         stackView.alignment = .fill
         stackView.distribution = .fill
+        stackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        stackView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -117,6 +149,8 @@ final class DispatchCheckTableViewCell: UITableViewCell {
         stackView.spacing = 4
         stackView.alignment = .fill
         stackView.distribution = .fill
+        stackView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        stackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -273,9 +307,7 @@ extension DispatchCheckTableViewCell {
         self.addSubview(self.driveImageView)
         self.addSubview(self.driveTitleLabel)
         self.addSubview(self.detailMapButton)
-        self.addSubview(self.firstStackView)
-        self.addSubview(self.secondStackView)
-        self.addSubview(self.buttonStackView)
+        self.addSubview(self.mainStackView)
     }
     
     // Set layouts
@@ -304,24 +336,19 @@ extension DispatchCheckTableViewCell {
             self.detailMapButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
-        // firstStackView
+        // mainStackView
         NSLayoutConstraint.activate([
-            self.firstStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.firstStackView.topAnchor.constraint(equalTo: self.driveImageView.bottomAnchor, constant: 8),
-            self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
+            self.mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.mainStackView.topAnchor.constraint(equalTo: self.driveImageView.bottomAnchor, constant: 8),
+            self.mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
         ])
         
-        // secondStackView
+        // contentStackView
         NSLayoutConstraint.activate([
-            self.secondStackView.leadingAnchor.constraint(equalTo: self.firstStackView.trailingAnchor, constant: 28),
-            self.secondStackView.centerYAnchor.constraint(equalTo: self.firstStackView.centerYAnchor)
-        ])
-        
-        // buttonStackView
-        NSLayoutConstraint.activate([
-            self.buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            self.buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
+            self.contentStackView.leadingAnchor.constraint(equalTo: self.contentBackGroundView.leadingAnchor),
+            self.contentStackView.topAnchor.constraint(equalTo: self.contentBackGroundView.topAnchor),
+            self.contentStackView.bottomAnchor.constraint(equalTo: self.contentBackGroundView.bottomAnchor)
         ])
         
         // checkButton
@@ -357,30 +384,18 @@ extension DispatchCheckTableViewCell {
         
         if info.maplink == "" {
             self.detailMapButton.isHidden = true
+            
         } else {
             self.detailMapButton.isHidden = false
+            
         }
         
         if info.checkRegularlyConnect.connectCheck == "1" || info.checkRegularlyConnect.connectCheck == "0" {
             self.buttonStackView.isHidden = true
             
-            NSLayoutConstraint.deactivate([
-                self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
-            ])
-            
-            NSLayoutConstraint.activate([
-                self.firstStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
-            ])
         } else {
             self.buttonStackView.isHidden = false
             
-            NSLayoutConstraint.deactivate([
-                self.firstStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -4)
-            ])
-            
-            NSLayoutConstraint.activate([
-                self.firstStackView.bottomAnchor.constraint(equalTo: self.buttonStackView.topAnchor, constant: -4)
-            ])
         }
     }
 }

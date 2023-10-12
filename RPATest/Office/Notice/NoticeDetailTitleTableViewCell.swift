@@ -87,7 +87,7 @@ extension NoticeDetailTitleTableViewCell {
     
     // Set layouts
     func setLayouts() {
-        let safeArea = self.safeAreaLayoutGuide
+//        let safeArea = self.safeAreaLayoutGuide
         
         // titleLabel
         NSLayoutConstraint.activate([

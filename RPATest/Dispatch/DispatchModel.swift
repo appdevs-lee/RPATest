@@ -177,7 +177,7 @@ final class DispatchModel {
                     return
                 }
                 
-                if let decodedData = try? JSONDecoder().decode(Temporary.self, from: data) {
+                if let _ = try? JSONDecoder().decode(Temporary.self, from: data) {
                     success?()
                     
                 } else { // improper structure

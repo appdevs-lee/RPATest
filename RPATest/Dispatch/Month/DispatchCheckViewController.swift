@@ -119,6 +119,8 @@ extension DispatchCheckViewController: EssentialViewMethods {
     
     func setNotificationCenters() {
         NotificationCenter.default.addObserver(self, selector: #selector(dateReload), name: Notification.Name("DispatchCheckComplete"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(dateReload), name: Notification.Name("DispatchDenyComplete"), object: nil)
     }
     
     func setSubviews() {
@@ -222,8 +224,8 @@ extension DispatchCheckViewController {
 
     }
     
-    func checkDispatchRequest(check: String, regularlyId: String, orderId: String, success: (() -> ())?, failure: ((String) -> ())?) {
-        self.dispatchModel.checkDispatchRequest(check: check, regularlyId: regularlyId, orderId: orderId) {
+    func checkDispatchRequest(check: String, refusal: String, regularlyId: String, orderId: String, success: (() -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.checkDispatchRequest(check: check, refusal: refusal, regularlyId: regularlyId, orderId: orderId) {
             success?()
             
         } failure: { errorMessage in
@@ -283,16 +285,10 @@ extension DispatchCheckViewController: DispatchDailyDelegate {
         self.present(vc, animated: true)
     }
     
+    // 배차 거부
     func tapDenyButton(info: DispatchRegularlyItem) {
-        SupportingMethods.shared.turnCoverView(.on)
-        self.checkDispatchRequest(check: "0", regularlyId: "\(info.id)", orderId: "") {
-            self.setData()
-            
-        } failure: { errorMessage in
-            SupportingMethods.shared.turnCoverView(.off)
-            print("tapDenyButton checkDispatchRequest API Error: \(errorMessage)")
-            
-        }
-
+        let vc = DispatchCheckDenyViewController(id: info.id)
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -40,6 +40,7 @@ final class DispatchCheckPopViewController: UIViewController {
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 1
         label.textColor = .useRGB(red: 66, green: 66, blue: 66)
         label.font = .useFont(ofSize: 24, weight: .Bold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -239,6 +240,7 @@ extension DispatchCheckPopViewController: EssentialViewMethods {
         // titleStackView
         NSLayoutConstraint.activate([
             self.titleStackView.leadingAnchor.constraint(equalTo: self.backGroundView.leadingAnchor, constant: 16),
+            self.titleStackView.trailingAnchor.constraint(equalTo: self.backGroundView.trailingAnchor, constant: -16),
             self.titleStackView.topAnchor.constraint(equalTo: self.backGroundView.topAnchor, constant: 8)
         ])
         
