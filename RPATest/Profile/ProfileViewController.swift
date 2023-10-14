@@ -101,6 +101,7 @@ final class ProfileViewController: UIViewController {
     
     let imageString: [String] = ["MyInfo","ToDo","DriveRecord","PhoneBook","DriveWay","Alert","DriveGoal"]
     let menuString: [String] = ["내 정보", "할 일", "운행기록", "주소록", "노선숙지", "알림", "목표운행량"]
+    let dispatchModel = DispatchModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -235,6 +236,19 @@ extension ProfileViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension ProfileViewController {
+    func loadDispatchGroupListRequest(success: (([DispatchSearchItemGroupList]) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.loadDispatchGroupListRequest { groupList in
+            success?(groupList)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+        
+    }
     
 }
 
@@ -255,6 +269,26 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectio
         cell.setCell(imageString: self.imageString[indexPath.row], menuString: self.menuString[indexPath.row])
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch indexPath.row {
+        case 4:
+            // Search
+            SupportingMethods.shared.turnCoverView(.on)
+            self.loadDispatchGroupListRequest { groupList in
+                let vc = DispatchSearchViewController(groupList: groupList)
+                
+                self.navigationController?.pushViewController(vc, animated: true)
+                SupportingMethods.shared.turnCoverView(.off)
+            } failure: { errorMessage in
+                SupportingMethods.shared.turnCoverView(.off)
+                print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
+            }
+            
+        default:
+            break
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
