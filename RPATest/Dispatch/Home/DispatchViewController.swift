@@ -349,6 +349,9 @@ extension DispatchViewController: EssentialViewMethods {
 extension DispatchViewController {
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, failure: ((String) -> ())?) {
         self.dispatchModel.loadDailyDispatchRequest(date: date) { dailyInfo in
+            if !dailyInfo.regularly.isEmpty {
+                print("wakeTime: \(dailyInfo.regularly[0].checkRegularlyConnect.wakeTime)")
+            }
             success?(dailyInfo)
             
         } dispatchFailure: { reason in
@@ -557,8 +560,16 @@ extension DispatchViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - Extension for DispatchDelegate
 extension DispatchViewController: DispatchDelegate {
-    func tapDriveCheckButton(current: String) {
-        
+    func tapDriveCheckButton(current: DriveCheckType, info: DispatchRegularlyItem) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.checkPatchDispatchRequest(checkType: current.rawValue, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(info.id)", orderId: "") { item in
+            
+            self.setData()
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("tappedDriveCheckButton checkPatchDispatchRequest API Error: \(errorMessage)")
+            
+        }
     }
     
     func tapDetailMapButton(mapLink: String) {

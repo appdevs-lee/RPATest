@@ -7,9 +7,16 @@
 
 import UIKit
 
+enum DriveCheckType: String {
+    case wake = "기상"
+    case drive = "운행"
+    case departure = "출발지"
+    case done
+}
+
 protocol DispatchDelegate: NSObjectProtocol {
     func tapDetailMapButton(mapLink: String)
-    func tapDriveCheckButton(current: String)
+    func tapDriveCheckButton(current: DriveCheckType, info: DispatchRegularlyItem)
 }
 
 final class DispatchTableViewCell: UITableViewCell {
@@ -205,6 +212,7 @@ final class DispatchTableViewCell: UITableViewCell {
     weak var delegate: DispatchDelegate?
     var info: DispatchRegularlyItem?
     let dispatchModel = DispatchModel()
+    var checkType: DriveCheckType = .wake
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -341,6 +349,32 @@ extension DispatchTableViewCell {
             self.detailMapButton.isHidden = false
         }
         
+        self.driveCheckButton.isEnabled = true
+        self.driveCheckButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        
+        if info.checkRegularlyConnect.wakeTime == "" {
+            // 기상 버튼 활성화
+            self.driveCheckButton.setTitle("기상", for: .normal)
+            self.checkType = .wake
+            
+        } else if info.checkRegularlyConnect.driveTime == "" {
+            // 운행 시작 버튼 활성화
+            self.driveCheckButton.setTitle("운행 시작", for: .normal)
+            self.checkType = .drive
+            
+        } else if info.checkRegularlyConnect.departureTime == "" {
+            // 출발지 도착 버튼 활성화
+            self.driveCheckButton.setTitle("출발지 도착", for: .normal)
+            self.checkType = .departure
+            
+        } else {
+            // 버튼 비활성화
+            self.driveCheckButton.setTitle("안전 운행하세요", for: .normal)
+            self.driveCheckButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            self.driveCheckButton.isEnabled = false
+            self.checkType = .done
+            
+        }
     }
 }
 
@@ -367,38 +401,9 @@ extension DispatchTableViewCell {
 // MARK: - Extension for selectors added
 extension DispatchTableViewCell {
     @objc func tappedDriveCheckButton(_ sender: UIButton) {
-        var checkType: String = ""
-        if self.driveCheckButton.titleLabel?.text == "기상" {
-            checkType = "기상"
-        } else if self.driveCheckButton.titleLabel?.text == "운행 시작" {
-            checkType = "운행"
-        } else if self.driveCheckButton.titleLabel?.text == "출발지 도착" {
-            checkType = "출발지"
-        }
-        
         guard let info = self.info else { return }
         
-        SupportingMethods.shared.turnCoverView(.on)
-        self.checkPatchDispatchRequest(checkType: checkType, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(info.id)", orderId: "") { item in
-            switch checkType {
-            case "기상":
-                self.driveCheckButton.setTitle("운행 시작", for: .normal)
-            case "운행":
-                self.driveCheckButton.setTitle("출발지 도착", for: .normal)
-            default:
-                self.driveCheckButton.setTitle("안전 운행하세요", for: .normal)
-                self.driveCheckButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
-                self.driveCheckButton.isEnabled = false
-            }
-            
-            SupportingMethods.shared.turnCoverView(.off)
-        } failure: { errorMessage in
-            SupportingMethods.shared.turnCoverView(.off)
-            print("tappedDriveCheckButton checkPatchDispatchRequest API Error: \(errorMessage)")
-            
-        }
-        
-        self.delegate?.tapDriveCheckButton(current: (self.driveCheckButton.titleLabel?.text!)!)
+        self.delegate?.tapDriveCheckButton(current: self.checkType, info: info)
     }
     
     @objc func tappedDetailMapButton(_ sender: UIButton) {
