@@ -334,11 +334,7 @@ extension DispatchSearchViewController {
         self.group = group
         self.searchController.searchBar.placeholder = "\(group.name)에서 검색합니다."
         
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            SupportingMethods.shared.turnCoverView(.off)
-        }
-        
+        self.loadDispatchPathRequestAtBeginning()
     }
 }
 
