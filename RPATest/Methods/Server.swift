@@ -9,6 +9,7 @@ import Foundation
 
 enum ServerURL: String {
     case DEV = "http://34.121.50.23:8000"
+    case NH = "http://34.125.128.74/"
     case PROD = "http://api.kingbuserp.link"
 }
 

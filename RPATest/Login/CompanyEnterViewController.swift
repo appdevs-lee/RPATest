@@ -31,6 +31,13 @@ class CompanyEnterViewController: UIViewController {
                 Server.shared.currentURL = ServerURL.PROD.rawValue
                 UserDefaults.standard.set(ServerURL.PROD.rawValue, forKey: "currentURL")
             }
+        } else if self.companyEnterTextField.text == "뉴한솔" {
+            self.dismiss(animated: false) {
+                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
+                
+                Server.shared.currentURL = ServerURL.NH.rawValue
+                UserDefaults.standard.set(ServerURL.NH.rawValue, forKey: "currentURL")
+            }
         }
     }
 }
