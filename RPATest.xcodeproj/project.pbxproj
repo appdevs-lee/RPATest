@@ -41,6 +41,7 @@
 		0582C5A82AB8218D0045CBCB /* DispatchSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0582C5A72AB8218D0045CBCB /* DispatchSearchViewController.swift */; };
 		0582C5AA2AB842BF0045CBCB /* DispatchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */; };
 		16E2C467A0658AD11CAC6652 /* Pods_RPATest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */; };
+		2DCBDFEB2AEE33C1000685F5 /* OrganizationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCBDFEA2AEE33C1000685F5 /* OrganizationModel.swift */; };
 		5F1A16182A74E23400132D29 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F1A16162A74E23400132D29 /* Pretendard-Bold.otf */; };
 		5F1A16192A74E23400132D29 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F1A16172A74E23400132D29 /* Pretendard-Medium.otf */; };
 		5F1A161B2A74EA6300132D29 /* PretendardVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F1A161A2A74EA6300132D29 /* PretendardVariable.ttf */; };
@@ -109,6 +110,7 @@
 		0582C5A72AB8218D0045CBCB /* DispatchSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSearchViewController.swift; sourceTree = "<group>"; };
 		0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCategoryViewController.swift; sourceTree = "<group>"; };
 		06EE240AA4CC2BD5297F34A3 /* Pods-RPATest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.debug.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.debug.xcconfig"; sourceTree = "<group>"; };
+		2DCBDFEA2AEE33C1000685F5 /* OrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationModel.swift; sourceTree = "<group>"; };
 		5F1A16162A74E23400132D29 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		5F1A16172A74E23400132D29 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		5F1A161A2A74EA6300132D29 /* PretendardVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PretendardVariable.ttf; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 		5FCC11712AA46D6D00550534 /* Organization */ = {
 			isa = PBXGroup;
 			children = (
+				2DCBDFEA2AEE33C1000685F5 /* OrganizationModel.swift */,
 				5FCC11752AA46DE200550534 /* OrganizationViewController.swift */,
 				053C55D32AA9AB86006A6D93 /* OrganizationTableViewCell.swift */,
 			);
@@ -526,6 +529,7 @@
 				055C2E6E2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift in Sources */,
 				5FCC11742AA46DD900550534 /* OfficeViewController.swift in Sources */,
 				0561E7252AC2BB3400787B77 /* ServerInspectionViewController.swift in Sources */,
+				2DCBDFEB2AEE33C1000685F5 /* OrganizationModel.swift in Sources */,
 				5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */,
 				056A34522ABBCC4200829750 /* CheckPermissionViewController.swift in Sources */,
 				5FE29CC22A7E1588000748FC /* TabBarController.swift in Sources */,

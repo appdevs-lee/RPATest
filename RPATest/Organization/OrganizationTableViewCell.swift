@@ -144,11 +144,11 @@ extension OrganizationTableViewCell {
 
 // MARK: - Extension for methods added
 extension OrganizationTableViewCell {
-    func setCell(nameData: String, positionData: String) {
-        self.nameLabel.text = nameData
-        self.positionLabel.text = positionData
+    func setCell(member: MemberDetailItem) {
+        self.nameLabel.text = member.name
+        self.positionLabel.text = member.role
         
-        let firstWordinName = String((nameData.first)!)
+        let firstWordinName = String((member.name.first)!)
         self.profileLabel.text = firstWordinName
     }
 }
