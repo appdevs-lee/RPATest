@@ -74,7 +74,7 @@ final class DispatchViewController: UIViewController {
     }()
     
     lazy var buttonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [self.dispatchMonthlyInfoButton, self.dispatchCheckButton])
+        let stackView = UIStackView(arrangedSubviews: [self.dispatchMonthlyInfoButton, self.refuelingCheckButton])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.alignment = .fill
@@ -96,14 +96,13 @@ final class DispatchViewController: UIViewController {
         return button
     }()
     
-    lazy var dispatchCheckButton: UIButton = {
+    lazy var refuelingCheckButton: UIButton = {
         let button = UIButton()
-        button.setTitle("운행수락", for: .normal)
+        button.setTitle("주유", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.isHidden = true
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
-        button.addTarget(self, action: #selector(tappedPushDispatchCheckButton(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tappedRefuelingCheckButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -263,10 +262,10 @@ extension DispatchViewController: EssentialViewMethods {
             self.buttonStackView.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor)
         ])
         
-        // dispatchCheckButton
+        // refuelingCheckButton
         NSLayoutConstraint.activate([
-            self.dispatchCheckButton.widthAnchor.constraint(equalToConstant: 75),
-            self.dispatchCheckButton.heightAnchor.constraint(equalToConstant: 30)
+            self.refuelingCheckButton.widthAnchor.constraint(equalToConstant: 75),
+            self.refuelingCheckButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
         // dispatchMonthlyInfoButton
@@ -401,7 +400,6 @@ extension DispatchViewController {
                 
             }
         }
-
         
     }
     
@@ -524,8 +522,11 @@ extension DispatchViewController {
         }
     }
     
-    @objc func tappedPushDispatchCheckButton(_ sender: UIButton) {
-        print("tappedPushDispatchCheckButton")
+    @objc func tappedRefuelingCheckButton(_ sender: UIButton) {
+        let vc = DispatchRefuelingBottomSheetViewController()
+        
+        vc.modalPresentationStyle = .overFullScreen
+        self.present(vc, animated: false)
     }
     
     @objc func dispatchCheck(_ noti: Notification) {
