@@ -9,6 +9,37 @@ import UIKit
 
 final class OrganizationViewController: UIViewController {
     
+    lazy var noDataStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.noDataImageView, self.noDataLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.isHidden = true
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    lazy var noDataImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "NoDataImage")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return imageView
+    }()
+    
+    lazy var noDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "검색 결과가 없습니다"
+        label.font = .useFont(ofSize: 14, weight: .Bold)
+        label.textColor = .useRGB(red: 189, green: 189, blue: 189)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.keyboardDismissMode = .onDrag
@@ -28,6 +59,9 @@ final class OrganizationViewController: UIViewController {
     let organizationModel = OrganizationModel()
     var memberList: [MemberDetailItem] = []
     var isSearching: Bool = false
+    var page: Int = 1
+    var nextRequest: String?
+    var searchText: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -135,21 +169,7 @@ extension OrganizationViewController: EssentialViewMethods {
     }
     
     func setData() {
-        SupportingMethods.shared.turnCoverView(.on)
-        self.memberSearchRequest(search: "") { memberList in
-            self.memberList = memberList
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                
-            }
-            
-            SupportingMethods.shared.turnCoverView(.off)
-        } failure: { errorMessage in
-            print("setData memberSearchRequest API Error: \(errorMessage)")
-            SupportingMethods.shared.turnCoverView(.off)
-            
-        }
+        self.memberSearchRequestAtBeginning()
 
     }
     
@@ -173,9 +193,9 @@ extension OrganizationViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension OrganizationViewController {
-    func memberSearchRequest(search: String, success: (([MemberDetailItem]) -> ())?, failure: ((String) -> ())?) {
-        self.organizationModel.memberSearchRequest(search: search) { memberList in
-            success?(memberList)
+    func memberSearchRequest(page: Int, search: String, success: ((MemberItem) -> ())?, failure: ((String) -> ())?) {
+        self.organizationModel.memberSearchRequest(page: page, search: search) { item in
+            success?(item)
             
         } failure: { errorMessage in
             SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
@@ -183,6 +203,67 @@ extension OrganizationViewController {
                 
             }
             
+        }
+
+    }
+    
+    func memberSearchRequestAtBeginning() {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.memberSearchRequest(page: 1, search: "") { item in
+            self.page = 1
+            self.nextRequest = item.next
+            self.memberList = item.memberList
+            
+            if item.memberList.isEmpty {
+                self.noDataStackView.isHidden = false
+                
+            } else {
+                self.noDataStackView.isHidden = true
+                
+            }
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                SupportingMethods.shared.turnCoverView(.off)
+                
+            }
+            
+        } failure: { errorMessage in
+            print("setData memberSearchRequest API Error: \(errorMessage)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        }
+    }
+    
+    func memberSearchRequest(page: Int) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.memberSearchRequest(page: page, search: self.searchText) { item in
+            self.page = page
+            self.nextRequest = item.next
+            
+            self.memberList.append(contentsOf: item.memberList)
+            
+            if !item.memberList.isEmpty {
+                self.tableView.reloadData()
+                
+            }
+            
+            if self.memberList.isEmpty {
+                self.noDataStackView.isHidden = false
+                
+            } else {
+                self.noDataStackView.isHidden = true
+                
+            }
+            
+            DispatchQueue.main.async {
+                SupportingMethods.shared.turnCoverView(.off)
+                
+            }
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("loadDispatchPathRequest API Error: \(errorMessage)")
         }
 
     }
@@ -207,6 +288,11 @@ extension OrganizationViewController: UITableViewDelegate, UITableViewDataSource
         
         cell.setCell(member: member)
         
+        if indexPath.row == self.memberList.count - 1 && self.nextRequest != nil {
+            self.memberSearchRequest(page: self.page + 1)
+            
+        }
+        
         return cell
     }
     
@@ -226,10 +312,12 @@ extension OrganizationViewController: UISearchBarDelegate, UISearchControllerDel
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchText = searchBar.text ?? ""
+        
         self.tableView.isUserInteractionEnabled = true
         SupportingMethods.shared.turnCoverView(.on)
-        self.memberSearchRequest(search: searchBar.text ?? "") { memberList in
-            self.memberList = memberList
+        self.memberSearchRequest(page: 1, search: self.searchText) { item in
+            self.memberList = item.memberList
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -246,7 +334,7 @@ extension OrganizationViewController: UISearchBarDelegate, UISearchControllerDel
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        self.setData()
+//        self.setData()
         self.tableView.isUserInteractionEnabled = false
         
         return true
