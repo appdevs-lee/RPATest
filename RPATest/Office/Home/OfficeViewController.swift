@@ -31,7 +31,7 @@ final class OfficeViewController: UIViewController {
     }()
     
     let imageString: [String] = ["Notice", "Inspection", "Consulting", "Estimate", "Accident", "Rating", "Edu", "Duty", "Rules"]
-    let menuString: [String] = ["공지사항", "차량민원", "상담신청", "견적" , "사고대처", "등급", "CS교육", "당번", "취업규칙"]
+    let menuString: [String] = ["공지사항", "차량민원", "상담신청", "견적" , "사고대처", "등급", "배차표", "당번", "취업규칙"]
     
     let noticeModel = NoticeModel()
     
@@ -108,7 +108,7 @@ extension OfficeViewController: EssentialViewMethods {
     
     func setViewAfterTransition() {
         //self.navigationController?.setNavigationBarHidden(false, animated: true)
-        //self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     private func setUpNavigationTitle() -> UIImageView {
@@ -184,6 +184,11 @@ extension OfficeViewController: UICollectionViewDelegateFlowLayout, UICollection
         case 2:
             // Consulting
             let vc = ConsultingViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 6:
+            // 배차표
+            let vc = DispatchScheduleViewController()
             
             self.navigationController?.pushViewController(vc, animated: true)
         default:

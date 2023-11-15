@@ -12,7 +12,7 @@ final class OrganizationModel {
     private(set) var memberSearchRequest: DataRequest?
     private(set) var memberInfoRequest: DataRequest?
     
-    func memberSearchRequest(search: String, success: (([MemberDetailItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+    func memberSearchRequest(page: Int, search: String, success: ((MemberItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/member/list"
         
         let headers: HTTPHeaders = [
@@ -21,7 +21,8 @@ final class OrganizationModel {
         ]
         
         let parameters: Parameters = [
-            "search": search
+            "search": search,
+            "page": page
         ]
         
         self.memberSearchRequest = AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers)
@@ -47,7 +48,7 @@ final class OrganizationModel {
                     if decodedData.result == "true" { // result == true
                         if let decodedData = try? JSONDecoder().decode(Member.self, from: data) {
                             print("memberSearchRequest succeeded")
-                            success?(decodedData.data.memberList)
+                            success?(decodedData.data)
                                                 
                         } else {
                             print("memberSearchRequest failure: API 성공, Parsing 실패")
@@ -84,9 +85,13 @@ struct Member: Codable {
 }
 
 struct MemberItem: Codable {
+    let count: Int
+    let next: String?
     let memberList: [MemberDetailItem]
     
     enum CodingKeys: String, CodingKey {
+        case count
+        case next
         case memberList = "member_list"
     }
 }
