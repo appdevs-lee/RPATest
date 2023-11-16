@@ -14,6 +14,7 @@ class UserInfo {
     var password: String?
     var access: String?
     var name: String?
+    var role: String?
     var fcmToken: String?
     
     private init() {

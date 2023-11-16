@@ -33,6 +33,10 @@
 		056A34762ABC393700829750 /* ConsultingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34752ABC393700829750 /* ConsultingModel.swift */; };
 		056A34782ABC394600829750 /* ConsultingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34772ABC394600829750 /* ConsultingTableViewCell.swift */; };
 		056A347A2ABC394E00829750 /* ConsultingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A34792ABC394E00829750 /* ConsultingViewController.swift */; };
+		056A759B2B059DCE00C25711 /* OrganizationViewPagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A759A2B059DCE00C25711 /* OrganizationViewPagerViewController.swift */; };
+		056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A759C2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift */; };
+		056A75A32B05D03600C25711 /* OrganizationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A75A22B05D03600C25711 /* OrganizationSearchViewController.swift */; };
+		056A75A52B05D18800C25711 /* OrganizationSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A75A42B05D18800C25711 /* OrganizationSearchTableViewCell.swift */; };
 		056BF5042AF3518900B4C389 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056BF5032AF3518900B4C389 /* BottomSheetViewController.swift */; };
 		056BF5062AF351BF00B4C389 /* DispatchRefuelingBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056BF5052AF351BF00B4C389 /* DispatchRefuelingBottomSheetViewController.swift */; };
 		057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */; };
@@ -106,6 +110,10 @@
 		056A34752ABC393700829750 /* ConsultingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsultingModel.swift; sourceTree = "<group>"; };
 		056A34772ABC394600829750 /* ConsultingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsultingTableViewCell.swift; sourceTree = "<group>"; };
 		056A34792ABC394E00829750 /* ConsultingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsultingViewController.swift; sourceTree = "<group>"; };
+		056A759A2B059DCE00C25711 /* OrganizationViewPagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationViewPagerViewController.swift; sourceTree = "<group>"; };
+		056A759C2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationViewPagerCollectionViewCell.swift; sourceTree = "<group>"; };
+		056A75A22B05D03600C25711 /* OrganizationSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchViewController.swift; sourceTree = "<group>"; };
+		056A75A42B05D18800C25711 /* OrganizationSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchTableViewCell.swift; sourceTree = "<group>"; };
 		056BF5032AF3518900B4C389 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		056BF5052AF351BF00B4C389 /* DispatchRefuelingBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchRefuelingBottomSheetViewController.swift; sourceTree = "<group>"; };
 		057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckOrderTableViewCell.swift; sourceTree = "<group>"; };
@@ -356,8 +364,12 @@
 			isa = PBXGroup;
 			children = (
 				2DCBDFEA2AEE33C1000685F5 /* OrganizationModel.swift */,
+				056A759A2B059DCE00C25711 /* OrganizationViewPagerViewController.swift */,
+				056A759C2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift */,
 				5FCC11752AA46DE200550534 /* OrganizationViewController.swift */,
 				053C55D32AA9AB86006A6D93 /* OrganizationTableViewCell.swift */,
+				056A75A22B05D03600C25711 /* OrganizationSearchViewController.swift */,
+				056A75A42B05D18800C25711 /* OrganizationSearchTableViewCell.swift */,
 			);
 			path = Organization;
 			sourceTree = "<group>";
@@ -578,6 +590,7 @@
 				5FD49D1B2AA31BFF00208273 /* TemplateCollectionViewCell.swift in Sources */,
 				057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */,
 				059093D22AFCAFA000E0F1DD /* DispatchScheduleTableViewCell.swift in Sources */,
+				056A759B2B059DCE00C25711 /* OrganizationViewPagerViewController.swift in Sources */,
 				059093D02AFCAEE700E0F1DD /* DispatchScheduleViewController.swift in Sources */,
 				5F1BB09F2A03D1210081DBBE /* AppDelegate.swift in Sources */,
 				056A345E2ABC054700829750 /* NoticeDetailViewController.swift in Sources */,
@@ -590,6 +603,9 @@
 				056A346F2ABC1D7300829750 /* IndexPathButton.swift in Sources */,
 				056A34542ABBDAA700829750 /* OfficeCollectionViewCell.swift in Sources */,
 				056A34602ABC071200829750 /* NoticeDetailTitleTableViewCell.swift in Sources */,
+				056A75A32B05D03600C25711 /* OrganizationSearchViewController.swift in Sources */,
+				056A75A52B05D18800C25711 /* OrganizationSearchTableViewCell.swift in Sources */,
+				056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */,
 				056A34622ABC072F00829750 /* NoticeDetailTextTableViewCell.swift in Sources */,
 				056A34692ABC13CC00829750 /* InspectionModel.swift in Sources */,
 				5F1BB0A12A03D1210081DBBE /* SceneDelegate.swift in Sources */,

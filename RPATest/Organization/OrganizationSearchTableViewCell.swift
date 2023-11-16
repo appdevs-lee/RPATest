@@ -1,13 +1,12 @@
 //
-//  OrganizationTableViewCell.swift
+//  OrganizationSearchTableViewCell.swift
 //  RPATest
 //
-//  Created by Awesomepia on 2023/09/07.
+//  Created by Awesomepia on 11/16/23.
 //
-
 import UIKit
 
-class OrganizationTableViewCell: UITableViewCell {
+class OrganizationSearchTableViewCell: UITableViewCell {
     
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -106,7 +105,7 @@ class OrganizationTableViewCell: UITableViewCell {
 }
 
 // MARK: Extension for essential methods
-extension OrganizationTableViewCell {
+extension OrganizationSearchTableViewCell {
     // Set view foundation
     func setCellFoundation() {
         self.selectionStyle = .none
@@ -183,7 +182,7 @@ extension OrganizationTableViewCell {
 }
 
 // MARK: - Extension for methods added
-extension OrganizationTableViewCell {
+extension OrganizationSearchTableViewCell {
     func setCell(member: MemberDetailItem) {
         self.nameLabel.text = member.name
         self.positionLabel.text = member.role

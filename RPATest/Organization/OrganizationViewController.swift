@@ -7,6 +7,12 @@
 
 import UIKit
 
+enum SeparateCurrent {
+    case top
+    case oneDepth
+    case otherCompany
+}
+
 final class OrganizationViewController: UIViewController {
     
     lazy var noDataStackView: UIStackView = {
@@ -50,18 +56,82 @@ final class OrganizationViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.sectionHeaderTopPadding = 0
+        tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         return tableView
     }()
     
-    let searchController = UISearchController(searchResultsController: nil)
+    lazy var navigationView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.layer.borderWidth = 0.8
+        button.layer.borderColor = UIColor.useRGB(red: 238, green: 238, blue: 238).cgColor
+        button.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        button.layer.cornerRadius = 20
+        button.setTitle("TOP", for: .normal)
+        button.setTitleColor(.useRGB(red: 97, green: 97, blue: 97), for: .normal)
+        button.titleLabel?.font = .useFont(ofSize: 12, weight: .Medium)
+        button.addTarget(self, action: #selector(tappedBackButton(_:)), for: .touchUpInside)
+        
+        if self.separateCurrent == .otherCompany {
+            button.isEnabled = false
+            
+        } else {
+            button.isEnabled = true
+            
+        }
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
+    lazy var currentButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("", for: .normal)
+        button.setTitleColor(.useRGB(red: 97, green: 97, blue: 97), for: .normal)
+        button.titleLabel?.font = .useFont(ofSize: 12, weight: .Bold)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
+    lazy var navigationViewBottomView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .useRGB(red: 238, green: 238, blue: 238)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    init(separateCurrent: SeparateCurrent = .top) {
+        self.separateCurrent = separateCurrent
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     let organizationModel = OrganizationModel()
+    var roleList: [String] = ["관리자", "운전원", "용역"]
     var memberList: [MemberDetailItem] = []
-    var isSearching: Bool = false
+    var clientList: [MemberDetailItem] = [MemberDetailItem(name: "에버모터스", role: "", phoneNum: "010-6258-9454"), MemberDetailItem(name: "명성차유리", role: "", phoneNum: "010-3804-3259")]
     var page: Int = 1
     var nextRequest: String?
-    var searchText: String = ""
+    
+    var current: String = ""
+    var separateCurrent: SeparateCurrent = .top
+    
+    var role: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,28 +143,25 @@ final class OrganizationViewController: UIViewController {
         self.setNotificationCenters()
         self.setSubviews()
         self.setLayouts()
-        self.setUpNavigationItem()
-        self.setUpSearchController()
+        
+//        if self.separateCurrent == .otherCompany {
+//            self.clientSearchRequestAtBeginning()
+//            
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.setViewAfterTransition()
-        self.setData()
     }
     
 //    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
 //        return .portrait
 //    }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.searchController.searchBar.resignFirstResponder()
-        self.tableView.isUserInteractionEnabled = true
-    }
-    
     deinit {
-            print("----------------------------------- TemplateViewController is disposed -----------------------------------")
+            print("----------------------------------- OrganizationViewController is disposed -----------------------------------")
     }
 }
 
@@ -122,17 +189,63 @@ extension OrganizationViewController: EssentialViewMethods {
     
     func setSubviews() {
         self.view.addSubview(self.tableView)
+        self.view.addSubview(self.noDataStackView)
+        self.view.addSubview(self.navigationView)
+        self.view.addSubview(self.navigationViewBottomView)
+        
+        SupportingMethods.shared.addSubviews([
+            self.backButton,
+            self.currentButton
+        ], to: self.navigationView)
     }
     
     func setLayouts() {
         let safeArea = self.view.safeAreaLayoutGuide
         
+        // navigationView
+        NSLayoutConstraint.activate([
+            self.navigationView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.navigationView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.navigationView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        // backButton
+        NSLayoutConstraint.activate([
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor),
+            self.backButton.topAnchor.constraint(equalTo: self.navigationView.topAnchor),
+            self.backButton.bottomAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.backButton.widthAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        // currentButton
+        NSLayoutConstraint.activate([
+            self.currentButton.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor),
+            self.currentButton.topAnchor.constraint(equalTo: self.navigationView.topAnchor),
+            self.currentButton.bottomAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.currentButton.widthAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        // navigationViewBottomView
+        NSLayoutConstraint.activate([
+            self.navigationViewBottomView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.navigationViewBottomView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.navigationViewBottomView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.navigationViewBottomView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+        
         // tableView
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.navigationViewBottomView.bottomAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        ])
+        
+        // noDataStackView
+        NSLayoutConstraint.activate([
+            self.noDataStackView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            self.noDataStackView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor)
         ])
     }
     
@@ -140,61 +253,12 @@ extension OrganizationViewController: EssentialViewMethods {
         //self.navigationController?.setNavigationBarHidden(false, animated: true)
         //self.tabBarController?.tabBar.isHidden = false
     }
-    
-    private func setUpNavigationTitle() -> UIImageView {
-        let navigationTitleImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 120, height: 32))
-        navigationTitleImageView.image = UIImage(named: "NavigationTitleImage")
-        navigationTitleImageView.contentMode = .scaleAspectFit
-        
-        return navigationTitleImageView
-    }
-    
-    private func setUpNavigationItem() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground() // No bar line appears
-        appearance.backgroundColor = .useRGB(red: 176, green: 0, blue: 32) // Navigation bar is transparent and root view appears on it.
-        appearance.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 66, green: 66, blue: 66),
-            .font:UIFont.useFont(ofSize: 18, weight: .Bold)
-        ]
-        
-        // MARK: NavigationItem appearance for each view controller
-        self.navigationItem.scrollEdgeAppearance = appearance
-        self.navigationItem.standardAppearance = appearance
-        self.navigationItem.compactAppearance = appearance
-        
-        self.navigationItem.titleView = self.setUpNavigationTitle()
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "search")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(rightBarButtonItem(_:)))
-    }
-    
-    func setData() {
-        self.memberSearchRequestAtBeginning()
-
-    }
-    
-    func setUpSearchController() {
-        self.searchController.searchBar.placeholder = "이름으로 검색해 주세요."
-        self.searchController.searchBar.searchTextField.textColor = .black
-        self.searchController.searchBar.searchTextField.backgroundColor = .white
-        self.searchController.hidesNavigationBarDuringPresentation = false
-        self.searchController.automaticallyShowsCancelButton = false
-        
-        // searchbar에 text가 업데이트 될 때마다 불리는 메소드를 위한 설정
-        self.searchController.searchResultsUpdater = self
-        
-        self.searchController.delegate = self
-        self.searchController.searchBar.delegate = self
-        
-        self.navigationItem.searchController = searchController
-        self.navigationItem.hidesSearchBarWhenScrolling = false
-    }
 }
 
 // MARK: - Extension for methods added
 extension OrganizationViewController {
-    func memberSearchRequest(page: Int, search: String, success: ((MemberItem) -> ())?, failure: ((String) -> ())?) {
-        self.organizationModel.memberSearchRequest(page: page, search: search) { item in
+    func memberSearchRequest(page: Int, role: String, success: ((MemberItem) -> ())?, failure: ((String) -> ())?) {
+        self.organizationModel.memberSearchRequest(page: page, search: "", role: role) { item in
             success?(item)
             
         } failure: { errorMessage in
@@ -204,12 +268,24 @@ extension OrganizationViewController {
             }
             
         }
-
+    }
+    
+    func clientSearchRequest(page: Int, success: ((MemberItem) -> ())?, failure: ((String) -> ())?) {
+        self.organizationModel.clientSearchRequest(page: page, search: "") { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
     }
     
     func memberSearchRequestAtBeginning() {
         SupportingMethods.shared.turnCoverView(.on)
-        self.memberSearchRequest(page: 1, search: "") { item in
+        self.memberSearchRequest(page: 1, role: self.role) { item in
             self.page = 1
             self.nextRequest = item.next
             self.memberList = item.memberList
@@ -237,7 +313,7 @@ extension OrganizationViewController {
     
     func memberSearchRequest(page: Int) {
         SupportingMethods.shared.turnCoverView(.on)
-        self.memberSearchRequest(page: page, search: self.searchText) { item in
+        self.memberSearchRequest(page: page, role: self.role) { item in
             self.page = page
             self.nextRequest = item.next
             
@@ -263,61 +339,25 @@ extension OrganizationViewController {
             
         } failure: { errorMessage in
             SupportingMethods.shared.turnCoverView(.off)
-            print("loadDispatchPathRequest API Error: \(errorMessage)")
+            print("memberSearchRequest API Error: \(errorMessage)")
         }
 
     }
-}
-
-// MARK: - Extension for selector methods
-extension OrganizationViewController {
-    @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        
-    }
-}
-
-// MARK: - Extension for UITableViewDelegate, UITableViewDataSource
-extension OrganizationViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.memberList.count
-    }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "OrganizationTableViewCell", for: indexPath) as! OrganizationTableViewCell
-        let member = self.memberList[indexPath.row]
-        
-        cell.setCell(member: member)
-        
-        if indexPath.row == self.memberList.count - 1 && self.nextRequest != nil {
-            self.memberSearchRequest(page: self.page + 1)
-            
-        }
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let member = self.memberList[indexPath.row]
-        
-        if let url = URL(string: "tel://\(member.phoneNum)") {
-            UIApplication.shared.open(url)
-            
-        }
-    }
-}
-
-extension OrganizationViewController: UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.searchText = searchBar.text ?? ""
-        
-        self.tableView.isUserInteractionEnabled = true
+    func clientSearchRequestAtBeginning() {
         SupportingMethods.shared.turnCoverView(.on)
-        self.memberSearchRequest(page: 1, search: self.searchText) { item in
-            self.memberList = item.memberList
+        self.clientSearchRequest(page: 1) { item in
+            self.page = 1
+            self.nextRequest = item.next
+            self.clientList = item.memberList
+            
+            if item.memberList.isEmpty {
+                self.noDataStackView.isHidden = false
+                
+            } else {
+                self.noDataStackView.isHidden = true
+                
+            }
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -326,22 +366,176 @@ extension OrganizationViewController: UISearchBarDelegate, UISearchControllerDel
             }
             
         } failure: { errorMessage in
-            print("searchBarSearchButtonClicked memberSearchRequest API Error: \(errorMessage)")
+            print("setData clientSearchRequestAtBeginning API Error: \(errorMessage)")
             SupportingMethods.shared.turnCoverView(.off)
             
         }
+    }
+    
+    func clientSearchRequest(page: Int) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.clientSearchRequest(page: page) { item in
+            self.page = page
+            self.nextRequest = item.next
+            
+            self.clientList.append(contentsOf: item.memberList)
+            
+            if !item.memberList.isEmpty {
+                self.tableView.reloadData()
+                
+            }
+            
+            if self.clientList.isEmpty {
+                self.noDataStackView.isHidden = false
+                
+            } else {
+                self.noDataStackView.isHidden = true
+                
+            }
+            
+            DispatchQueue.main.async {
+                SupportingMethods.shared.turnCoverView(.off)
+                
+            }
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("clientSearchRequest API Error: \(errorMessage)")
+        }
 
     }
-    
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-//        self.setData()
-        self.tableView.isUserInteractionEnabled = false
+}
+
+// MARK: - Extension for selector methods
+extension OrganizationViewController {
+    @objc func tappedBackButton(_ sender: UIButton) {
+        self.separateCurrent = .top
+        self.role = ""
         
-        return true
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            
+        }
+    }
+}
+
+// MARK: - Extension for UITableViewDelegate, UITableViewDataSource
+extension OrganizationViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch self.separateCurrent {
+        case .top:
+            return self.roleList.count
+            
+        case .oneDepth:
+            return self.memberList.count
+            
+        case .otherCompany:
+            return self.clientList.count
+            
+        }
+        
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.setData()
-        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch self.separateCurrent {
+        case .top:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "OrganizationTableViewCell", for: indexPath) as! OrganizationTableViewCell
+            let role = self.roleList[indexPath.row]
+            
+            self.currentButton.isHidden = true
+            cell.profileView.isHidden = true
+            cell.profileImageView.isHidden = false
+            
+            if role == "운전원" {
+                cell.nameLabel.text = "정규기사"
+                self.current = "정규기사"
+                
+            } else {
+                cell.nameLabel.text = "\(role)"
+                
+            }
+            cell.positionLabel.isHidden = true
+            
+            cell.arrowImageView.isHidden = false
+            
+            return cell
+            
+        case .oneDepth:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "OrganizationTableViewCell", for: indexPath) as! OrganizationTableViewCell
+            let member = self.memberList[indexPath.row]
+            
+            cell.setCell(member: member)
+            
+            self.currentButton.isHidden = false
+            self.currentButton.setTitle(self.current, for: .normal)
+            cell.profileView.isHidden = false
+            cell.profileImageView.isHidden = true
+            
+            cell.positionLabel.isHidden = false
+            
+            cell.arrowImageView.isHidden = true
+            
+            if indexPath.row == self.memberList.count - 1 && self.nextRequest != nil {
+                self.memberSearchRequest(page: self.page + 1)
+                
+            }
+            
+            return cell
+            
+        case .otherCompany:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "OrganizationTableViewCell", for: indexPath) as! OrganizationTableViewCell
+            let member = self.clientList[indexPath.row]
+            
+            cell.setCell(member: member)
+            
+            cell.profileView.isHidden = false
+            cell.profileImageView.isHidden = true
+            
+            cell.positionLabel.isHidden = false
+            
+            cell.arrowImageView.isHidden = true
+            
+            if indexPath.row == self.clientList.count - 1 && self.nextRequest != nil {
+                self.clientSearchRequest(page: self.page + 1)
+                
+            }
+            
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch self.separateCurrent {
+        case .top:
+            let role = self.roleList[indexPath.row]
+            self.separateCurrent = .oneDepth
+            self.role = role
+            if role == "운전원" {
+                self.current = "정규기사"
+                
+            } else {
+                self.current = role
+                
+            }
+            
+            self.memberSearchRequestAtBeginning()
+            
+        case .oneDepth:
+            let member = self.memberList[indexPath.row]
+            
+            if let url = URL(string: "tel://\(member.phoneNum)") {
+                UIApplication.shared.open(url)
+                
+            }
+            
+        case .otherCompany:
+            let member = self.clientList[indexPath.row]
+            
+            if let url = URL(string: "tel://\(member.phoneNum)") {
+                UIApplication.shared.open(url)
+                
+            }
+            
+        }
     }
 }
