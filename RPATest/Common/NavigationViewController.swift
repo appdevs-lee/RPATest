@@ -9,21 +9,25 @@ import UIKit
 
 class NavigationViewController: UINavigationController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    init() {
+        super.init(nibName: nil, bundle: nil)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override init(rootViewController: UIViewController) {
+        super.init(rootViewController: rootViewController)
+        
+        self.modalPresentationStyle = rootViewController.modalPresentationStyle
+        self.modalTransitionStyle = rootViewController.modalTransitionStyle
     }
-    */
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Do any additional setup after loading the view.
+    }
 
 }

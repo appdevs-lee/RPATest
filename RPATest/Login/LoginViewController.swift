@@ -61,6 +61,7 @@ class LoginViewController: UIViewController {
     let loginModel = LoginModel()
     let commonModel = CommonModel()
     let dispatchModel = DispatchModel()
+    let organizationModel = OrganizationModel()
     
     var progressBarTimer: Timer?
     
@@ -85,46 +86,49 @@ class LoginViewController: UIViewController {
             self.loginRequest(id: self.idTextField.text!, pwd: self.pwdTextField.text!) { info in
                 UserInfo.shared.access = "Bearer " + info.access
                 UserInfo.shared.name = info.authenticatedUser.name
+                UserInfo.shared.role = info.authenticatedUser.role
                 UserDefaults.standard.set(info.authenticatedUser.name, forKey: "name")
                 UserDefaults.standard.set(info.refresh, forKey: "refreshToken")
                 
                 self.sendFCMTokenRequest(fcmToken: UserInfo.shared.fcmToken ?? "") {
-                    self.loadDailyDispatchRequest { items in
-                        var isDispatchCheck: Bool = true
-                        
-                        for item in items.regularly {
-                            if item.checkRegularlyConnect.connectCheck == "" {
-                                isDispatchCheck = false
-                                break
-                            }
-                        }
-                        
-                        if !isDispatchCheck {
-                            for item in items.order {
-                                if item.checkOrderConnect.connectCheck == "" {
+                    self.memberInfoRequest {
+                        self.loadDailyDispatchRequest { items in
+                            var isDispatchCheck: Bool = true
+                            
+                            for item in items.regularly {
+                                if item.checkRegularlyConnect.connectCheck == "" {
                                     isDispatchCheck = false
                                     break
                                 }
                             }
-                        }
-                        
-                        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
-                        
-                        vc.modalPresentationStyle = .fullScreen
-                        self.present(vc, animated: false) {
+                            
                             if !isDispatchCheck {
-                                let afterDate = SupportingMethods.shared.calculateDate(byValue: 1, component: .day, date: Date())
-                                let dateString = SupportingMethods.shared.convertDate(intoString: afterDate)
-                                
-                                NotificationCenter.default.post(name: Notification.Name("LoginDispatchCheck"), object: nil, userInfo: ["dateString": dateString])
+                                for item in items.order {
+                                    if item.checkOrderConnect.connectCheck == "" {
+                                        isDispatchCheck = false
+                                        break
+                                    }
+                                }
                             }
+                            
+                            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
+                            
+                            vc.modalPresentationStyle = .fullScreen
+                            self.present(vc, animated: false) {
+                                if !isDispatchCheck {
+                                    let afterDate = SupportingMethods.shared.calculateDate(byValue: 1, component: .day, date: Date())
+                                    let dateString = SupportingMethods.shared.convertDate(intoString: afterDate)
+                                    
+                                    NotificationCenter.default.post(name: Notification.Name("LoginDispatchCheck"), object: nil, userInfo: ["dateString": dateString])
+                                }
+                                SupportingMethods.shared.turnCoverView(.off)
+                            }
+                            
+                        } failure: { errorMessage in
                             SupportingMethods.shared.turnCoverView(.off)
+                            print("loadDailyDispatchRequest API Errpr \(errorMessage)")
+                            
                         }
-                        
-                    } failure: { errorMessage in
-                        SupportingMethods.shared.turnCoverView(.off)
-                        print("loadDailyDispatchRequest API Errpr \(errorMessage)")
-                        
                     }
                 } failure: { errorMessage in
                     SupportingMethods.shared.turnCoverView(.off)
@@ -163,6 +167,22 @@ extension LoginViewController {
                 failure?(errorMessage)
             }
         }
+    }
+    
+    func memberInfoRequest(success: (() -> ())?) {
+        self.organizationModel.memberInfoRequest { info in
+            UserInfo.shared.role = info.role
+            SupportingMethods.shared.turnCoverView(.off)
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                print("memeberInfoRequest API Error: \(errorMessage)")
+                SupportingMethods.shared.turnCoverView(.off)
+                
+            }
+        }
+
     }
     
     func tokenRefreshRequest(success: ((Token) -> ())?, refreshFailure: ((Int) -> ())?, failure: ((String) -> ())?) {
@@ -298,44 +318,46 @@ extension LoginViewController {
                         UserDefaults.standard.set(tokenData.refresh, forKey: "refreshToken")
                         
                         self.sendFCMTokenRequest(fcmToken: UserInfo.shared.fcmToken ?? "") {
-                            self.loadDailyDispatchRequest { items in
-                                var isDispatchCheck: Bool = true
-                                
-                                for item in items.regularly {
-                                    if item.checkRegularlyConnect.connectCheck == "" {
-                                        isDispatchCheck = false
-                                        break
-                                    }
-                                }
-                                
-                                if !isDispatchCheck {
-                                    for item in items.order {
-                                        if item.checkOrderConnect.connectCheck == "" {
+                            self.memberInfoRequest {
+                                self.loadDailyDispatchRequest { items in
+                                    var isDispatchCheck: Bool = true
+                                    
+                                    for item in items.regularly {
+                                        if item.checkRegularlyConnect.connectCheck == "" {
                                             isDispatchCheck = false
                                             break
                                         }
                                     }
-                                }
-                                
-                                guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
-                                
-                                vc.modalPresentationStyle = .fullScreen
-                                self.present(vc, animated: false) {
+                                    
                                     if !isDispatchCheck {
-                                        let afterDate = SupportingMethods.shared.calculateDate(byValue: 1, component: .day, date: Date())
-                                        let dateString = SupportingMethods.shared.convertDate(intoString: afterDate)
-                                        
-                                        NotificationCenter.default.post(name: Notification.Name("LoginDispatchCheck"), object: nil, userInfo: ["dateString": dateString])
-                                        
-                                        SupportingMethods.shared.showAlertNoti(title: "다음날 배차 수락이 완료되지 않았습니다. 배차 수락 화면으로 이동합니다.")
+                                        for item in items.order {
+                                            if item.checkOrderConnect.connectCheck == "" {
+                                                isDispatchCheck = false
+                                                break
+                                            }
+                                        }
                                     }
+                                    
+                                    guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
+                                    
+                                    vc.modalPresentationStyle = .fullScreen
+                                    self.present(vc, animated: false) {
+                                        if !isDispatchCheck {
+                                            let afterDate = SupportingMethods.shared.calculateDate(byValue: 1, component: .day, date: Date())
+                                            let dateString = SupportingMethods.shared.convertDate(intoString: afterDate)
+                                            
+                                            NotificationCenter.default.post(name: Notification.Name("LoginDispatchCheck"), object: nil, userInfo: ["dateString": dateString])
+                                            
+                                            SupportingMethods.shared.showAlertNoti(title: "다음날 배차 수락이 완료되지 않았습니다. 배차 수락 화면으로 이동합니다.")
+                                        }
+                                        SupportingMethods.shared.turnCoverView(.off)
+                                    }
+                                    
+                                } failure: { errorMessage in
                                     SupportingMethods.shared.turnCoverView(.off)
+                                    print("loadDailyDispatchRequest API Errpr \(errorMessage)")
+                                    
                                 }
-                                
-                            } failure: { errorMessage in
-                                SupportingMethods.shared.turnCoverView(.off)
-                                print("loadDailyDispatchRequest API Errpr \(errorMessage)")
-                                
                             }
                         } failure: { errorMessage in
                             SupportingMethods.shared.turnCoverView(.off)
