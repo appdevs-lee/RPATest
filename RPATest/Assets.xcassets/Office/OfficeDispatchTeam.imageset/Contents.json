@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "DriveGoal@1x.png",
+      "filename" : "OfficeDispatchTeam.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "DriveGoal@2x.png",
+      "filename" : "OfficeDispatchTeam@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "DriveGoal@3x.png",
+      "filename" : "OfficeDispatchTeam@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

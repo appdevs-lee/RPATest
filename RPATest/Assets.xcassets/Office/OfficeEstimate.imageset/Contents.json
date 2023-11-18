@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "DriveRecord@1x.png",
+      "filename" : "OfficeEstimate.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "DriveRecord@2x.png",
+      "filename" : "OfficeEstimate@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "DriveRecord@3x.png",
+      "filename" : "OfficeEstimate@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

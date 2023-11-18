@@ -7,6 +7,41 @@
 
 import UIKit
 
+enum Office: String {
+    case notice = "OfficeNotice"
+    case vehicle = "OfficeVehicle"
+    case consulting = "OfficeConsulting"
+    case csEdu = "OfficeEdu"
+    case accident = "OfficeAccident"
+    case fuel = "OfficeFuel"
+    case estimate = "OfficeEstimate"
+    case dispatchTeam = "OfficeDispatchTeam"
+    case rules = "OfficeRules"
+    
+    var labelName: String {
+        switch self {
+        case .notice:
+            return "공지사항"
+        case .vehicle:
+            return "차량관리"
+        case .consulting:
+            return "민원"
+        case .csEdu:
+            return "CS교육"
+        case .accident:
+            return "사고대처"
+        case .fuel:
+            return "주유"
+        case .estimate:
+            return "견적"
+        case .dispatchTeam:
+            return "팀원 배차"
+        case .rules:
+            return "취업규칙"
+        }
+    }
+}
+
 final class OfficeViewController: UIViewController {
     
     lazy var collectionView: UICollectionView = {
@@ -30,8 +65,7 @@ final class OfficeViewController: UIViewController {
         return collectionView
     }()
     
-    let imageString: [String] = ["Notice", "Inspection", "Consulting", "Estimate", "Accident", "Rating", "Edu", "Duty", "Rules"]
-    let menuString: [String] = ["공지사항", "차량민원", "상담신청", "견적" , "사고대처", "등급", "배차표", "당번", "취업규칙"]
+    let officeList: [Office] = [.notice, .vehicle, .consulting, .csEdu, .accident, .fuel, .estimate, .dispatchTeam, .rules]
     
     let noticeModel = NoticeModel()
     
@@ -150,13 +184,13 @@ extension OfficeViewController {
 // MARK: - Extension for UICollectionViewDelegateFlowLayout, UICollectionViewDataSource
 extension OfficeViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.imageString.count
+        return self.officeList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "OfficeCollectionViewCell", for: indexPath) as! OfficeCollectionViewCell
-        
-        cell.setCell(imageString: self.imageString[indexPath.row], menuString: self.menuString[indexPath.row])
+        let office = self.officeList[indexPath.row]
+        cell.setCell(office: office)
         
         return cell
     }
@@ -170,27 +204,33 @@ extension OfficeViewController: UICollectionViewDelegateFlowLayout, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case 0:
+        let office = self.officeList[indexPath.row]
+        
+        switch office {
+        case .notice:
             // Notice
             let vc = NoticeViewController()
             
             self.navigationController?.pushViewController(vc, animated: true)
-        case 1:
-            // Inspection
+            
+        case .vehicle:
+            // Vehicle
             let vc = InspectionViewController()
             
             self.navigationController?.pushViewController(vc, animated: true)
-        case 2:
+            
+        case .consulting:
             // Consulting
             let vc = ConsultingViewController()
             
             self.navigationController?.pushViewController(vc, animated: true)
-        case 6:
+            
+        case .dispatchTeam:
             // 배차표
             let vc = DispatchScheduleViewController()
             
             self.navigationController?.pushViewController(vc, animated: true)
+            
         default:
             break
         }

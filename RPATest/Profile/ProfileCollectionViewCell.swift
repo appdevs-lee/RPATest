@@ -87,8 +87,8 @@ extension ProfileCollectionViewCell: EssentialCellHeaderMethods {
 
 // MARK: - Extension for methods added
 extension ProfileCollectionViewCell {
-    func setCell(imageString: String, menuString: String) {
-        self.menuImageView.image = UIImage(named: "\(imageString)")
-        self.menuLabel.text = "\(menuString)"
+    func setCell(profile: Profile) {
+        self.menuImageView.image = UIImage(named: "\(profile.rawValue)")
+        self.menuLabel.text = "\(profile.labelName)"
     }
 }

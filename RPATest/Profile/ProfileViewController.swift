@@ -7,6 +7,26 @@
 
 import UIKit
 
+enum Profile: String {
+    case myInfo = "ProfileMyInfo"
+    case toDo = "ProfileToDo"
+    case Alarm = "ProfileAlarm"
+    case driveWay = "ProfileDriveWay"
+    
+    var labelName: String {
+        switch self {
+        case .myInfo:
+            return "내 정보"
+        case .toDo:
+            return "할 일"
+        case .Alarm:
+            return "알림"
+        case .driveWay:
+            return "노선숙지"
+        }
+    }
+}
+
 final class ProfileViewController: UIViewController {
     
     lazy var profileInfoStackView: UIStackView = {
@@ -99,8 +119,7 @@ final class ProfileViewController: UIViewController {
         return collectionView
     }()
     
-    let imageString: [String] = ["MyInfo","ToDo","DriveRecord","PhoneBook","DriveWay","Alert","DriveGoal"]
-    let menuString: [String] = ["내 정보", "할 일", "운행기록", "주소록", "노선숙지", "알림", "목표운행량"]
+    let profileList: [Profile] = [.myInfo, .toDo, .Alarm, .driveWay]
     let dispatchModel = DispatchModel()
     
     override func viewDidLoad() {
@@ -260,20 +279,23 @@ extension ProfileViewController {
 // MARK: - Extension for UICollectionViewDelegateFlowLayout, UICollectionViewDataSource
 extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.imageString.count
+        return self.profileList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileCollectionViewCell", for: indexPath) as! ProfileCollectionViewCell
+        let profile = self.profileList[indexPath.row]
         
-        cell.setCell(imageString: self.imageString[indexPath.row], menuString: self.menuString[indexPath.row])
+        cell.setCell(profile: profile)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case 4:
+        let profile = self.profileList[indexPath.row]
+        
+        switch profile {
+        case .driveWay:
             // Search
             SupportingMethods.shared.turnCoverView(.on)
             self.loadDispatchGroupListRequest { groupList in
@@ -281,9 +303,11 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectio
                 
                 self.navigationController?.pushViewController(vc, animated: true)
                 SupportingMethods.shared.turnCoverView(.off)
+                
             } failure: { errorMessage in
                 SupportingMethods.shared.turnCoverView(.off)
                 print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
+                
             }
             
         default:

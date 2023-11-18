@@ -87,8 +87,8 @@ extension OfficeCollectionViewCell: EssentialCellHeaderMethods {
 
 // MARK: - Extension for methods added
 extension OfficeCollectionViewCell {
-    func setCell(imageString: String, menuString: String) {
-        self.menuImageView.image = UIImage(named: "\(imageString)")
-        self.menuLabel.text = "\(menuString)"
+    func setCell(office: Office) {
+        self.menuImageView.image = UIImage(named: "\(office.rawValue)")
+        self.menuLabel.text = "\(office.labelName)"
     }
 }

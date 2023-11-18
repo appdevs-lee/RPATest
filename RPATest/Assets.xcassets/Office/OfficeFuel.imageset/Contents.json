@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Rating@1x.png",
+      "filename" : "OfficeFuel.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Rating@2x.png",
+      "filename" : "OfficeFuel@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Rating@3x.png",
+      "filename" : "OfficeFuel@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
