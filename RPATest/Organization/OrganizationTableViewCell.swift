@@ -184,12 +184,24 @@ extension OrganizationTableViewCell {
 
 // MARK: - Extension for methods added
 extension OrganizationTableViewCell {
-    func setCell(member: MemberDetailItem) {
-        self.nameLabel.text = member.name
-        self.positionLabel.text = member.role
+    func setCell(member: MemberDetailItem? = nil, client: ClientDetailItem? = nil) {
+        if member != nil {
+            guard let member = member else { return }
+            self.nameLabel.text = member.name
+            self.positionLabel.text = member.role
+            
+            let firstWordinName = String((member.name.first)!)
+            self.profileLabel.text = firstWordinName
+        }
         
-        let firstWordinName = String((member.name.first)!)
-        self.profileLabel.text = firstWordinName
+        if client != nil {
+            guard let client = client else { return }
+            self.nameLabel.text = client.name
+            
+            let firstWordinName = String((client.name.first)!)
+            self.profileLabel.text = firstWordinName
+        }
+        
     }
 }
 

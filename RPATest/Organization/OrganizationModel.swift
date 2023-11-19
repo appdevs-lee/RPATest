@@ -131,7 +131,7 @@ final class OrganizationModel {
         }
     }
     
-    func clientSearchRequest(page: Int, search: String, success: ((MemberItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+    func clientSearchRequest(page: Int, search: String, success: ((ClientItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/client"
         
         let headers: HTTPHeaders = [
@@ -165,7 +165,7 @@ final class OrganizationModel {
                 
                 if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
                     if decodedData.result == "true" { // result == true
-                        if let decodedData = try? JSONDecoder().decode(Member.self, from: data) {
+                        if let decodedData = try? JSONDecoder().decode(Client.self, from: data) {
                             print("clientSearchRequest succeeded")
                             success?(decodedData.data)
                                                 
@@ -224,6 +224,39 @@ struct MemberDetailItem: Codable {
         case name
         case role
         case phoneNum = "phone_num"
+    }
+    
+}
+
+struct Client: Codable {
+    let result: String
+    let data: ClientItem
+    
+    enum CodingKeys: CodingKey {
+        case result
+        case data
+    }
+}
+
+struct ClientItem: Codable {
+    let count: Int
+    let next: String?
+    let clientList: [ClientDetailItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case count
+        case next
+        case clientList = "client_list"
+    }
+}
+
+struct ClientDetailItem: Codable {
+    let name: String
+    let phoneNum: String
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case phoneNum = "phone"
     }
     
 }

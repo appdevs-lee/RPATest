@@ -124,7 +124,7 @@ final class OrganizationViewController: UIViewController {
     let organizationModel = OrganizationModel()
     var roleList: [String] = ["관리자", "운전원", "용역"]
     var memberList: [MemberDetailItem] = []
-    var clientList: [MemberDetailItem] = [MemberDetailItem(name: "에버모터스", role: "", phoneNum: "010-6258-9454"), MemberDetailItem(name: "명성차유리", role: "", phoneNum: "010-3804-3259")]
+    var clientList: [ClientDetailItem] = []
     var page: Int = 1
     var nextRequest: String?
     
@@ -144,10 +144,10 @@ final class OrganizationViewController: UIViewController {
         self.setSubviews()
         self.setLayouts()
         
-//        if self.separateCurrent == .otherCompany {
-//            self.clientSearchRequestAtBeginning()
-//            
-//        }
+        if self.separateCurrent == .otherCompany {
+            self.clientSearchRequestAtBeginning()
+            
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -270,7 +270,7 @@ extension OrganizationViewController {
         }
     }
     
-    func clientSearchRequest(page: Int, success: ((MemberItem) -> ())?, failure: ((String) -> ())?) {
+    func clientSearchRequest(page: Int, success: ((ClientItem) -> ())?, failure: ((String) -> ())?) {
         self.organizationModel.clientSearchRequest(page: page, search: "") { item in
             success?(item)
             
@@ -349,9 +349,9 @@ extension OrganizationViewController {
         self.clientSearchRequest(page: 1) { item in
             self.page = 1
             self.nextRequest = item.next
-            self.clientList = item.memberList
+            self.clientList = item.clientList
             
-            if item.memberList.isEmpty {
+            if item.clientList.isEmpty {
                 self.noDataStackView.isHidden = false
                 
             } else {
@@ -378,9 +378,9 @@ extension OrganizationViewController {
             self.page = page
             self.nextRequest = item.next
             
-            self.clientList.append(contentsOf: item.memberList)
+            self.clientList.append(contentsOf: item.clientList)
             
-            if !item.memberList.isEmpty {
+            if !item.clientList.isEmpty {
                 self.tableView.reloadData()
                 
             }
@@ -484,9 +484,9 @@ extension OrganizationViewController: UITableViewDelegate, UITableViewDataSource
             
         case .otherCompany:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrganizationTableViewCell", for: indexPath) as! OrganizationTableViewCell
-            let member = self.clientList[indexPath.row]
+            let client = self.clientList[indexPath.row]
             
-            cell.setCell(member: member)
+            cell.setCell(client: client)
             
             cell.profileView.isHidden = false
             cell.profileImageView.isHidden = true
@@ -517,6 +517,7 @@ extension OrganizationViewController: UITableViewDelegate, UITableViewDataSource
                 self.current = role
                 
             }
+            
             
             self.memberSearchRequestAtBeginning()
             
