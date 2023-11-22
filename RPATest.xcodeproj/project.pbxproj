@@ -51,6 +51,7 @@
 		05821A9F2B0DE718007049C9 /* DispatchOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A9E2B0DE718007049C9 /* DispatchOrderTableViewCell.swift */; };
 		05821AA12B0DEBC1007049C9 /* TempateViewPagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821AA02B0DEBC1007049C9 /* TempateViewPagerViewController.swift */; };
 		05821AA32B0DEBCE007049C9 /* ViewPagerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821AA22B0DEBCE007049C9 /* ViewPagerCollectionViewCell.swift */; };
+		05821AA52B0DEC94007049C9 /* TemplateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821AA42B0DEC94007049C9 /* TemplateView.swift */; };
 		0582C5A82AB8218D0045CBCB /* DispatchSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0582C5A72AB8218D0045CBCB /* DispatchSearchViewController.swift */; };
 		0582C5AA2AB842BF0045CBCB /* DispatchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */; };
 		059093D02AFCAEE700E0F1DD /* DispatchScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059093CF2AFCAEE700E0F1DD /* DispatchScheduleViewController.swift */; };
@@ -135,6 +136,7 @@
 		05821A9E2B0DE718007049C9 /* DispatchOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchOrderTableViewCell.swift; sourceTree = "<group>"; };
 		05821AA02B0DEBC1007049C9 /* TempateViewPagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempateViewPagerViewController.swift; sourceTree = "<group>"; };
 		05821AA22B0DEBCE007049C9 /* ViewPagerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPagerCollectionViewCell.swift; sourceTree = "<group>"; };
+		05821AA42B0DEC94007049C9 /* TemplateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateView.swift; sourceTree = "<group>"; };
 		0582C5A72AB8218D0045CBCB /* DispatchSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSearchViewController.swift; sourceTree = "<group>"; };
 		0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCategoryViewController.swift; sourceTree = "<group>"; };
 		059093CF2AFCAEE700E0F1DD /* DispatchScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleViewController.swift; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				056BF5032AF3518900B4C389 /* BottomSheetViewController.swift */,
 				05821AA02B0DEBC1007049C9 /* TempateViewPagerViewController.swift */,
 				05821AA22B0DEBCE007049C9 /* ViewPagerCollectionViewCell.swift */,
+				05821AA42B0DEC94007049C9 /* TemplateView.swift */,
 			);
 			path = Template;
 			sourceTree = "<group>";
@@ -586,6 +589,7 @@
 				056BF5042AF3518900B4C389 /* BottomSheetViewController.swift in Sources */,
 				5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */,
 				056A34522ABBCC4200829750 /* CheckPermissionViewController.swift in Sources */,
+				05821AA52B0DEC94007049C9 /* TemplateView.swift in Sources */,
 				5FE29CC22A7E1588000748FC /* TabBarController.swift in Sources */,
 				0561E7232AC2A32100787B77 /* DispatchHomeCheckViewController.swift in Sources */,
 				5FE29CBE2A7E142A000748FC /* AlertPopViewController.swift in Sources */,
