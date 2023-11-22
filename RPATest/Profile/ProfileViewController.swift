@@ -121,6 +121,7 @@ final class ProfileViewController: UIViewController {
     
     let profileList: [Profile] = [.myInfo, .toDo, .Alarm, .driveWay]
     let dispatchModel = DispatchModel()
+    let profileModel = ProfileModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -269,6 +270,33 @@ extension ProfileViewController {
         
     }
     
+    func loadSalaryStatementRequest(success: ((String) -> ())?, failure: ((String) -> ())?) {
+        self.profileModel.loadSalaryStatementRequest(date: Date()) { html in
+            success?(html)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
+    
+    func htmlToAttributedString(text: String) -> NSAttributedString? {
+        guard let data = text.data(using: .utf8) else {
+            return NSAttributedString()
+        }
+        
+        if let attributedString = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding:String.Encoding.utf8.rawValue], documentAttributes: nil) {
+            return attributedString
+                
+        } else {
+            return NSAttributedString()
+        }
+    }
+    
 }
 
 // MARK: - Extension for selector methods
@@ -309,6 +337,20 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectio
                 print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
                 
             }
+            
+        case .myInfo:
+            SupportingMethods.shared.turnCoverView(.on)
+            self.loadSalaryStatementRequest { html in
+                let vc = ProfilePayWebViewController(html: html)
+                
+                self.navigationController?.pushViewController(vc, animated: true)
+                SupportingMethods.shared.turnCoverView(.off)
+            } failure: { errorMessage in
+                SupportingMethods.shared.turnCoverView(.off)
+                print("didSelectItemAt loadSalaryStatementRequest API Error: \(errorMessage)")
+                
+            }
+
             
         default:
             break
