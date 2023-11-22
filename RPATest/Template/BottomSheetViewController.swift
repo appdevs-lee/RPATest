@@ -68,7 +68,7 @@ final class BottomSheetViewController: UIViewController {
     //    }
     
     deinit {
-        print("----------------------------------- TemplateViewController is disposed -----------------------------------")
+        print("----------------------------------- BottomSheetViewController is disposed -----------------------------------")
     }
 }
 
@@ -186,4 +186,3 @@ extension BottomSheetViewController {
         }
     }
 }
-
