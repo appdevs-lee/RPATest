@@ -523,10 +523,7 @@ extension DispatchViewController {
     }
     
     @objc func tappedRefuelingCheckButton(_ sender: UIButton) {
-        let vc = DispatchRefuelingBottomSheetViewController()
         
-        vc.modalPresentationStyle = .overFullScreen
-        self.present(vc, animated: false)
     }
     
     @objc func dispatchCheck(_ noti: Notification) {

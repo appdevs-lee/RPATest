@@ -200,6 +200,7 @@
 			children = (
 				5FCC11732AA46DD900550534 /* OfficeViewController.swift */,
 				056A34532ABBDAA700829750 /* OfficeCollectionViewCell.swift */,
+				056BF5052AF351BF00B4C389 /* DispatchRefuelingBottomSheetViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -251,7 +252,6 @@
 				5FD49D0F2AA31A7700208273 /* DispatchViewController.swift */,
 				5FCC116E2AA4638500550534 /* DispatchTableViewCell.swift */,
 				0561E7222AC2A32100787B77 /* DispatchHomeCheckViewController.swift */,
-				056BF5052AF351BF00B4C389 /* DispatchRefuelingBottomSheetViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";

@@ -231,6 +231,12 @@ extension OfficeViewController: UICollectionViewDelegateFlowLayout, UICollection
             
             self.navigationController?.pushViewController(vc, animated: true)
             
+        case .fuel:
+            // 주유
+            let vc = DispatchRefuelingBottomSheetViewController()
+            
+            vc.modalPresentationStyle = .overFullScreen
+            self.present(vc, animated: false)
         default:
             break
         }

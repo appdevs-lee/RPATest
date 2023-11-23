@@ -91,6 +91,8 @@ final class DispatchRefuelingBottomSheetViewController: UIViewController {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
+        // FIXME: API 적용 후, 이 부분 활성화해줘야 함.
+        button.isEnabled = false
         button.setTitle("확인", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
@@ -131,6 +133,8 @@ final class DispatchRefuelingBottomSheetViewController: UIViewController {
         
         return view
     }()
+    
+    let officeModel = OfficeModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -332,17 +336,41 @@ extension DispatchRefuelingBottomSheetViewController {
             }
         }
     }
+    
+    func sendRefuelingDataRequest(success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        self.officeModel.sendRefuelingDataRequest {
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
 extension DispatchRefuelingBottomSheetViewController {
     // UITapGestureRecognizer 연결 함수 부분
     @objc private func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
-//        self.hideBottomSheetAndGoBack()
+        self.hideBottomSheetAndGoBack()
     }
     
     @objc func tappedDoneButton() {
-        self.hideBottomSheetAndGoBack()
+        SupportingMethods.shared.turnCoverView(.on)
+        self.sendRefuelingDataRequest {
+            self.hideBottomSheetAndGoBack()
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        } failure: { errorMessage in
+            print("tappedDoneButton sendRefuelingDataRequest API Error: \(errorMessage)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        }
+        
     }
     
     // UISwipeGestureRecognizer 연결 함수 부분
@@ -351,7 +379,7 @@ extension DispatchRefuelingBottomSheetViewController {
             switch recognizer.direction {
             case .down:
                 print(".down")
-//                self.hideBottomSheetAndGoBack()
+                self.hideBottomSheetAndGoBack()
             default:
                 break
             }
