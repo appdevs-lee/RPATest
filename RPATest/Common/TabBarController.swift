@@ -21,7 +21,7 @@ class TabBarController: UITabBarController {
         let dispatchVC = DispatchViewController()
         let officeVC = OfficeViewController()
         let organizationVC = OrganizationViewPagerViewController()
-        let profileVC = ProfileViewController()
+        let profileVC = RenewalProfileViewController()
         
         self.viewControllers = [
             self.createTabBarItem(tabBarTitle: "배차", tabBarImage: "dispatch", selectedImage: "selectedDispatch", viewController: dispatchVC),

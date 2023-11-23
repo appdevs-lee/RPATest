@@ -225,7 +225,7 @@ extension ProfileViewController: EssentialViewMethods {
     
     func setViewAfterTransition() {
         //self.navigationController?.setNavigationBarHidden(false, animated: true)
-        //self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     private func setUpNavigationTitle() -> UIImageView {
@@ -341,7 +341,7 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout, UICollectio
         case .myInfo:
             SupportingMethods.shared.turnCoverView(.on)
             self.loadSalaryStatementRequest { html in
-                let vc = ProfilePayWebViewController(html: html)
+                let vc = ProfileSalaryStatementViewController(html: html)
                 
                 self.navigationController?.pushViewController(vc, animated: true)
                 SupportingMethods.shared.turnCoverView(.off)

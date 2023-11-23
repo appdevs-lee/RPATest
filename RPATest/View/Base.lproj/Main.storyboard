@@ -192,10 +192,10 @@
             </objects>
             <point key="canvasLocation" x="953" y="2911"/>
         </scene>
-        <!--Profile View Controller-->
+        <!--Renewal Profile View Controller-->
         <scene sceneID="t3Z-mM-6mt">
             <objects>
-                <viewController storyboardIdentifier="ProfileViewController" id="8zY-87-3Bu" customClass="ProfileViewController" customModule="RPATest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RenewalProfileViewController" id="8zY-87-3Bu" customClass="RenewalProfileViewController" customModule="RPATest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="d2K-kN-qjb">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -42,10 +42,11 @@
 		057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */; };
 		057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */; };
 		057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */; };
+		057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */; };
+		057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */; };
 		057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */; };
 		057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */; };
 		05821A952B0DCDEA007049C9 /* RenewalDispatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A942B0DCDEA007049C9 /* RenewalDispatchViewController.swift */; };
-		05821A972B0DD152007049C9 /* ProfilePayWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A962B0DD152007049C9 /* ProfilePayWebViewController.swift */; };
 		05821A992B0DD443007049C9 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A982B0DD443007049C9 /* ProfileModel.swift */; };
 		05821A9D2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A9C2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift */; };
 		05821A9F2B0DE718007049C9 /* DispatchOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A9E2B0DE718007049C9 /* DispatchOrderTableViewCell.swift */; };
@@ -127,10 +128,11 @@
 		057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckOrderTableViewCell.swift; sourceTree = "<group>"; };
 		057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckPopViewController.swift; sourceTree = "<group>"; };
 		057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckDenyViewController.swift; sourceTree = "<group>"; };
+		057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSalaryStatementViewController.swift; sourceTree = "<group>"; };
+		057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalProfileViewController.swift; sourceTree = "<group>"; };
 		057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckViewController.swift; sourceTree = "<group>"; };
 		057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckTableViewCell.swift; sourceTree = "<group>"; };
 		05821A942B0DCDEA007049C9 /* RenewalDispatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchViewController.swift; sourceTree = "<group>"; };
-		05821A962B0DD152007049C9 /* ProfilePayWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePayWebViewController.swift; sourceTree = "<group>"; };
 		05821A982B0DD443007049C9 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		05821A9C2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchRegularlyTableViewCell.swift; sourceTree = "<group>"; };
 		05821A9E2B0DE718007049C9 /* DispatchOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchOrderTableViewCell.swift; sourceTree = "<group>"; };
@@ -374,8 +376,9 @@
 			isa = PBXGroup;
 			children = (
 				05821A982B0DD443007049C9 /* ProfileModel.swift */,
+				057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */,
 				5FCC11772AA46DE900550534 /* ProfileViewController.swift */,
-				05821A962B0DD152007049C9 /* ProfilePayWebViewController.swift */,
+				057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */,
 				5F680E9B2AA56CA40047ED65 /* ProfileCollectionViewCell.swift */,
 			);
 			path = Profile;
@@ -598,7 +601,6 @@
 				5FCC116F2AA4638500550534 /* DispatchTableViewCell.swift in Sources */,
 				056A34782ABC394600829750 /* ConsultingTableViewCell.swift in Sources */,
 				5FCC11782AA46DE900550534 /* ProfileViewController.swift in Sources */,
-				05821A972B0DD152007049C9 /* ProfilePayWebViewController.swift in Sources */,
 				5F1A16232A74EECB00132D29 /* ReferenceValues.swift in Sources */,
 				056A34652ABC0EF000829750 /* InspectionViewController.swift in Sources */,
 				056A347A2ABC394E00829750 /* ConsultingViewController.swift in Sources */,
@@ -632,11 +634,13 @@
 				05821A9D2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift in Sources */,
 				056A346F2ABC1D7300829750 /* IndexPathButton.swift in Sources */,
 				05821A952B0DCDEA007049C9 /* RenewalDispatchViewController.swift in Sources */,
+				057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */,
 				056A34542ABBDAA700829750 /* OfficeCollectionViewCell.swift in Sources */,
 				056A34602ABC071200829750 /* NoticeDetailTitleTableViewCell.swift in Sources */,
 				056A75A32B05D03600C25711 /* OrganizationSearchViewController.swift in Sources */,
 				056A75A52B05D18800C25711 /* OrganizationSearchTableViewCell.swift in Sources */,
 				056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */,
+				057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */,
 				056A34622ABC072F00829750 /* NoticeDetailTextTableViewCell.swift in Sources */,
 				056A34692ABC13CC00829750 /* InspectionModel.swift in Sources */,
 				05821AA12B0DEBC1007049C9 /* TempateViewPagerViewController.swift in Sources */,
