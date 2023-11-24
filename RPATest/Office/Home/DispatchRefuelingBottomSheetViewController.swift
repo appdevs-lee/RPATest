@@ -48,6 +48,7 @@ final class DispatchRefuelingBottomSheetViewController: UIViewController {
             .font:UIFont.useFont(ofSize: 16, weight: .Medium)
         ])
         textField.borderStyle = .roundedRect
+        textField.text = UserInfo.shared.name
         textField.translatesAutoresizingMaskIntoConstraints = false
         
         return textField
@@ -135,6 +136,7 @@ final class DispatchRefuelingBottomSheetViewController: UIViewController {
     }()
     
     let officeModel = OfficeModel()
+    let dispatchModel = DispatchModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -350,6 +352,20 @@ extension DispatchRefuelingBottomSheetViewController {
         }
 
     }
+    
+    func loadVehicleListRequest(success: (([VehicleListItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        self.dispatchModel.loadVehicleListRequest { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -419,4 +435,3 @@ extension DispatchRefuelingBottomSheetViewController {
         }
     }
 }
-

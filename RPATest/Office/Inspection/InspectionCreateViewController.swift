@@ -137,6 +137,7 @@ final class InspectionCreateViewController: UIViewController {
     
     let inspectionModel = InspectionModel()
     let commonModel = CommonModel()
+    let dispatchModel = DispatchModel()
     
     var vehicleList: [VehicleListItem] = []
     var type: CommentType
@@ -364,7 +365,7 @@ extension InspectionCreateViewController {
     }
     
     func loadVehicleListRequest(success: (([VehicleListItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        self.inspectionModel.loadVehicleListRequest { item in
+        self.dispatchModel.loadVehicleListRequest { item in
             success?(item)
             
         } failure: { errorMessage in

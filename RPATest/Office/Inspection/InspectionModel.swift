@@ -10,7 +10,6 @@ import Alamofire
 
 final class InspectionModel {
     private(set) var loadInspectionListRequest: DataRequest?
-    private(set) var loadVehicleListRequest: DataRequest?
     
     func loadInspectionListRequest(page: Int, success: ((InspectionList) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/complaint/inspection"
@@ -53,48 +52,6 @@ final class InspectionModel {
                 
             case .failure(let error): // error
                 print("loadInspectionListRequest error: \(error.localizedDescription)")
-                failure?(error.localizedDescription)
-            }
-        }
-    }
-    
-    func loadVehicleListRequest(success: (([VehicleListItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/vehicle"
-        
-        let headers: HTTPHeaders = [
-            "access": "application/json",
-            "Authorization": UserInfo.shared.access!
-        ]
-        
-        self.loadVehicleListRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
-        
-        self.loadVehicleListRequest?.responseData { response in
-            switch response.result {
-            case .success(let data):
-                guard let statusCode = response.response?.statusCode else {
-                    print("loadVehicleListRequest failure: statusCode nil")
-                    failure?("statusCodeNil")
-                    
-                    return
-                }
-                
-                guard statusCode >= 200 && statusCode < 300 else {
-                    print("loadVehicleListRequest failure: statusCode(\(statusCode))")
-                    failure?("statusCodeError")
-                    
-                    return
-                }
-                
-                if let decodedData = try? JSONDecoder().decode(VehicleList.self, from: data) {
-                    success?(decodedData.vehicleList)
-                    
-                } else { // improper structure
-                    print("loadVehicleListRequest failure: improper structure")
-                    failure?("알 수 없는 Response 구조")
-                }
-                
-            case .failure(let error): // error
-                print("loadVehicleListRequest error: \(error.localizedDescription)")
                 failure?(error.localizedDescription)
             }
         }

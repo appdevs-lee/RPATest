@@ -74,6 +74,7 @@ final class InspectionViewController: UIViewController {
     }
     
     let inspectionModel = InspectionModel()
+    let dispatchModel = DispatchModel()
     var inspectionList: [InspectionItem] = []
     var page: Int = 1
     var nextRequest: String?
@@ -269,7 +270,7 @@ extension InspectionViewController {
     }
     
     func loadVehicleListRequest(success: (([VehicleListItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        self.inspectionModel.loadVehicleListRequest { item in
+        self.dispatchModel.loadVehicleListRequest { item in
             success?(item)
             
         } failure: { errorMessage in

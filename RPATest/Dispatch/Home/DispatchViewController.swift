@@ -74,7 +74,7 @@ final class DispatchViewController: UIViewController {
     }()
     
     lazy var buttonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [self.dispatchMonthlyInfoButton, self.refuelingCheckButton])
+        let stackView = UIStackView(arrangedSubviews: [self.dispatchMonthlyInfoButton, self.dispatchDailyLogButton])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.alignment = .fill
@@ -96,13 +96,13 @@ final class DispatchViewController: UIViewController {
         return button
     }()
     
-    lazy var refuelingCheckButton: UIButton = {
+    lazy var dispatchDailyLogButton: UIButton = {
         let button = UIButton()
-        button.setTitle("주유", for: .normal)
+        button.setTitle("운행일보", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
-        button.addTarget(self, action: #selector(tappedRefuelingCheckButton(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tappedDispatchDailyLogButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -264,8 +264,8 @@ extension DispatchViewController: EssentialViewMethods {
         
         // refuelingCheckButton
         NSLayoutConstraint.activate([
-            self.refuelingCheckButton.widthAnchor.constraint(equalToConstant: 75),
-            self.refuelingCheckButton.heightAnchor.constraint(equalToConstant: 30)
+            self.dispatchDailyLogButton.widthAnchor.constraint(equalToConstant: 75),
+            self.dispatchDailyLogButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
         // dispatchMonthlyInfoButton
@@ -522,7 +522,8 @@ extension DispatchViewController {
         }
     }
     
-    @objc func tappedRefuelingCheckButton(_ sender: UIButton) {
+    @objc func tappedDispatchDailyLogButton(_ sender: UIButton) {
+        // 운행일보
         
     }
     

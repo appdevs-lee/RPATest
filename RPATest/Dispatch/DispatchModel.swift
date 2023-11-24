@@ -17,6 +17,7 @@ final class DispatchModel {
     private(set) var loadDispatchPathRequest: DataRequest?
     private(set) var pathKnowRequest: DataRequest?
     private(set) var pathKnowDeleteRequest: DataRequest?
+    private(set) var loadVehicleListRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -489,6 +490,49 @@ final class DispatchModel {
                 
             case .failure(let error): // error
                 print("pathKnowDeleteRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    // MARK: - 차량 목록 가져오기
+    func loadVehicleListRequest(success: (([VehicleListItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/vehicle"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadVehicleListRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadVehicleListRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadVehicleListRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadVehicleListRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(VehicleList.self, from: data) {
+                    success?(decodedData.vehicleList)
+                    
+                } else { // improper structure
+                    print("loadVehicleListRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error): // error
+                print("loadVehicleListRequest error: \(error.localizedDescription)")
                 failure?(error.localizedDescription)
             }
         }
