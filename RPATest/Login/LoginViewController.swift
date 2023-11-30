@@ -172,6 +172,7 @@ extension LoginViewController {
     func memberInfoRequest(success: (() -> ())?) {
         self.organizationModel.memberInfoRequest { info in
             UserInfo.shared.role = info.role
+            UserInfo.shared.id = info.id
             SupportingMethods.shared.turnCoverView(.off)
             success?()
             

@@ -30,6 +30,7 @@ final class ProfileSalaryStatementViewController: UIViewController {
     }
     
     var html: String
+    let profileModel = ProfileModel()
 //    var htmlString: NSAttributedString
     
     override func viewDidLoad() {
@@ -139,7 +140,19 @@ extension ProfileSalaryStatementViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension ProfileSalaryStatementViewController {
-    
+    func signSalaryStatementRequest(date: String, success: (() -> ())?, failure: ((String) -> ())?) {
+        self.profileModel.signSalaryStatementRequest(date: date) {
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -150,12 +163,33 @@ extension ProfileSalaryStatementViewController {
     }
     
     @objc func tappedSignButton(_ barButtonItem: UIBarButtonItem) {
-        let vc = AlertPopViewController(.normalTwoButton(messageTitle: "급여 명세서에 서명하시겠습니까?", messageContent: "확인 버튼을 누르시면 자동으로 서명됩니다.", leftButtonTitle: "취소", leftAction: { }, rightButtonTitle: "확인", rightAction: {
+        if UserInfo.shared.signStatus {
+            SupportingMethods.shared.showAlertNoti(title: "이미 서명이 완료되었습니다.")
             
-            self.navigationController?.popViewController(animated: true)
-        }))
+        } else {
+            let vc = AlertPopViewController(.normalTwoButton(messageTitle: "급여 명세서에 서명하시겠습니까?", messageContent: "(급여에 이의 없음을 동의합니다.)\n확인 버튼을 누르시면 자동으로 서명됩니다.", leftButtonTitle: "취소", leftAction: { }, rightButtonTitle: "확인", rightAction: {
+                let date = SupportingMethods.shared.convertDate(intoString: Date(), "yyyy-MM")
+                
+                SupportingMethods.shared.turnCoverView(.on)
+                self.signSalaryStatementRequest(date: date) {
+                    UserInfo.shared.signStatus = true
+                    SupportingMethods.shared.showAlertNoti(title: "서명이 완료되었습니다.")
+                    SupportingMethods.shared.turnCoverView(.off)
+                    
+                } failure: { errorMessage in
+                    print("tappedSignButton signSalaryStatementRequest API Error: \(errorMessage)")
+                    SupportingMethods.shared.turnCoverView(.off)
+                    
+                }
+
+                
+                self.navigationController?.popViewController(animated: true)
+            }))
+            
+            self.present(vc, animated: true)
+            
+        }
         
-        self.present(vc, animated: true)
     }
 }
 

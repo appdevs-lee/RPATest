@@ -10,12 +10,22 @@ import Foundation
 class UserInfo {
     static let shared = UserInfo()
 
-    var id: String?
+    var id: Int?
     var password: String?
     var access: String?
     var name: String?
     var role: String?
     var fcmToken: String?
+    var signStatus: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "salarySignStatus")
+            
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "salarySignStatus")
+        }
+    }
     
     private init() {
         self.name = UserDefaults.standard.string(forKey: "name")
