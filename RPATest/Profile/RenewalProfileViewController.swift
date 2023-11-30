@@ -486,7 +486,8 @@ extension RenewalProfileViewController {
     }
     
     func loadSalaryStatementRequest(success: ((String) -> ())?, failure: ((String) -> ())?) {
-        self.profileModel.loadSalaryStatementRequest(date: Date()) { html in
+        let beforeDate = SupportingMethods.shared.calculateDate(byValue: -1, component: .month, date: Date())
+        self.profileModel.loadSalaryStatementRequest(date: beforeDate) { html in
             success?(html)
             
         } failure: { errorMessage in

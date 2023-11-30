@@ -77,7 +77,9 @@ extension ProfileSalaryStatementViewController: EssentialViewMethods {
     }
     
     func setGestures() {
-        
+        let titleGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tappedSelectMonthLabel(_:)))
+        self.navigationController?.navigationBar.addGestureRecognizer(titleGesture)
+        self.navigationController?.navigationBar.isUserInteractionEnabled = true
     }
     
     func setNotificationCenters() {
@@ -162,13 +164,18 @@ extension ProfileSalaryStatementViewController {
         
     }
     
+    @objc func tappedSelectMonthLabel(_ gesture: UITapGestureRecognizer) {
+        print("tappedSelectMonthLabel")
+    }
+    
     @objc func tappedSignButton(_ barButtonItem: UIBarButtonItem) {
         if UserInfo.shared.signStatus {
             SupportingMethods.shared.showAlertNoti(title: "이미 서명이 완료되었습니다.")
             
         } else {
             let vc = AlertPopViewController(.normalTwoButton(messageTitle: "급여 명세서에 서명하시겠습니까?", messageContent: "(급여에 이의 없음을 동의합니다.)\n확인 버튼을 누르시면 자동으로 서명됩니다.", leftButtonTitle: "취소", leftAction: { }, rightButtonTitle: "확인", rightAction: {
-                let date = SupportingMethods.shared.convertDate(intoString: Date(), "yyyy-MM")
+                let beforeDate = SupportingMethods.shared.calculateDate(byValue: -1, component: .month, date: Date())
+                let date = SupportingMethods.shared.convertDate(intoString: beforeDate, "yyyy-MM")
                 
                 SupportingMethods.shared.turnCoverView(.on)
                 self.signSalaryStatementRequest(date: date) {
