@@ -74,7 +74,7 @@ final class DispatchViewController: UIViewController {
     }()
     
     lazy var buttonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [self.dispatchMonthlyInfoButton, self.dispatchDailyLogButton])
+        let stackView = UIStackView(arrangedSubviews: [self.dispatchCheckButton, self.dispatchNoteButton])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.alignment = .fill
@@ -84,9 +84,9 @@ final class DispatchViewController: UIViewController {
         return stackView
     }()
     
-    lazy var dispatchMonthlyInfoButton: UIButton = {
+    lazy var dispatchCheckButton: UIButton = {
         let button = UIButton()
-        button.setTitle("월간정보", for: .normal)
+        button.setTitle("운행수락", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
@@ -96,7 +96,7 @@ final class DispatchViewController: UIViewController {
         return button
     }()
     
-    lazy var dispatchDailyLogButton: UIButton = {
+    lazy var dispatchNoteButton: UIButton = {
         let button = UIButton()
         button.setTitle("운행일보", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -264,14 +264,14 @@ extension DispatchViewController: EssentialViewMethods {
         
         // refuelingCheckButton
         NSLayoutConstraint.activate([
-            self.dispatchDailyLogButton.widthAnchor.constraint(equalToConstant: 75),
-            self.dispatchDailyLogButton.heightAnchor.constraint(equalToConstant: 30)
+            self.dispatchNoteButton.widthAnchor.constraint(equalToConstant: 75),
+            self.dispatchNoteButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
         // dispatchMonthlyInfoButton
         NSLayoutConstraint.activate([
-            self.dispatchMonthlyInfoButton.widthAnchor.constraint(equalToConstant: 75),
-            self.dispatchMonthlyInfoButton.heightAnchor.constraint(equalToConstant: 30)
+            self.dispatchCheckButton.widthAnchor.constraint(equalToConstant: 75),
+            self.dispatchCheckButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         
         // noDataStackView
@@ -524,6 +524,31 @@ extension DispatchViewController {
     
     @objc func tappedDispatchDailyLogButton(_ sender: UIButton) {
         // 운행일보
+        print("tappedDispatchDailyLogButton")
+        
+        let currentMonth = SupportingMethods.shared.convertDate(intoString: Date(), "yyyy-MM")
+        print(currentMonth)
+        
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadMonthlyDispatchRequest(month: currentMonth) { item in
+            
+            let vc = DispatchMonthlyNoteViewController(item: item)
+            
+            for index in 0..<item.attendance.count {
+                if item.attendance[index] != 0 {
+                    let date: String = index < 9 ? currentMonth + "-0\(index + 1)" : currentMonth + "-\(index + 1)"
+                    vc.eventsArray.append(date)
+                }
+            }
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("calendarCurrentPageDidChange loadMonthlyDispatchRequest API Error: \(errorMessage)")
+            
+        }
         
     }
     
