@@ -42,6 +42,7 @@
 		057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */; };
 		057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */; };
 		057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */; };
+		05709D6E2B1FFA2900748F52 /* DispatchNoteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05709D6D2B1FFA2900748F52 /* DispatchNoteListViewController.swift */; };
 		057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */; };
 		057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */; };
 		057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */; };
@@ -131,6 +132,7 @@
 		057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckOrderTableViewCell.swift; sourceTree = "<group>"; };
 		057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckPopViewController.swift; sourceTree = "<group>"; };
 		057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckDenyViewController.swift; sourceTree = "<group>"; };
+		05709D6D2B1FFA2900748F52 /* DispatchNoteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteListViewController.swift; sourceTree = "<group>"; };
 		057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSalaryStatementViewController.swift; sourceTree = "<group>"; };
 		057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalProfileViewController.swift; sourceTree = "<group>"; };
 		057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckViewController.swift; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 			isa = PBXGroup;
 			children = (
 				2DE378542B1C6850000741DD /* DispatchMonthlyNoteViewController.swift */,
+				05709D6D2B1FFA2900748F52 /* DispatchNoteListViewController.swift */,
 			);
 			path = Note;
 			sourceTree = "<group>";
@@ -650,6 +653,7 @@
 				05821A992B0DD443007049C9 /* ProfileModel.swift in Sources */,
 				057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */,
 				057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */,
+				05709D6E2B1FFA2900748F52 /* DispatchNoteListViewController.swift in Sources */,
 				05821A9D2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift in Sources */,
 				056A346F2ABC1D7300829750 /* IndexPathButton.swift in Sources */,
 				05821A952B0DCDEA007049C9 /* RenewalDispatchViewController.swift in Sources */,

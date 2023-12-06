@@ -241,6 +241,9 @@ extension DispatchMonthlyNoteViewController: FSCalendarDelegate, FSCalendarDataS
         let selectedDate = SupportingMethods.shared.convertDate(intoString: date)
         if self.eventsArray.contains(selectedDate) {
             // FIXME: 해당 부분에 해당 날짜 운행리스트(운행일보) 페이지로 넘어가는 코드 넣기
+            let vc = DispatchNoteListViewController(date: selectedDate)
+            
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
