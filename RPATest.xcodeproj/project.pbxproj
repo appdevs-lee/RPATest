@@ -37,6 +37,11 @@
 		056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A759C2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift */; };
 		056A75A32B05D03600C25711 /* OrganizationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A75A22B05D03600C25711 /* OrganizationSearchViewController.swift */; };
 		056A75A52B05D18800C25711 /* OrganizationSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A75A42B05D18800C25711 /* OrganizationSearchTableViewCell.swift */; };
+		056B49482B218F8600F7A3A4 /* DispatchNoteRegularlyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B49472B218F8600F7A3A4 /* DispatchNoteRegularlyTableViewCell.swift */; };
+		056B494A2B218F9300F7A3A4 /* DispatchNoteOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B49492B218F9300F7A3A4 /* DispatchNoteOrderTableViewCell.swift */; };
+		056B494C2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B494B2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift */; };
+		056B494E2B21AE4F00F7A3A4 /* EveningRollCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B494D2B21AE4F00F7A3A4 /* EveningRollCallViewController.swift */; };
+		056B49502B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B494F2B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift */; };
 		056BF5042AF3518900B4C389 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056BF5032AF3518900B4C389 /* BottomSheetViewController.swift */; };
 		056BF5062AF351BF00B4C389 /* DispatchRefuelingBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056BF5052AF351BF00B4C389 /* DispatchRefuelingBottomSheetViewController.swift */; };
 		057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */; };
@@ -127,6 +132,11 @@
 		056A759C2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationViewPagerCollectionViewCell.swift; sourceTree = "<group>"; };
 		056A75A22B05D03600C25711 /* OrganizationSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchViewController.swift; sourceTree = "<group>"; };
 		056A75A42B05D18800C25711 /* OrganizationSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchTableViewCell.swift; sourceTree = "<group>"; };
+		056B49472B218F8600F7A3A4 /* DispatchNoteRegularlyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteRegularlyTableViewCell.swift; sourceTree = "<group>"; };
+		056B49492B218F9300F7A3A4 /* DispatchNoteOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteOrderTableViewCell.swift; sourceTree = "<group>"; };
+		056B494B2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningRollCallViewController.swift; sourceTree = "<group>"; };
+		056B494D2B21AE4F00F7A3A4 /* EveningRollCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveningRollCallViewController.swift; sourceTree = "<group>"; };
+		056B494F2B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningRollCallTableViewCell.swift; sourceTree = "<group>"; };
 		056BF5032AF3518900B4C389 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		056BF5052AF351BF00B4C389 /* DispatchRefuelingBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchRefuelingBottomSheetViewController.swift; sourceTree = "<group>"; };
 		057000D22AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckOrderTableViewCell.swift; sourceTree = "<group>"; };
@@ -304,6 +314,11 @@
 			children = (
 				2DE378542B1C6850000741DD /* DispatchMonthlyNoteViewController.swift */,
 				05709D6D2B1FFA2900748F52 /* DispatchNoteListViewController.swift */,
+				056B49492B218F9300F7A3A4 /* DispatchNoteOrderTableViewCell.swift */,
+				056B49472B218F8600F7A3A4 /* DispatchNoteRegularlyTableViewCell.swift */,
+				056B494B2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift */,
+				056B494F2B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift */,
+				056B494D2B21AE4F00F7A3A4 /* EveningRollCallViewController.swift */,
 			);
 			path = Note;
 			sourceTree = "<group>";
@@ -632,6 +647,7 @@
 				056A345C2ABBF6D400829750 /* NoticeModel.swift in Sources */,
 				5FD49D152AA31BBA00208273 /* TemplateViewController.swift in Sources */,
 				056A34582ABBDE9C00829750 /* NoticeViewController.swift in Sources */,
+				056B494A2B218F9300F7A3A4 /* DispatchNoteOrderTableViewCell.swift in Sources */,
 				056A34712ABC317F00829750 /* InspectionVehicleListViewController.swift in Sources */,
 				0561E7212AC29D3D00787B77 /* NavigationViewController.swift in Sources */,
 				056A34672ABC0FED00829750 /* InspectionTableViewCell.swift in Sources */,
@@ -655,6 +671,7 @@
 				057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */,
 				05709D6E2B1FFA2900748F52 /* DispatchNoteListViewController.swift in Sources */,
 				05821A9D2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift in Sources */,
+				056B49482B218F8600F7A3A4 /* DispatchNoteRegularlyTableViewCell.swift in Sources */,
 				056A346F2ABC1D7300829750 /* IndexPathButton.swift in Sources */,
 				05821A952B0DCDEA007049C9 /* RenewalDispatchViewController.swift in Sources */,
 				057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */,
@@ -662,6 +679,7 @@
 				056A34602ABC071200829750 /* NoticeDetailTitleTableViewCell.swift in Sources */,
 				056A75A32B05D03600C25711 /* OrganizationSearchViewController.swift in Sources */,
 				056A75A52B05D18800C25711 /* OrganizationSearchTableViewCell.swift in Sources */,
+				056B494C2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift in Sources */,
 				056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */,
 				057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */,
 				056A34622ABC072F00829750 /* NoticeDetailTextTableViewCell.swift in Sources */,
@@ -676,6 +694,7 @@
 				053C55D42AA9AB86006A6D93 /* OrganizationTableViewCell.swift in Sources */,
 				0582C5A82AB8218D0045CBCB /* DispatchSearchViewController.swift in Sources */,
 				5F1BB0B72A03D6B30081DBBE /* LoginModel.swift in Sources */,
+				056B49502B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift in Sources */,
 				056A34502ABBC53C00829750 /* OfficeModel.swift in Sources */,
 				5FD49D102AA31A7700208273 /* DispatchViewController.swift in Sources */,
 				056A34732ABC31B400829750 /* InspectionVehicleListTableViewCell.swift in Sources */,
@@ -683,6 +702,7 @@
 				057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */,
 				5FD49D172AA31BCA00208273 /* TemplateTableViewCell.swift in Sources */,
 				5FCD8D412A6B9C82000AFC3F /* CompanyEnterViewController.swift in Sources */,
+				056B494E2B21AE4F00F7A3A4 /* EveningRollCallViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

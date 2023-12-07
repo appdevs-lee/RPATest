@@ -403,11 +403,11 @@ extension SupportingMethods {
     }
     
     // String -> Date
-    func convertString(intoDate dateString: String) -> Date {
+    func convertString(intoDate dateString: String, _ dateFormat: String = "yyyy-MM-dd") -> Date {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(abbreviation: "KST")!
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = dateFormat
         
         return formatter.date(from: dateString)!
     }
