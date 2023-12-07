@@ -177,7 +177,7 @@ final class DispatchViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-//        self.setViewAfterTransition()
+        self.setViewAfterTransition()
         self.setData()
     }
     
@@ -290,8 +290,8 @@ extension DispatchViewController: EssentialViewMethods {
     }
     
     func setViewAfterTransition() {
-//        self.navigationController?.setNavigationBarHidden(false, animated: true)
-//        self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     private func setUpNavigationTitle() -> UIImageView {
