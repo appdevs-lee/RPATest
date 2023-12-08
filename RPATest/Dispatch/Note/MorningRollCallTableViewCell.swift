@@ -176,10 +176,27 @@ extension MorningRollCallTableViewCell {
 
 // MARK: - Extension for methods added
 extension MorningRollCallTableViewCell {
-    func setCell(title: String, index: Int) {
+    func setCell(title: String, index: Int, status: String) {
         self.titleLabel.text = title
         
         self.selectedCellInfo.index = index
+        
+        switch status {
+        case "양호":
+            self.selectedCellInfo.status = RollCallStatus.fine
+            
+            self.fineButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+            self.notFineButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            
+        case "이상":
+            self.selectedCellInfo.status = RollCallStatus.notFine
+            
+            self.notFineButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+            self.fineButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            
+        default:
+            break
+        }
         
     }
 }

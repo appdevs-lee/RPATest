@@ -18,6 +18,9 @@ final class DispatchModel {
     private(set) var pathKnowRequest: DataRequest?
     private(set) var pathKnowDeleteRequest: DataRequest?
     private(set) var loadVehicleListRequest: DataRequest?
+    private(set) var sendMorningRollCallDataRequest: DataRequest?
+    private(set) var loadMorningRollCallDataRequest: DataRequest?
+    private(set) var sendEveningRollCallDataRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -538,6 +541,177 @@ final class DispatchModel {
         }
     }
     
+    func sendMorningRollCallDataRequest(date: String, time: String, health: String, clean: String, pathKnow: String, alcohol: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        // 2023-12-04
+        let url = Server.shared.currentURL! + "/dispatch/checklist/morning/\(date)"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "arrival_time": time,
+            "health_condition": health,
+            "cleanliness_condition": clean,
+            "route_familiarity": pathKnow,
+            "alcohol_test": alcohol,
+        ]
+        
+        self.sendMorningRollCallDataRequest = AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        
+        self.sendMorningRollCallDataRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("sendMorningRollCallDataRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("sendMorningRollCallDataRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        print("sendMorningRollCallDataRequest succeeded")
+                        success?()
+                        
+                    } else {
+                        print("sendMorningRollCallDataRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else {
+                    print("sendMorningRollCallDataRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("sendMorningRollCallDataRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    func loadMorningRollCallDataRequest(date: String, success: ((MorningRollCallItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = Server.shared.currentURL! + "/dispatch/checklist/morning/\(date)"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadMorningRollCallDataRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadMorningRollCallDataRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadMorningRollCallDataRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadMorningRollCallDataRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        if let decodedData = try? JSONDecoder().decode(MorningRollCall.self, from: data) {
+                            print("loadMorningRollCallDataRequest succeeded")
+                            success?(decodedData.data)
+                            
+                        } else {
+                            print("loadMorningRollCallDataRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else {
+                        print("loadMorningRollCallDataRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else {
+                    print("loadMorningRollCallDataRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("loadMorningRollCallDataRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    func sendEveningRollCallDataRequest(locationId: Int, batteryCondition: String, driveDistance: Double, fuel: Double, urea: Double, suitGauge: Double, specialNotes: String, date: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = Server.shared.currentURL! + "/dispatch/checklist/evening/\(date)"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "garage_location": "\(locationId)",
+            "battery_condition": "\(batteryCondition)",
+            "drive_distance": "\(driveDistance)",
+            "fuel_quantity": "\(fuel)",
+            "urea_solution_quantity": "\(urea)",
+            "suit_gauge": "\(suitGauge)",
+            "special_notes": "\(specialNotes)",
+        ]
+        
+        self.sendEveningRollCallDataRequest = AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        
+        self.sendEveningRollCallDataRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("sendEveningRollCallDataRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("sendEveningRollCallDataRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        print("sendEveningRollCallDataRequest succeeded")
+                        success?()
+                        
+                    } else {
+                        print("sendEveningRollCallDataRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else {
+                    print("sendEveningRollCallDataRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("sendEveningRollCallDataRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
 }
 
 struct DispatchMonthly: Codable {
@@ -797,5 +971,32 @@ struct DispatchPathKnowItem: Codable {
         case id
         case regularlyId = "regularly_id"
         case driverId = "driver_id"
+    }
+}
+
+struct MorningRollCall: Codable {
+    let result: String
+    let data: MorningRollCallItem
+}
+
+struct MorningRollCallItem: Codable {
+    let member: String
+    let date: String
+    let arrivalTime: String
+    let health: String
+    let clean: String
+    let pathKnow: String
+    let alcohol: String
+    let bus: [String]
+    
+    enum CodingKeys: String, CodingKey {
+        case member
+        case date
+        case arrivalTime = "arrival_time"
+        case health = "health_condition"
+        case clean = "cleanliness_condition"
+        case pathKnow = "route_familiarity"
+        case alcohol = "alcohol_test"
+        case bus
     }
 }

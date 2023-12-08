@@ -48,6 +48,7 @@
 		057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */; };
 		057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */; };
 		05709D6E2B1FFA2900748F52 /* DispatchNoteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05709D6D2B1FFA2900748F52 /* DispatchNoteListViewController.swift */; };
+		0573B50A2B22D28B005F1F4F /* SelectTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0573B5092B22D28B005F1F4F /* SelectTimeViewController.swift */; };
 		057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */; };
 		057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */; };
 		057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */; };
@@ -143,6 +144,7 @@
 		057000D42AB2D095007F650E /* DispatchCheckPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckPopViewController.swift; sourceTree = "<group>"; };
 		057000D62AB2E5EA007F650E /* DispatchCheckDenyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckDenyViewController.swift; sourceTree = "<group>"; };
 		05709D6D2B1FFA2900748F52 /* DispatchNoteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteListViewController.swift; sourceTree = "<group>"; };
+		0573B5092B22D28B005F1F4F /* SelectTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTimeViewController.swift; sourceTree = "<group>"; };
 		057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSalaryStatementViewController.swift; sourceTree = "<group>"; };
 		057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalProfileViewController.swift; sourceTree = "<group>"; };
 		057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckViewController.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				056B49472B218F8600F7A3A4 /* DispatchNoteRegularlyTableViewCell.swift */,
 				056B494B2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift */,
 				056B494F2B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift */,
+				0573B5092B22D28B005F1F4F /* SelectTimeViewController.swift */,
 				056B494D2B21AE4F00F7A3A4 /* EveningRollCallViewController.swift */,
 			);
 			path = Note;
@@ -695,6 +698,7 @@
 				0582C5A82AB8218D0045CBCB /* DispatchSearchViewController.swift in Sources */,
 				5F1BB0B72A03D6B30081DBBE /* LoginModel.swift in Sources */,
 				056B49502B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift in Sources */,
+				0573B50A2B22D28B005F1F4F /* SelectTimeViewController.swift in Sources */,
 				056A34502ABBC53C00829750 /* OfficeModel.swift in Sources */,
 				5FD49D102AA31A7700208273 /* DispatchViewController.swift in Sources */,
 				056A34732ABC31B400829750 /* InspectionVehicleListTableViewCell.swift in Sources */,

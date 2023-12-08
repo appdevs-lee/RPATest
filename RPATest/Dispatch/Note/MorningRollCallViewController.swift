@@ -78,6 +78,7 @@ final class MorningRollCallViewController: UIViewController {
             .font:UIFont.useFont(ofSize: 16, weight: .Medium)
         ])
         textField.borderStyle = .roundedRect
+        textField.keyboardType = .decimalPad
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         
@@ -127,6 +128,7 @@ final class MorningRollCallViewController: UIViewController {
     let statusList: [String] = ["건강상태", "청소상태", "노선숙지"]
     var resultList: [String] = ["양호", "양호", "양호"]
     var date: String
+    let dispatchModel = DispatchModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,6 +141,7 @@ final class MorningRollCallViewController: UIViewController {
         self.setSubviews()
         self.setLayouts()
         self.setUpNavigationItem()
+        self.setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -147,9 +150,10 @@ final class MorningRollCallViewController: UIViewController {
         self.setViewAfterTransition()
     }
     
-    //    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    //        return .portrait
-    //    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+        
+    }
     
     deinit {
         print("----------------------------------- MorningRollCallViewController is disposed -----------------------------------")
@@ -176,6 +180,7 @@ extension MorningRollCallViewController: EssentialViewMethods {
     
     func setNotificationCenters() {
         NotificationCenter.default.addObserver(self, selector: #selector(reload(_:)), name: Notification.Name("MorningRollCallStatus"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedTime(_:)), name: Notification.Name("SelectTime"), object: nil)
     }
     
     func setSubviews() {
@@ -285,11 +290,72 @@ extension MorningRollCallViewController: EssentialViewMethods {
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
     }
+    
+    func setData() {
+        // FIXME: bus model 고쳐지면 배정차량 부분 데이터 추가해주기
+        self.loadMorningRollCallDataRequest { data in
+            if data.arrivalTime == "" {
+                self.completeButton.isEnabled = false
+                self.completeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                SupportingMethods.shared.turnCoverView(.off)
+                
+            } else {
+                self.completeButton.isEnabled = true
+                self.completeButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+                
+                self.rollCallTimeTextField.text = data.arrivalTime
+                self.alcoholTestTextField.text = data.alcohol
+                
+                self.resultList[0] = data.health
+                self.resultList[1] = data.clean
+                self.resultList[2] = data.pathKnow
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    SupportingMethods.shared.turnCoverView(.off)
+                }
+                
+            }
+            
+        } failure: { errorMessage in
+            self.completeButton.isEnabled = false
+            self.completeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            SupportingMethods.shared.turnCoverView(.off)
+            print("setData loadMorningRollCallDataRequest API Error: \(errorMessage)")
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for methods added
 extension MorningRollCallViewController {
+    func sendMorningRollCallDataRequest(success: (() -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.sendMorningRollCallDataRequest(date: self.date, time: self.rollCallTimeTextField.text!, health: self.resultList[0], clean: self.resultList[1], pathKnow: self.resultList[2], alcohol: self.alcoholTestTextField.text!) {
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+        }
+
+    }
     
+    func loadMorningRollCallDataRequest(success: ((MorningRollCallItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.loadMorningRollCallDataRequest(date: self.date) { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -300,11 +366,28 @@ extension MorningRollCallViewController {
     }
     
     @objc func tappedRollCallTimeSelectButton(_ sender: UIButton) {
+        let vc = SelectTimeViewController()
         
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overFullScreen
+        self.present(vc, animated: true)
     }
     
     @objc func tappedCompleteButton(_ sender: UIButton) {
-        
+        self.completeButton.isEnabled = false
+        SupportingMethods.shared.turnCoverView(.on)
+        self.sendMorningRollCallDataRequest {
+            SupportingMethods.shared.showAlertNoti(title: "아침 점호가 완료되었습니다.")
+            self.navigationController?.popViewController(animated: true)
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        } failure: { errorMessage in
+            self.completeButton.isEnabled = true
+            SupportingMethods.shared.turnCoverView(.off)
+            print("tappedCompleteButton sendMorningRollCallDataRequest API Error: \(errorMessage)")
+            
+        }
+
     }
     
     @objc func reload(_ notification: Notification) {
@@ -312,6 +395,12 @@ extension MorningRollCallViewController {
         
         self.resultList[status.index] = status.status.status
         
+    }
+    
+    @objc func selectedTime(_ notification: Notification) {
+        guard let time = notification.userInfo?["time"] as? String else { return }
+        
+        self.rollCallTimeTextField.text = time
     }
 }
 
@@ -345,8 +434,9 @@ extension MorningRollCallViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MorningRollCallTableViewCell", for: indexPath) as! MorningRollCallTableViewCell
         let status = self.statusList[indexPath.row]
+        let result = self.resultList[indexPath.row]
         
-        cell.setCell(title: status, index: indexPath.row)
+        cell.setCell(title: status, index: indexPath.row, status: result)
         
         return cell
     }
