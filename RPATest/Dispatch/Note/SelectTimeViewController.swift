@@ -125,7 +125,7 @@ extension SelectTimeViewController: EssentialViewMethods {
             self.baseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -55),
             self.baseView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
             self.baseView.widthAnchor.constraint(equalToConstant: 320),
-            self.baseView.heightAnchor.constraint(equalToConstant: 384)
+            self.baseView.heightAnchor.constraint(equalToConstant: 320)
         ])
         
         // datePicker

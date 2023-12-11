@@ -21,6 +21,7 @@ final class DispatchModel {
     private(set) var sendMorningRollCallDataRequest: DataRequest?
     private(set) var loadMorningRollCallDataRequest: DataRequest?
     private(set) var sendEveningRollCallDataRequest: DataRequest?
+    private(set) var loadEveningRollCallDataRequest: DataRequest?
     private(set) var loadGarageRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
@@ -655,7 +656,7 @@ final class DispatchModel {
         }
     }
     
-    func sendEveningRollCallDataRequest(locationId: Int, batteryCondition: String, driveDistance: Double, fuel: Double, urea: Double, suitGauge: Double, specialNotes: String, date: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+    func sendEveningRollCallDataRequest(locationId: Int, batteryCondition: String, driveDistance: String, fuel: String, urea: String, suitGauge: String, specialNotes: String, date: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = Server.shared.currentURL! + "/dispatch/checklist/evening/\(date)"
         
         let headers: HTTPHeaders = [
@@ -709,6 +710,61 @@ final class DispatchModel {
                 
             case .failure(let error):
                 print("sendEveningRollCallDataRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    func loadEveningRollCallDataRequest(date: String, success: ((EveningRollCallItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = Server.shared.currentURL! + "/dispatch/checklist/evening/\(date)"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadEveningRollCallDataRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadEveningRollCallDataRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadEveningRollCallDataRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadEveningRollCallDataRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        if let decodedData = try? JSONDecoder().decode(EveningRollCall.self, from: data) {
+                            print("loadEveningRollCallDataRequest succeeded")
+                            success?(decodedData.data)
+                            
+                        } else {
+                            print("loadEveningRollCallDataRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else {
+                        print("loadEveningRollCallDataRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else {
+                    print("loadEveningRollCallDataRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("loadEveningRollCallDataRequest error: \(error.localizedDescription)")
                 failure?(error.localizedDescription)
             }
         }
@@ -1062,6 +1118,37 @@ struct MorningRollCallItem: Codable {
     }
 }
 
+struct EveningRollCall: Codable {
+    let result: String
+    let data: EveningRollCallItem
+}
+
+struct EveningRollCallItem: Codable {
+    let id: Int
+    let date: String
+    let batteryCondition: String
+    let driveDistance: String
+    let fuelQuantity: String
+    let ureaSolutionQuantity: String
+    let suitGauge: String
+    let specialNotes: String
+    let member: String
+    let garageLocation: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case date
+        case batteryCondition = "battery_condition"
+        case driveDistance = "drive_distance"
+        case fuelQuantity = "fuel_quantity"
+        case ureaSolutionQuantity = "urea_solution_quantity"
+        case suitGauge = "suit_gauge"
+        case specialNotes = "special_notes"
+        case member
+        case garageLocation = "garage_location"
+    }
+}
+
 struct Garage: Codable {
     let result: String
     let data: GarageItem
@@ -1071,6 +1158,12 @@ struct GarageItem: Codable {
     let count: Int
     let next: String?
     let garageList: [GarageDetailItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case count
+        case next
+        case garageList = "garage_list"
+    }
 }
 
 struct GarageDetailItem: Codable {

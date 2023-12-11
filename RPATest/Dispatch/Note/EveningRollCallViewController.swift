@@ -21,7 +21,7 @@ final class EveningRollCallViewController: UIViewController {
         let label = UILabel()
         label.text = "\(self.date)"
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
-        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -31,7 +31,17 @@ final class EveningRollCallViewController: UIViewController {
         let label = UILabel()
         label.text = "차량 번호"
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
-        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var batteryStatusLabel: UILabel = {
+        let label = UILabel()
+        label.text = "메인 스위치: ON"
+        label.textColor = .useRGB(red: 97, green: 97, blue: 97)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -42,7 +52,7 @@ final class EveningRollCallViewController: UIViewController {
         let label = UILabel()
         label.text = "입고 장소"
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
-        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -74,7 +84,7 @@ final class EveningRollCallViewController: UIViewController {
         let label = UILabel()
         label.text = "계기판 KM"
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
-        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -98,7 +108,7 @@ final class EveningRollCallViewController: UIViewController {
         let label = UILabel()
         label.text = "현재 주유량: "
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
-        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -119,7 +129,7 @@ final class EveningRollCallViewController: UIViewController {
         let label = UILabel()
         label.text = "현재 요소수량"
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
-        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -143,7 +153,7 @@ final class EveningRollCallViewController: UIViewController {
         let label = UILabel()
         label.text = "수트게이지: "
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
-        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -171,7 +181,7 @@ final class EveningRollCallViewController: UIViewController {
         return label
     }()
     
-    lazy var additionalInfoTextView: UIView = {
+    lazy var additionalInfoTextView: UITextView = {
         let textView = UITextView()
         textView.textColor = .useRGB(red: 97, green: 97, blue: 97)
         textView.font = .useFont(ofSize: 16, weight: .Medium)
@@ -213,6 +223,9 @@ final class EveningRollCallViewController: UIViewController {
     var completeButtonBottomConstraint: NSLayoutConstraint!
     var keyboardHeight: CGFloat = 0
     
+    var batteryCondition: String = "양호"
+    var garageId: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -224,6 +237,7 @@ final class EveningRollCallViewController: UIViewController {
         self.setSubviews()
         self.setLayouts()
         self.setUpNavigationItem()
+        self.setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -264,6 +278,8 @@ extension EveningRollCallViewController: EssentialViewMethods {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(addGarageData(_:)), name: Notification.Name("SendGarage"), object: nil)
+        
     }
     
     func setSubviews() {
@@ -273,6 +289,7 @@ extension EveningRollCallViewController: EssentialViewMethods {
         
         SupportingMethods.shared.addSubviews([
             self.dateLabel,
+            self.batteryStatusLabel,
             self.carNumberLabel,
             self.garageLabel,
             self.garageTextField,
@@ -316,10 +333,17 @@ extension EveningRollCallViewController: EssentialViewMethods {
             self.carNumberLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
         
+        // batteryStatusLabel
+        NSLayoutConstraint.activate([
+            self.batteryStatusLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
+            self.batteryStatusLabel.topAnchor.constraint(equalTo: self.carNumberLabel.bottomAnchor, constant: 10),
+            self.batteryStatusLabel.heightAnchor.constraint(equalToConstant: 20)
+        ])
+        
         // garageLabel
         NSLayoutConstraint.activate([
             self.garageLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
-            self.garageLabel.topAnchor.constraint(equalTo: self.carNumberLabel.bottomAnchor, constant: 10),
+            self.garageLabel.topAnchor.constraint(equalTo: self.batteryStatusLabel.bottomAnchor, constant: 10),
             self.garageLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
         
@@ -449,10 +473,103 @@ extension EveningRollCallViewController: EssentialViewMethods {
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
     }
+    
+    func setData() {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadEveningRollCallDataRequest { data in
+            if data.batteryCondition == "" {
+                let vc = AlertPopViewController(.normalTwoButton(messageTitle: "메인 스위치를 끄셨나요?", messageContent: "", leftButtonTitle: "아니오", leftAction: {
+                    self.navigationController?.popViewController(animated: true)
+                    SupportingMethods.shared.showAlertNoti(title: "메인 스위치를 꺼주세요")
+                    
+                }, rightButtonTitle: "예", rightAction: {
+                    self.completeButton.isEnabled = false
+                    self.completeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                    
+                    self.batteryCondition = "양호"
+                    self.batteryStatusLabel.text = "메인 스위치: OFF"
+                }))
+                
+                self.present(vc, animated: true) {
+                    SupportingMethods.shared.turnCoverView(.off)
+                    
+                }
+                
+            } else {
+                self.loadGarageRequest(page: 1, search: data.garageLocation!) { garage in
+                    for garage in garage.garageList {
+                        if garage.category == data.garageLocation! {
+                            self.garageId = garage.id
+                            
+                            break
+                        }
+                    }
+                    
+                    self.batteryStatusLabel.text = "메인 스위치: OFF"
+                    
+                    self.garageTextField.text = data.garageLocation
+                    self.drivingDistanceTextField.text = data.driveDistance
+                    
+                    self.fuelLabel.text = "현재 주유량: \(data.fuelQuantity)"
+                    self.fuelSlider.value = Float(data.fuelQuantity) ?? 50
+                    
+                    self.gaugeLabel.text = "수트게이지: \(data.suitGauge)"
+                    self.gaugeSlider.value = Float(data.suitGauge) ?? 5
+                    
+                    self.ureaTextField.text = data.ureaSolutionQuantity
+                    
+                    self.additionalInfoTextView.text = data.specialNotes
+                    
+                    self.completeButton.isEnabled = true
+                    self.completeButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+                    
+                    SupportingMethods.shared.turnCoverView(.off)
+                } failure: { errorMessage in
+                    print("setData loadEveningRollCallDataRequest API Error: \(errorMessage)")
+                    SupportingMethods.shared.turnCoverView(.off)
+                    
+                }
+                
+            }
+            
+        } failure: { errorMessage in
+            print("setData loadEveningRollCallDataRequest API Error: \(errorMessage)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for methods added
 extension EveningRollCallViewController {
+    func loadEveningRollCallDataRequest(success: ((EveningRollCallItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        self.dispatchModel.loadEveningRollCallDataRequest(date: self.date) { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+        }
+
+    }
+    
+    func sendEveningRollCallDataRequest(success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        self.dispatchModel.sendEveningRollCallDataRequest(locationId: self.garageId, batteryCondition: self.batteryCondition, driveDistance: self.drivingDistanceTextField.text!, fuel: "\(self.fuelSlider.value)", urea: self.ureaTextField.text!, suitGauge: "\(Int(self.gaugeSlider.value))", specialNotes: self.additionalInfoTextView.text ?? "", date: self.date) {
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
+    
     func loadGarageRequest(page: Int, search: String, success: ((GarageItem) -> ())?, failure: ((String) -> ())?) {
         self.dispatchModel.loadGarageRequest(page: page, search: search) { item in
             success?(item)
@@ -466,6 +583,7 @@ extension EveningRollCallViewController {
         }
 
     }
+    
 }
 
 // MARK: - Extension for selector methods
@@ -476,7 +594,17 @@ extension EveningRollCallViewController {
     }
     
     @objc func tappedGarageButton(_ sender: UIButton) {
+        let vc = GarageListViewController()
         
+        self.present(vc, animated: true)
+    }
+    
+    @objc func addGarageData(_ noti: Notification) {
+        guard let garageId = noti.userInfo?["garageId"] as? Int else { return }
+        guard let garageName = noti.userInfo?["garageName"] as? String else { return }
+        
+        self.garageId = garageId
+        self.garageTextField.text = "\(garageName)"
     }
     
     @objc func fuelValueChanged(_ sender: UISlider) {
@@ -485,12 +613,26 @@ extension EveningRollCallViewController {
     }
     
     @objc func gaugeValueChanged(_ sender: UISlider) {
-        self.gaugeLabel.text = "수트 게이지: \(Int(sender.value))"
+        self.gaugeLabel.text = "수트게이지: \(Int(sender.value))"
         
     }
     
     @objc func tappedCompleteButton(_ sender: UIButton) {
+        self.completeButton.isEnabled = false
         
+        SupportingMethods.shared.turnCoverView(.on)
+        self.sendEveningRollCallDataRequest {
+            SupportingMethods.shared.showAlertNoti(title: "저녁 점호가 완료되었습니다.")
+            self.navigationController?.popViewController(animated: true)
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        } failure: { errorMessage in
+            self.completeButton.isEnabled = true
+            SupportingMethods.shared.turnCoverView(.off)
+            print("tappedCompleteButton sendEveningRollCallDataRequest API Error: \(errorMessage)")
+            
+        }
+
     }
     
     @objc func keyboardWillShow(_ notification: Notification) {
@@ -520,6 +662,7 @@ extension EveningRollCallViewController {
             }
         }
     }
+    
 }
 
 // MARK: - Extension for UITextFieldDelegate
@@ -530,7 +673,7 @@ extension EveningRollCallViewController: UITextFieldDelegate {
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if self.garageTextField.text != "" && self.drivingDistanceTextField.text != "" {
+        if self.garageTextField.text != "" && self.drivingDistanceTextField.text != "" && self.ureaTextField.text != "" {
             self.completeButton.isEnabled = true
             self.completeButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
             
