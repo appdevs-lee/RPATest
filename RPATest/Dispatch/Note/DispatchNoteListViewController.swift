@@ -411,7 +411,9 @@ extension DispatchNoteListViewController {
     }
     
     @objc func tappedEveningButton(_ sender: UIButton) {
+        let vc = EveningRollCallViewController(date: self.date)
         
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

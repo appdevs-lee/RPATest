@@ -21,6 +21,7 @@ final class DispatchModel {
     private(set) var sendMorningRollCallDataRequest: DataRequest?
     private(set) var loadMorningRollCallDataRequest: DataRequest?
     private(set) var sendEveningRollCallDataRequest: DataRequest?
+    private(set) var loadGarageRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -712,6 +713,66 @@ final class DispatchModel {
             }
         }
     }
+    
+    func loadGarageRequest(page: Int, search: String, success: ((GarageItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = Server.shared.currentURL! + "/garage"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "page": page,
+            "search": search
+        ]
+        
+        self.loadGarageRequest = AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadGarageRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadGarageRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadGarageRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        if let decodedData = try? JSONDecoder().decode(Garage.self, from: data) {
+                            print("loadGarageRequest succeeded")
+                            success?(decodedData.data)
+                            
+                        } else {
+                            print("loadGarageRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else {
+                        print("loadGarageRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else {
+                    print("loadGarageRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("loadGarageRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
 }
 
 struct DispatchMonthly: Codable {
@@ -999,4 +1060,21 @@ struct MorningRollCallItem: Codable {
         case alcohol = "alcohol_test"
         case bus
     }
+}
+
+struct Garage: Codable {
+    let result: String
+    let data: GarageItem
+}
+
+struct GarageItem: Codable {
+    let count: Int
+    let next: String?
+    let garageList: [GarageDetailItem]
+}
+
+struct GarageDetailItem: Codable {
+    let id: Int
+    let type: String
+    let category: String
 }
