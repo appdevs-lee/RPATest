@@ -132,7 +132,7 @@ extension NoticeViewController: EssentialViewMethods {
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
         
         // noDataStackView
@@ -143,8 +143,8 @@ extension NoticeViewController: EssentialViewMethods {
     }
     
     func setViewAfterTransition() {
-        //self.navigationController?.setNavigationBarHidden(false, animated: true)
-        //self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     private func setUpNavigationTitle() -> UIImageView {

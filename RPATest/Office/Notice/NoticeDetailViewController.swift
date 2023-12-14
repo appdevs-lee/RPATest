@@ -106,8 +106,8 @@ extension NoticeDetailViewController: EssentialViewMethods {
     }
     
     func setViewAfterTransition() {
-        //self.navigationController?.setNavigationBarHidden(false, animated: true)
-        //self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     private func setUpNavigationTitle() -> UIImageView {

@@ -166,7 +166,7 @@ extension OrganizationViewPagerViewController: EssentialViewMethods {
     }
     
     func setViewAfterTransition() {
-//        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.tabBarController?.tabBar.isHidden = false
         
     }

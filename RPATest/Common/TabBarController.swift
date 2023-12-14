@@ -18,7 +18,8 @@ class TabBarController: UITabBarController {
     }
     
     func setViewController() {
-        let dispatchVC = DispatchViewController()
+//        let dispatchVC = DispatchViewController()
+        let dispatchVC = RenewalDispatchViewController()
         let officeVC = OfficeViewController()
         let organizationVC = OrganizationViewPagerViewController()
         let profileVC = RenewalProfileViewController()

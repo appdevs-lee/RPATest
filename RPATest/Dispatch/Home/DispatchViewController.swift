@@ -427,9 +427,11 @@ extension DispatchViewController {
             
             self.navigationController?.pushViewController(vc, animated: true)
             SupportingMethods.shared.turnCoverView(.off)
+            
         } failure: { errorMessage in
             SupportingMethods.shared.turnCoverView(.off)
             print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
+            
         }
     }
     
