@@ -23,6 +23,7 @@ final class DispatchModel {
     private(set) var sendEveningRollCallDataRequest: DataRequest?
     private(set) var loadEveningRollCallDataRequest: DataRequest?
     private(set) var loadGarageRequest: DataRequest?
+    private(set) var loadDispatchNoteDetailRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -829,6 +830,66 @@ final class DispatchModel {
             }
         }
     }
+    
+    func loadDispatchNoteDetailRequest(regularlyId: String = "", orderId: String = "", success: ((DispatchNoteDetailItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/drivinghistory"
+        
+        let headers: HTTPHeaders = [
+            "Authorization": UserInfo.shared.access!,
+            "access": "application/json"
+        ]
+        
+        let parameters: Parameters = [
+            "regularly_connect_id": regularlyId,
+            "order_connect_id": orderId
+        ]
+        
+        self.loadDispatchNoteDetailRequest = AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadDispatchNoteDetailRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadDispatchNoteDetailRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadDispatchNoteDetailRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        if let decodedData = try? JSONDecoder().decode(DispatchNoteDetail.self, from: data) {
+                            print("loadDispatchNoteDetailRequest succeeded")
+                            success?(decodedData.data)
+                            
+                        } else {
+                            print("loadDispatchNoteDetailRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else {
+                        print("loadDispatchNoteDetailRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else {
+                    print("loadDispatchNoteDetailRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("loadDispatchNoteDetailRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
 }
 
 struct DispatchMonthly: Codable {
@@ -1124,7 +1185,7 @@ struct EveningRollCall: Codable {
 }
 
 struct EveningRollCallItem: Codable {
-    let id: Int
+    let member: String
     let date: String
     let batteryCondition: String
     let driveDistance: String
@@ -1132,11 +1193,12 @@ struct EveningRollCallItem: Codable {
     let ureaSolutionQuantity: String
     let suitGauge: String
     let specialNotes: String
-    let member: String
+    let bus: String
     let garageLocation: String?
+    let submitCheck: Bool
     
     enum CodingKeys: String, CodingKey {
-        case id
+        case member
         case date
         case batteryCondition = "battery_condition"
         case driveDistance = "drive_distance"
@@ -1144,8 +1206,10 @@ struct EveningRollCallItem: Codable {
         case ureaSolutionQuantity = "urea_solution_quantity"
         case suitGauge = "suit_gauge"
         case specialNotes = "special_notes"
-        case member
+        case bus
         case garageLocation = "garage_location"
+        case submitCheck = "submit_check"
+
     }
 }
 
@@ -1170,4 +1234,56 @@ struct GarageDetailItem: Codable {
     let id: Int
     let type: String
     let category: String
+}
+
+
+// MARK: 운행일보 Model
+struct DispatchNoteDetail: Codable {
+    let result: String
+    let data: DispatchNoteDetailItem
+}
+
+struct DispatchNoteDetailItem: Codable {
+    let date: String
+    let member: String
+    let regularlyId: Int?
+    let orderId: Int?
+    let departureFigure: String
+    let arrivalFigure: String
+    let passengerNumber: String
+    let specialNotes: String
+    let creator: Int
+    let connect: DispatchNoteDetailSubItem
+    let submitCheck: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case date
+        case member
+        case regularlyId = "regularly_connect_id"
+        case orderId = "order_connect_id"
+        case departureFigure = "departure_km"
+        case arrivalFigure = "arrival_km"
+        case passengerNumber = "passenger_num"
+        case specialNotes = "special_notes"
+        case creator
+        case connect
+        case submitCheck = "submit_check"
+    }
+}
+
+
+struct DispatchNoteDetailSubItem: Codable {
+    let bus: String
+    let departure: String
+    let departureTime: String
+    let arrival: String
+    let arrivalTime: String
+    
+    enum CodingKeys: String, CodingKey {
+        case bus
+        case departure
+        case departureTime = "departure_time"
+        case arrival
+        case arrivalTime = "arrival_time"
+    }
 }

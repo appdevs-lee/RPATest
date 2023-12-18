@@ -287,7 +287,7 @@ extension DispatchInspectionViewController: EssentialViewMethods {
             self.doneButton.leadingAnchor.constraint(equalTo: self.bottomSheetView.leadingAnchor, constant: 16),
             self.doneButton.trailingAnchor.constraint(equalTo: self.bottomSheetView.trailingAnchor, constant: -16),
             self.doneButton.heightAnchor.constraint(equalToConstant: 44),
-            self.doneButton.bottomAnchor.constraint(equalTo: self.bottomSheetView.bottomAnchor, constant: -16)
+            self.doneButton.bottomAnchor.constraint(equalTo: self.bottomSheetView.bottomAnchor, constant: -34)
         ])
     }
     

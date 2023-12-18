@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum DispatchKindType {
+    case regularly
+    case order
+}
+
 final class DispatchNoteListViewController: UIViewController {
     
     lazy var dateLabel: UILabel = {
@@ -156,6 +161,7 @@ final class DispatchNoteListViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
         button.backgroundColor = .black
+        button.addTarget(self, action: #selector(tappedDispatchNoteButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -177,6 +183,7 @@ final class DispatchNoteListViewController: UIViewController {
     var regularlyList: [DispatchRegularlyItem] = []
     var orderList: [DispatchOrderItem] = []
     var selectedIndex: (section: Int, row: Int)?
+    var type: DispatchKindType = .regularly
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -414,6 +421,32 @@ extension DispatchNoteListViewController {
         let vc = EveningRollCallViewController(date: self.date)
         
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func tappedDispatchNoteButton(_ sender: UIButton) {
+        guard let selectedIndex = self.selectedIndex else { return }
+        var regularlyItem: DispatchRegularlyItem?
+        var orderItem: DispatchOrderItem?
+        
+        switch selectedIndex.section {
+        case 0:
+            self.type = .regularly
+            regularlyItem = self.regularlyList[selectedIndex.row]
+            
+            let vc = DispatchNoteDetailViewController(type: .regularly, id: (regularly: "\(regularlyItem?.id ?? 0)", order: ""))
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 1:
+            self.type = .order
+            orderItem = self.orderList[selectedIndex.row]
+            
+            let vc = DispatchNoteDetailViewController(type: .order, id: (regularly: "", order: "\(orderItem?.id ?? 0)"))
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
+        }
+        
     }
 }
 

@@ -133,7 +133,7 @@ extension DispatchHomeCheckViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(checkComplete(_:)), name: Notification.Name("DispatchCheckComplete"), object: nil)
     }
     
     func setSubviews() {
@@ -286,6 +286,11 @@ extension DispatchHomeCheckViewController {
             print("loadDailyDispatchRequest API Errpr \(errorMessage)")
             
         }
+    }
+    
+    @objc func checkComplete(_ noti: Notification) {
+        self.setData()
+        
     }
 }
 

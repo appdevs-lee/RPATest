@@ -21,7 +21,7 @@ final class TaskViewController: UIViewController {
     lazy var dailyButton: UIButton = {
         let button = UIButton()
         button.setTitle("일일 점검", for: .normal)
-        button.setTitleColor(.useRGB(red: 97, green: 97, blue: 97), for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.layer.cornerRadius = 10
@@ -34,7 +34,7 @@ final class TaskViewController: UIViewController {
     lazy var weeklyButton: UIButton = {
         let button = UIButton()
         button.setTitle("주간 점검", for: .normal)
-        button.setTitleColor(.useRGB(red: 97, green: 97, blue: 97), for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.layer.cornerRadius = 10
@@ -47,7 +47,7 @@ final class TaskViewController: UIViewController {
     lazy var equipmentButton: UIButton = {
         let button = UIButton()
         button.setTitle("비품 점검", for: .normal)
-        button.setTitleColor(.useRGB(red: 97, green: 97, blue: 97), for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.layer.cornerRadius = 10
@@ -60,7 +60,7 @@ final class TaskViewController: UIViewController {
     lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setTitle("완료", for: .normal)
-        button.setTitleColor(.useRGB(red: 97, green: 97, blue: 97), for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.layer.cornerRadius = 10
@@ -140,13 +140,13 @@ extension TaskViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.baseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
             self.baseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            self.baseView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            self.baseView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor)
+            self.baseView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
+            self.baseView.heightAnchor.constraint(equalToConstant: 360)
         ])
         
         // dailyButton
         NSLayoutConstraint.activate([
-            self.dailyButton.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
+            self.dailyButton.trailingAnchor.constraint(equalTo: self.weeklyButton.leadingAnchor, constant: -16),
             self.dailyButton.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 16),
             self.dailyButton.widthAnchor.constraint(equalToConstant: 72),
             self.dailyButton.heightAnchor.constraint(equalToConstant: 50),
@@ -154,17 +154,16 @@ extension TaskViewController: EssentialViewMethods {
         
         // weeklyButton
         NSLayoutConstraint.activate([
-            self.weeklyButton.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
-            self.weeklyButton.topAnchor.constraint(equalTo: self.dailyButton.bottomAnchor, constant: 16),
+            self.weeklyButton.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 16),
+            self.weeklyButton.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
             self.weeklyButton.widthAnchor.constraint(equalToConstant: 72),
             self.weeklyButton.heightAnchor.constraint(equalToConstant: 50),
         ])
         
         // equipmentButton
         NSLayoutConstraint.activate([
-            self.equipmentButton.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
-            self.equipmentButton.topAnchor.constraint(equalTo: self.weeklyButton.bottomAnchor, constant: 16),
-            self.equipmentButton.bottomAnchor.constraint(equalTo: self.doneButton.topAnchor, constant: -16),
+            self.equipmentButton.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 16),
+            self.equipmentButton.leadingAnchor.constraint(equalTo: self.weeklyButton.trailingAnchor, constant: 16),
             self.equipmentButton.widthAnchor.constraint(equalToConstant: 72),
             self.equipmentButton.heightAnchor.constraint(equalToConstant: 44),
         ])
@@ -173,6 +172,7 @@ extension TaskViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.doneButton.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.doneButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+            self.doneButton.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -16),
             self.doneButton.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
@@ -209,6 +209,10 @@ extension TaskViewController {
         
         vc.modalPresentationStyle = .overFullScreen
         self.present(vc, animated: false)
+    }
+    
+    @objc func tappedDoneButton(_ sender: UIButton) {
+        self.dismiss(animated: true)
     }
 }
 

@@ -182,7 +182,7 @@ final class RenewalDispatchViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.sectionHeaderTopPadding = 0
-        tableView.separatorStyle = .none
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.layer.cornerRadius = 10
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -419,6 +419,14 @@ extension RenewalDispatchViewController: EssentialViewMethods {
             self.taskImageView.widthAnchor.constraint(equalToConstant: 28)
         ])
         
+        // taskButton
+        NSLayoutConstraint.activate([
+            self.taskButton.leadingAnchor.constraint(equalTo: self.taskView.leadingAnchor),
+            self.taskButton.trailingAnchor.constraint(equalTo: self.taskView.trailingAnchor),
+            self.taskButton.topAnchor.constraint(equalTo: self.taskView.topAnchor),
+            self.taskButton.bottomAnchor.constraint(equalTo: self.taskView.bottomAnchor),
+        ])
+        
         // todayDispatchLabel
         NSLayoutConstraint.activate([
             self.todayDispatchLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
@@ -524,6 +532,22 @@ extension RenewalDispatchViewController {
                 
             }
             
+        }
+        
+    }
+    
+    func checkPatchDispatchRequest(checkType: String, time: String, regularlyId: String, orderId: String, success: ((CheckDriveItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.checkPatchDispatchRequest(checkType: checkType, time: time, regularlyId: regularlyId, orderId: orderId) { item in
+            success?(item)
+            
+        } dispatchFailure: { reason in
+            print(reason)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
         }
         
     }
@@ -646,6 +670,7 @@ extension RenewalDispatchViewController: UITableViewDelegate, UITableViewDataSou
             let item = self.regularlyList[indexPath.row]
             
             cell.setCell(item: item)
+            cell.delegate = self
             cell.backgroundColor = .useRGB(red: 242, green: 242, blue: 247)
             
             return cell
@@ -659,6 +684,32 @@ extension RenewalDispatchViewController: UITableViewDelegate, UITableViewDataSou
             return cell
         }
     }
+}
+
+
+
+// MARK: - Extension for UIGestureRecognizerDelegate
+extension RenewalDispatchViewController: RenewalDispatchDelegate {
+    func tappedStatusButton(type: DriveCheckType, item: DispatchRegularlyItem?) {
+        guard let item = item else { return }
+        
+        SupportingMethods.shared.turnCoverView(.on)
+        self.checkPatchDispatchRequest(checkType: type.rawValue, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(item.id)", orderId: "") { item in
+            
+            self.setData()
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("tappedDriveCheckButton checkPatchDispatchRequest API Error: \(errorMessage)")
+            
+        }
+    }
+    
+    func tapDetailMapButton(mapLink: String) {
+        guard let url = URL(string: mapLink) else { return }
+        UIApplication.shared.open(url)
+        
+    }
+    
 }
 
 // MARK: - Extension for UIGestureRecognizerDelegate

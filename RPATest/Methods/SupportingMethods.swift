@@ -358,6 +358,7 @@ extension SupportingMethods {
             
             ReferenceValues.firstVC?.dismiss(animated: false)
             ReferenceValues.firstVC?.navigationController?.popToRootViewController(animated: false)
+            ReferenceValues.firstVC?.setUpProgressView()
             
         case .serverError:
             ReferenceValues.firstVC?.backGroundView.isHidden = false
@@ -371,6 +372,7 @@ extension SupportingMethods {
             
             ReferenceValues.firstVC?.dismiss(animated: false)
             ReferenceValues.firstVC?.navigationController?.popToRootViewController(animated: false)
+            ReferenceValues.firstVC?.setUpProgressView()
         case .expired:
             // expired state
             

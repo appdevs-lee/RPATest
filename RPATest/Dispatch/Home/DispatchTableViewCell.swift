@@ -7,13 +7,6 @@
 
 import UIKit
 
-enum DriveCheckType: String {
-    case wake = "기상"
-    case drive = "운행"
-    case departure = "출발지"
-    case done
-}
-
 protocol DispatchDelegate: NSObjectProtocol {
     func tapDetailMapButton(mapLink: String)
     func tapDriveCheckButton(current: DriveCheckType, info: DispatchRegularlyItem)

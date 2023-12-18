@@ -7,6 +7,19 @@
 
 import UIKit
 
+enum DriveCheckType: String {
+    case wake = "기상"
+    case drive = "운행"
+    case departure = "출발지"
+    case done
+}
+
+protocol RenewalDispatchDelegate: NSObjectProtocol {
+    func tapDetailMapButton(mapLink: String)
+    func tappedStatusButton(type: DriveCheckType, item: DispatchRegularlyItem?)
+    
+}
+
 final class RenewalDispatchRegularlyTableViewCell: UITableViewCell {
     
     lazy var contentsView: UIView = {
@@ -102,6 +115,47 @@ final class RenewalDispatchRegularlyTableViewCell: UITableViewCell {
         return label
     }()
     
+    lazy var statusStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.statusButton, self.kakaoImageView])
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    lazy var statusButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("기상", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .useFont(ofSize: 18, weight: .Bold)
+        button.layer.cornerRadius = 20
+        button.backgroundColor = .white
+        button.addShadow(location: .bottom)
+        button.addTarget(self, action: #selector(tappedStatusButton(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
+    lazy var kakaoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "KakaoMapLogo")
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.addShadow(location: .bottom)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return imageView
+    }()
+    
+    var delegate: RenewalDispatchDelegate?
+    var mapLink: String = ""
+    var checkType: DriveCheckType = .wake
+    var item: DispatchRegularlyItem?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -144,7 +198,9 @@ extension RenewalDispatchRegularlyTableViewCell {
     
     // Set gestures
     func setGestures() {
-        
+        let kakaoGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tappedKakaoButton(_:)))
+        self.kakaoImageView.addGestureRecognizer(kakaoGesture)
+        self.kakaoImageView.isUserInteractionEnabled = true
     }
     
     // Set notificationCenters
@@ -155,7 +211,8 @@ extension RenewalDispatchRegularlyTableViewCell {
     // Set subviews
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
-            self.contentsView
+            self.contentsView,
+            self.statusStackView
         ], to: self)
         
         SupportingMethods.shared.addSubviews([
@@ -177,9 +234,27 @@ extension RenewalDispatchRegularlyTableViewCell {
         // contentsView
         NSLayoutConstraint.activate([
             self.contentsView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
-            self.contentsView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             self.contentsView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             self.contentsView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16)
+        ])
+        
+        // statusSatckView
+        NSLayoutConstraint.activate([
+            self.statusStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.statusStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.statusStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+            self.statusStackView.topAnchor.constraint(equalTo: self.contentsView.bottomAnchor, constant: 8)
+        ])
+        
+        // statusButton
+        NSLayoutConstraint.activate([
+            self.statusButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        // kakaoImageView
+        NSLayoutConstraint.activate([
+            self.kakaoImageView.heightAnchor.constraint(equalToConstant: 50),
+            self.kakaoImageView.widthAnchor.constraint(equalToConstant: 50)
         ])
         
         // departureTimeLabel
@@ -245,6 +320,9 @@ extension RenewalDispatchRegularlyTableViewCell {
 // MARK: - Extension for methods added
 extension RenewalDispatchRegularlyTableViewCell {
     func setCell(item: DispatchRegularlyItem) {
+        self.item = item
+        self.mapLink = item.maplink
+        
         self.departureTimeLabel.text = self.sliceString(string: item.departureDate)
         self.departureLabel.text = item.departure
         
@@ -252,6 +330,38 @@ extension RenewalDispatchRegularlyTableViewCell {
         self.arrivalLabel.text = item.arrival
         
         self.vehicleNumberLabel.text = item.busId
+        
+        if item.maplink == "" {
+            self.kakaoImageView.isHidden = true
+            
+        } else {
+            self.kakaoImageView.isHidden = false
+            
+        }
+        
+        if item.checkRegularlyConnect.wakeTime == "" {
+            // 기상 버튼 활성화
+            self.statusButton.setTitle("기상", for: .normal)
+            self.checkType = .wake
+            
+        } else if item.checkRegularlyConnect.driveTime == "" {
+            // 운행 시작 버튼 활성화
+            self.statusButton.setTitle("운행 시작", for: .normal)
+            self.checkType = .drive
+            
+        } else if item.checkRegularlyConnect.departureTime == "" {
+            // 출발지 도착 버튼 활성화
+            self.statusButton.setTitle("출발지 도착", for: .normal)
+            self.checkType = .departure
+            
+        } else {
+            // 버튼 비활성화
+            self.statusButton.setTitle("안전 운행하세요", for: .normal)
+            self.statusButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            self.statusButton.isEnabled = false
+            self.checkType = .done
+            
+        }
     }
     
     func sliceString(string: String) -> String {
@@ -262,3 +372,15 @@ extension RenewalDispatchRegularlyTableViewCell {
     }
 }
 
+// MARK: - Extension for selector added
+extension RenewalDispatchRegularlyTableViewCell {
+    @objc func tappedKakaoButton(_ sender: UIButton) {
+        self.delegate?.tapDetailMapButton(mapLink: self.mapLink)
+        
+    }
+    
+    @objc func tappedStatusButton(_ sender: UIButton) {
+        self.delegate?.tappedStatusButton(type: self.checkType, item: self.item)
+        
+    }
+}
