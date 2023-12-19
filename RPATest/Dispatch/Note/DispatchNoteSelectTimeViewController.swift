@@ -1,13 +1,13 @@
 //
-//  SelectTimeViewController.swift
+//  DispatchNoteSelectTimeViewController.swift
 //  RPATest
 //
-//  Created by Awesomepia on 12/8/23.
+//  Created by 이주성 on 12/19/23.
 //
 
 import UIKit
 
-final class SelectTimeViewController: UIViewController {
+final class DispatchNoteSelectTimeViewController: UIViewController {
     
     lazy var baseView: UIView = {
         let view = UIView()
@@ -20,10 +20,10 @@ final class SelectTimeViewController: UIViewController {
     
     lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
-        picker.datePickerMode = .time
+        picker.datePickerMode = .dateAndTime
         picker.preferredDatePickerStyle = .wheels
         picker.locale = Locale(identifier: "ko-KR")
-        picker.date = SupportingMethods.shared.convertString(intoDate: self.date, "HH:mm")
+        picker.date = SupportingMethods.shared.convertString(intoDate: self.date, "yyyy-MM-dd HH:mm")
         picker.translatesAutoresizingMaskIntoConstraints = false
         
         return picker
@@ -56,7 +56,7 @@ final class SelectTimeViewController: UIViewController {
         return button
     }()
     
-    init(date: String = SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm")) {
+    init(date: String) {
         self.date = date
         
         super.init(nibName: nil, bundle: nil)
@@ -96,7 +96,7 @@ final class SelectTimeViewController: UIViewController {
 }
 
 // MARK: Extension for essential methods
-extension SelectTimeViewController: EssentialViewMethods {
+extension DispatchNoteSelectTimeViewController: EssentialViewMethods {
     func setViewFoundation() {
         self.view.backgroundColor = .useRGB(red: 0, green: 0, blue: 0, alpha: 0.4)
     }
@@ -134,10 +134,10 @@ extension SelectTimeViewController: EssentialViewMethods {
         
         // baseView
         NSLayoutConstraint.activate([
-            self.baseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 55),
-            self.baseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -55),
+            self.baseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            self.baseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
             self.baseView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
-            self.baseView.widthAnchor.constraint(equalToConstant: 320),
+            self.baseView.widthAnchor.constraint(equalToConstant: ReferenceValues.Size.Device.width - 32),
             self.baseView.heightAnchor.constraint(equalToConstant: 320)
         ])
         
@@ -174,12 +174,12 @@ extension SelectTimeViewController: EssentialViewMethods {
 }
 
 // MARK: - Extension for methods added
-extension SelectTimeViewController {
+extension DispatchNoteSelectTimeViewController {
     
 }
 
 // MARK: - Extension for selector methods
-extension SelectTimeViewController {
+extension DispatchNoteSelectTimeViewController {
     @objc func tappedCancelButton(_ sender: UIButton) {
         self.dismiss(animated: true)
         
@@ -187,7 +187,7 @@ extension SelectTimeViewController {
     
     @objc func tappedCheckButton(_ sender: UIButton) {
         self.dismiss(animated: true) {
-            NotificationCenter.default.post(name: Notification.Name("SelectTime"), object: nil, userInfo: ["time": SupportingMethods.shared.convertDate(intoString: self.datePicker.date, "HH:mm")])
+            NotificationCenter.default.post(name: Notification.Name("SelectTime"), object: nil, userInfo: ["time": SupportingMethods.shared.convertDate(intoString: self.datePicker.date, "yyyy-MM-dd HH:mm")])
             
         }
     }

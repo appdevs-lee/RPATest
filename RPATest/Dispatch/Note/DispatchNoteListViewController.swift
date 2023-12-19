@@ -433,14 +433,14 @@ extension DispatchNoteListViewController {
             self.type = .regularly
             regularlyItem = self.regularlyList[selectedIndex.row]
             
-            let vc = DispatchNoteDetailViewController(type: .regularly, id: (regularly: "\(regularlyItem?.id ?? 0)", order: ""))
+            let vc = DispatchNoteDetailViewController(type: .regularly, id: (regularly: "\(regularlyItem?.id ?? 0)", order: ""), date: (departure: regularlyItem!.departureDate, arrival: regularlyItem!.arrivalDate))
             
             self.navigationController?.pushViewController(vc, animated: true)
         case 1:
             self.type = .order
             orderItem = self.orderList[selectedIndex.row]
             
-            let vc = DispatchNoteDetailViewController(type: .order, id: (regularly: "", order: "\(orderItem?.id ?? 0)"))
+            let vc = DispatchNoteDetailViewController(type: .order, id: (regularly: "", order: "\(orderItem?.id ?? 0)"), date: (departure: orderItem!.departureDate, arrival: orderItem!.arrivalDate))
             
             self.navigationController?.pushViewController(vc, animated: true)
         default:

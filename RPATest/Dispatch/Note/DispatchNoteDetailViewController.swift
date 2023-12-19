@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum SelectDispatchTypeForTime {
+    case departure
+    case arrival
+}
+
 final class DispatchNoteDetailViewController: UIViewController {
     
     lazy var carNumberLabel: UILabel = {
@@ -193,6 +198,7 @@ final class DispatchNoteDetailViewController: UIViewController {
             NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 189, green: 189, blue: 189),
             .font:UIFont.useFont(ofSize: 16, weight: .Medium)
         ])
+        textField.keyboardType = .decimalPad
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -225,6 +231,7 @@ final class DispatchNoteDetailViewController: UIViewController {
             NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 189, green: 189, blue: 189),
             .font:UIFont.useFont(ofSize: 16, weight: .Medium)
         ])
+        textField.keyboardType = .decimalPad
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -257,6 +264,7 @@ final class DispatchNoteDetailViewController: UIViewController {
             NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 189, green: 189, blue: 189),
             .font:UIFont.useFont(ofSize: 16, weight: .Medium)
         ])
+        textField.keyboardType = .numberPad
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -298,19 +306,22 @@ final class DispatchNoteDetailViewController: UIViewController {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
+        button.isEnabled = false
         button.setTitle("완료", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
         button.layer.cornerRadius = 22
-        button.backgroundColor = .black
+        button.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+        button.addTarget(self, action: #selector(tappedDoneButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    init(type: DispatchKindType, id: (regularly: String, order: String)) {
+    init(type: DispatchKindType, id: (regularly: String, order: String), date: (departure: String, arrival: String)) {
         self.type = type
         self.id = id
+        self.date = date
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -321,6 +332,10 @@ final class DispatchNoteDetailViewController: UIViewController {
     
     var type: DispatchKindType
     var id: (regularly: String, order: String)
+    var date: (departure: String, arrival: String)
+    var selectDispatchTypeForTime: SelectDispatchTypeForTime?
+    var bottomAnchorConstraint: NSLayoutConstraint!
+    var keyboardHeight: CGFloat = 0
     
     let dispatchModel = DispatchModel()
     
@@ -373,6 +388,9 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedTime(_:)), name: Notification.Name("SelectTime"), object: nil)
         
     }
     
@@ -499,7 +517,7 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
         // departureTimeArrowImageView
         NSLayoutConstraint.activate([
             self.departureTimeArrowImageView.trailingAnchor.constraint(equalTo: self.departureTimeBaseView.trailingAnchor, constant: -10),
-            self.departureTimeArrowImageView.centerYAnchor.constraint(equalTo: self.departureTimeBaseView.centerYAnchor)
+            self.departureTimeArrowImageView.centerYAnchor.constraint(equalTo: self.departureTimeTitleLabel.centerYAnchor)
         ])
         
         // departureTimeButton
@@ -536,7 +554,7 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
         // arrivalTimeArrowImageView
         NSLayoutConstraint.activate([
             self.arrivalTimeArrowImageView.trailingAnchor.constraint(equalTo: self.arrivalTimeBaseView.trailingAnchor, constant: -10),
-            self.arrivalTimeArrowImageView.centerYAnchor.constraint(equalTo: self.arrivalTimeBaseView.centerYAnchor)
+            self.arrivalTimeArrowImageView.centerYAnchor.constraint(equalTo: self.arrivalTimeTitleLabel.centerYAnchor)
         ])
         
         // arrivalTimeButton
@@ -550,7 +568,7 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
         // departureFigureBaseView
         NSLayoutConstraint.activate([
             self.departureFigureBaseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            self.departureFigureBaseView.topAnchor.constraint(equalTo: self.arrivalTimeBaseView.bottomAnchor, constant: 10),
+//            self.departureFigureBaseView.topAnchor.constraint(equalTo: self.arrivalTimeBaseView.bottomAnchor, constant: 10),
             self.departureFigureBaseView.widthAnchor.constraint(equalToConstant: (ReferenceValues.Size.Device.width - 40) / 2)
         ])
         
@@ -573,7 +591,7 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
         // arrivalFigureBaseView
         NSLayoutConstraint.activate([
             self.arrivalFigureBaseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            self.arrivalFigureBaseView.topAnchor.constraint(equalTo: self.arrivalTimeBaseView.bottomAnchor, constant: 10),
+//            self.arrivalFigureBaseView.topAnchor.constraint(equalTo: self.arrivalTimeBaseView.bottomAnchor, constant: 10),
             self.arrivalFigureBaseView.leadingAnchor.constraint(equalTo: self.departureFigureBaseView.trailingAnchor, constant: 8),
             self.arrivalFigureBaseView.widthAnchor.constraint(equalToConstant: (ReferenceValues.Size.Device.width - 40) / 2)
         ])
@@ -598,7 +616,8 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.passengerNumberBaseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
             self.passengerNumberBaseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            self.passengerNumberBaseView.topAnchor.constraint(equalTo: self.departureFigureBaseView.bottomAnchor, constant: 20)
+            self.passengerNumberBaseView.topAnchor.constraint(equalTo: self.departureFigureBaseView.bottomAnchor, constant: 10),
+            self.passengerNumberBaseView.topAnchor.constraint(equalTo: self.arrivalFigureBaseView.bottomAnchor, constant: 10)
         ])
         
         // passengerNumberTitleLabel
@@ -621,7 +640,8 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.additionalInfoBaseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
             self.additionalInfoBaseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            self.additionalInfoBaseView.topAnchor.constraint(equalTo: self.passengerNumberBaseView.bottomAnchor, constant: 10)
+            self.additionalInfoBaseView.topAnchor.constraint(equalTo: self.passengerNumberBaseView.bottomAnchor, constant: 10),
+            self.additionalInfoBaseView.bottomAnchor.constraint(equalTo: self.doneButton.topAnchor, constant: -16)
         ])
         
         // additionalInfoTitleLabel
@@ -641,10 +661,11 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
         ])
         
         // doneButton
+        self.bottomAnchorConstraint = self.doneButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -16)
         NSLayoutConstraint.activate([
             self.doneButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
             self.doneButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            self.doneButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -16),
+            self.bottomAnchorConstraint,
             self.doneButton.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
@@ -681,8 +702,28 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
             self.departureLabel.text = "\(item.connect.departure)"
             self.arrivalLabel.text = "\(item.connect.arrival)"
             
-            self.departureTimeLabel.text = "\(item.connect.departureTime)"
-            self.arrivalTimeLabel.text = "\(item.connect.arrivalTime)"
+            if item.submitCheck {
+                self.doneButton.backgroundColor = .black
+                self.doneButton.isEnabled = true
+                
+                self.departureTimeLabel.text = "\(item.departureTime)"
+                self.arrivalTimeLabel.text = "\(item.arrivalTime)"
+
+                self.departureFigureTextField.text = item.departureFigure
+                self.arrivalFigureTextField.text = item.arrivalFigure
+                
+                self.passengerNumberTextField.text = item.passengerNumber
+                
+                self.additionalInfoTextView.text = item.specialNotes
+                
+            } else {
+                self.doneButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                self.doneButton.isEnabled = false
+                
+                self.departureTimeLabel.text = "\(self.date.departure)"
+                self.arrivalTimeLabel.text = "\(self.date.arrival)"
+                
+            }
             
             SupportingMethods.shared.turnCoverView(.off)
             
@@ -709,6 +750,19 @@ extension DispatchNoteDetailViewController {
         }
 
     }
+    
+    func sendDispatchNoteDetailRequest(success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        self.dispatchModel.sendDispatchNoteDetailRequest(type: self.type, regularlyId: self.id.regularly, orderId: id.order, departureTime: self.departureTimeLabel.text!, arrivalTime: self.arrivalTimeLabel.text!, departureFigure: self.departureFigureTextField.text!, arrivalFigure: self.arrivalFigureTextField.text!, passengerNumber: self.passengerNumberTextField.text!, specialNotes: self.additionalInfoTextView.text!) {
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -719,20 +773,110 @@ extension DispatchNoteDetailViewController {
     }
     
     @objc func tappedDepartureTimeButton(_ sender: UIButton) {
+        let vc = DispatchNoteSelectTimeViewController(date: self.departureTimeLabel.text!)
         
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overFullScreen
+        self.present(vc, animated: true) {
+            self.selectDispatchTypeForTime = .departure
+        }
     }
     
     @objc func tappedArrivalTimeButton(_ sender: UIButton) {
+        let vc = DispatchNoteSelectTimeViewController(date: self.arrivalTimeLabel.text!)
         
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overFullScreen
+        self.present(vc, animated: true) {
+            self.selectDispatchTypeForTime = .arrival
+        }
+    }
+    
+    @objc func selectedTime(_ notification: Notification) {
+        guard let time = notification.userInfo?["time"] as? String else { return }
+        guard let type = self.selectDispatchTypeForTime else { return }
+        
+        switch type {
+        case .departure:
+            self.departureTimeLabel.text = time
+            
+        case .arrival:
+            self.arrivalTimeLabel.text = time
+            
+        }
+        
+    }
+    
+    @objc func tappedDoneButton(_ sender: UIButton) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.sendDispatchNoteDetailRequest {
+            SupportingMethods.shared.showAlertNoti(title: "운행일보 등록이 완료되었습니다.")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+            self.navigationController?.popViewController(animated: true)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("tappedDoneButton sendDispatchNoteDetailRequest API Error: \(errorMessage)")
+            
+        }
+
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
+            
+            NSLayoutConstraint.deactivate([
+                self.bottomAnchorConstraint
+            ])
+            
+            self.bottomAnchorConstraint.constant = -keyboardSize.height
+            
+            NSLayoutConstraint.activate([
+                self.bottomAnchorConstraint
+            ])
+            
+            UIView.animate(withDuration: duration) {
+                self.view.layoutIfNeeded()
+                
+            } completion: { finished in
+                
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        if let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
+            
+            self.bottomAnchorConstraint.constant = -16
+            UIView.animate(withDuration: duration) {
+                self.view.layoutIfNeeded()
+                
+            } completion: { finished in
+                
+            }
+        }
     }
 }
 
 // MARK: - Extension for UITextFieldDelegate
 extension DispatchNoteDetailViewController: UITextFieldDelegate {
-    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if self.departureFigureTextField.text != "" && self.arrivalFigureTextField.text != "" && self.passengerNumberTextField.text != "" {
+            self.doneButton.backgroundColor = .black
+            self.doneButton.isEnabled = true
+        } else {
+            self.doneButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            self.doneButton.isEnabled = false
+        }
+    }
 }
 
 // MARK: - Extension for UITextViewDelegate
 extension DispatchNoteDetailViewController: UITextViewDelegate {
-    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        
+        return true
+    }
 }

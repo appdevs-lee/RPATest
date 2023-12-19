@@ -24,6 +24,7 @@ final class DispatchModel {
     private(set) var loadEveningRollCallDataRequest: DataRequest?
     private(set) var loadGarageRequest: DataRequest?
     private(set) var loadDispatchNoteDetailRequest: DataRequest?
+    private(set) var sendDispatchNoteDetailRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -890,6 +891,75 @@ final class DispatchModel {
             }
         }
     }
+    
+    func sendDispatchNoteDetailRequest(type: DispatchKindType, regularlyId: String, orderId: String, departureTime: String, arrivalTime: String, departureFigure: String, arrivalFigure: String, passengerNumber: String, specialNotes: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/drivinghistory"
+        
+        let headers: HTTPHeaders = [
+            "Authorization": UserInfo.shared.access!,
+            "access": "application/json"
+        ]
+        
+        var parameters: Parameters = [
+            "departure_date": departureTime,
+            "arrival_date": arrivalTime,
+            "departure_km": departureFigure,
+            "arrival_km": arrivalFigure,
+            "passenger_num": passengerNumber,
+            "special_notes": specialNotes
+        ]
+        
+        switch type {
+        case .regularly:
+            parameters.updateValue(regularlyId, forKey: "regularly_connect_id")
+            parameters.updateValue("", forKey: "order_connect_id")
+            
+        case .order:
+            parameters.updateValue("", forKey: "regularly_connect_id")
+            parameters.updateValue(orderId, forKey: "order_connect_id")
+            
+        }
+        
+        self.sendDispatchNoteDetailRequest = AF.request(url, method: .patch, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        
+        self.sendDispatchNoteDetailRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("sendDispatchNoteDetailRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("sendDispatchNoteDetailRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        print("sendDispatchNoteDetailRequest succeeded")
+                        success?()
+                        
+                    } else {
+                        print("sendDispatchNoteDetailRequest failure: \(decodedData.result)")
+                        failure?(decodedData.result)
+                    }
+                    
+                } else {
+                    print("sendDispatchNoteDetailRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("sendDispatchNoteDetailRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
 }
 
 struct DispatchMonthly: Codable {
@@ -1252,6 +1322,8 @@ struct DispatchNoteDetailItem: Codable {
     let arrivalFigure: String
     let passengerNumber: String
     let specialNotes: String
+    let departureTime: String
+    let arrivalTime: String
     let creator: Int
     let connect: DispatchNoteDetailSubItem
     let submitCheck: Bool
@@ -1268,6 +1340,8 @@ struct DispatchNoteDetailItem: Codable {
         case creator
         case connect
         case submitCheck = "submit_check"
+        case departureTime = "departure_date"
+        case arrivalTime = "arrival_date"
     }
 }
 
@@ -1275,15 +1349,11 @@ struct DispatchNoteDetailItem: Codable {
 struct DispatchNoteDetailSubItem: Codable {
     let bus: String
     let departure: String
-    let departureTime: String
     let arrival: String
-    let arrivalTime: String
     
     enum CodingKeys: String, CodingKey {
         case bus
         case departure
-        case departureTime = "departure_time"
         case arrival
-        case arrivalTime = "arrival_time"
     }
 }
