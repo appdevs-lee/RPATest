@@ -22,7 +22,9 @@ final class RenewalDispatchViewController: UIViewController {
     
     lazy var alarmButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ""), for: .normal)
+        button.isHidden = true
+        button.setImage(UIImage(systemName: "bell.fill"), for: .normal)
+        button.imageView?.tintColor = .black
         button.addTarget(self, action: #selector(tappedAlarmButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -31,7 +33,7 @@ final class RenewalDispatchViewController: UIViewController {
     
     lazy var searchButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ""), for: .normal)
+        button.setImage(UIImage(named: "homeSearch"), for: .normal)
         button.addTarget(self, action: #selector(tappedSearchButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -220,6 +222,14 @@ final class RenewalDispatchViewController: UIViewController {
         return label
     }()
     
+    lazy var accidentResponseButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "accidentResponseButtonImage"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     let dispatchModel = DispatchModel()
     var regularlyList: [DispatchRegularlyItem] = []
     var orderList: [DispatchOrderItem] = []
@@ -300,7 +310,8 @@ extension RenewalDispatchViewController: EssentialViewMethods {
             self.taskButton,
             self.todayDispatchLabel,
             self.tableView,
-            self.noDataStackView
+            self.noDataStackView,
+            self.accidentResponseButton
         ], to: self.view)
     }
     
@@ -317,16 +328,16 @@ extension RenewalDispatchViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.alarmButton.trailingAnchor.constraint(equalTo: self.searchButton.leadingAnchor, constant: -8),
             self.alarmButton.centerYAnchor.constraint(equalTo: self.searchButton.centerYAnchor),
-            self.alarmButton.widthAnchor.constraint(equalToConstant: 16),
-            self.alarmButton.heightAnchor.constraint(equalToConstant: 16)
+            self.alarmButton.widthAnchor.constraint(equalToConstant: 50),
+            self.alarmButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         // searchButton
         NSLayoutConstraint.activate([
             self.searchButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
             self.searchButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-            self.searchButton.widthAnchor.constraint(equalToConstant: 16),
-            self.searchButton.heightAnchor.constraint(equalToConstant: 16)
+            self.searchButton.widthAnchor.constraint(equalToConstant: 24),
+            self.searchButton.heightAnchor.constraint(equalToConstant: 24)
         ])
         
         // dispatchCheckView
@@ -446,6 +457,13 @@ extension RenewalDispatchViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.noDataStackView.centerXAnchor.constraint(equalTo: self.tableView.centerXAnchor),
             self.noDataStackView.centerYAnchor.constraint(equalTo: self.tableView.centerYAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.accidentResponseButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            self.accidentResponseButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -16),
+            self.accidentResponseButton.widthAnchor.constraint(equalToConstant: 60),
+            self.accidentResponseButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     
