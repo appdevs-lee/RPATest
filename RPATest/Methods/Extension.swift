@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension String {
     func sliceString() -> String {
@@ -13,5 +14,19 @@ extension String {
         let endIndex = self.index(self.startIndex, offsetBy: 16)// 사용자지정 끝인덱스
         
         return String(self[startIndex..<endIndex])
+    }
+}
+
+extension UIView {
+    func transfromToImage() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, 0.0)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+        if let context = UIGraphicsGetCurrentContext() {
+            layer.render(in: context)
+            return UIGraphicsGetImageFromCurrentImageContext()
+        }
+        return nil
     }
 }

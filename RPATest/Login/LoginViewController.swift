@@ -173,6 +173,7 @@ extension LoginViewController {
         self.organizationModel.memberInfoRequest { info in
             UserInfo.shared.role = info.role
             UserInfo.shared.id = info.id
+            UserInfo.shared.phoneNumber = info.phoneNum
             SupportingMethods.shared.turnCoverView(.off)
             success?()
             

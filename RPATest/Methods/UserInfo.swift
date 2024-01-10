@@ -16,6 +16,7 @@ class UserInfo {
     var name: String?
     var role: String?
     var fcmToken: String?
+    var phoneNumber: String?
     var signStatus: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "salarySignStatus")
