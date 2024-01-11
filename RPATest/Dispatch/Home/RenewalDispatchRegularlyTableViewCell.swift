@@ -9,8 +9,10 @@ import UIKit
 
 enum DriveCheckType: String {
     case wake = "기상"
-    case drive = "운행"
-    case departure = "출발지"
+    case boarding = "운행"
+    case departureArrive = "출발지"
+    case drivingStart
+    case driving
     case done
 }
 
@@ -319,9 +321,10 @@ extension RenewalDispatchRegularlyTableViewCell {
 
 // MARK: - Extension for methods added
 extension RenewalDispatchRegularlyTableViewCell {
-    func setCell(item: DispatchRegularlyItem) {
+    func setCell(item: DispatchRegularlyItem, checkType: DriveCheckType) {
         self.item = item
         self.mapLink = item.maplink
+        self.checkType = checkType
         
         self.departureTimeLabel.text = item.departureDate.sliceString()
         self.departureLabel.text = item.departure
@@ -339,28 +342,42 @@ extension RenewalDispatchRegularlyTableViewCell {
             
         }
         
+        if item.checkRegularlyConnect.driveTime == "" {
+            self.checkType = .wake
+        } else if item.checkRegularlyConnect.departureTime == "" {
+            self.checkType = .boarding
+        } else {
+            if checkType == .wake {
+                self.checkType = .departureArrive
+            }
+            
+        }
+        
         if item.checkRegularlyConnect.wakeTime == "" {
-            // 기상 버튼 활성화
             self.statusButton.setTitle("기상", for: .normal)
             self.checkType = .wake
             
-        } else if item.checkRegularlyConnect.driveTime == "" {
-            // 운행 시작 버튼 활성화
-            self.statusButton.setTitle("운행 시작", for: .normal)
-            self.checkType = .drive
+        } else if item.checkRegularlyConnect.wakeTime != "" && self.checkType == .wake {
+            self.statusButton.setTitle("탑승 및 출발", for: .normal)
+            self.checkType = .boarding
             
-        } else if item.checkRegularlyConnect.departureTime == "" {
-            // 출발지 도착 버튼 활성화
-            self.statusButton.setTitle("출발지 도착", for: .normal)
-            self.checkType = .departure
+        } else if item.checkRegularlyConnect.driveTime != "" && self.checkType == .boarding {
+            self.statusButton.setTitle("첫 출발지 도착", for: .normal)
+            self.checkType = .departureArrive
+            
+        } else if self.checkType == .departureArrive {
+            self.statusButton.setTitle("운행 시작", for: .normal)
+            self.checkType = .drivingStart
+            
+        } else if self.checkType == .drivingStart {
+            self.statusButton.setTitle("운행중", for: .normal)
+            self.checkType = .driving
             
         } else {
-            // 버튼 비활성화
-            self.statusButton.setTitle("안전 운행하세요", for: .normal)
+            self.statusButton.setTitle("운행 종료", for: .normal)
             self.statusButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
             self.statusButton.isEnabled = false
             self.checkType = .done
-            
         }
     }
 }

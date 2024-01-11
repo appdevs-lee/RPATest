@@ -223,6 +223,7 @@ final class RenewalDispatchViewController: UIViewController {
     let dispatchModel = DispatchModel()
     var regularlyList: [DispatchRegularlyItem] = []
     var orderList: [DispatchOrderItem] = []
+    var driveType: DriveCheckType = .wake
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -669,7 +670,7 @@ extension RenewalDispatchViewController: UITableViewDelegate, UITableViewDataSou
             let cell = tableView.dequeueReusableCell(withIdentifier: "RenewalDispatchRegularlyTableViewCell", for: indexPath) as! RenewalDispatchRegularlyTableViewCell
             let item = self.regularlyList[indexPath.row]
             
-            cell.setCell(item: item)
+            cell.setCell(item: item, checkType: self.driveType)
             cell.delegate = self
             cell.backgroundColor = .useRGB(red: 242, green: 242, blue: 247)
             
@@ -693,15 +694,31 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
     func tappedStatusButton(type: DriveCheckType, item: DispatchRegularlyItem?) {
         guard let item = item else { return }
         
-        SupportingMethods.shared.turnCoverView(.on)
-        self.checkPatchDispatchRequest(checkType: type.rawValue, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(item.id)", orderId: "") { item in
+        if type == .wake || type == .boarding || type == .departureArrive {
+            SupportingMethods.shared.turnCoverView(.on)
+            self.checkPatchDispatchRequest(checkType: type.rawValue, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(item.id)", orderId: "") { item in
+                
+                self.setData()
+            } failure: { errorMessage in
+                SupportingMethods.shared.turnCoverView(.off)
+                print("tappedDriveCheckButton checkPatchDispatchRequest API Error: \(errorMessage)")
+                
+            }
+        } else {
+            self.driveType = type
+            if type == .driving || type == .drivingStart {
+//                let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: item)
+//                
+//                self.navigationController?.pushViewController(vc, animated: true)
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
             
-            self.setData()
-        } failure: { errorMessage in
-            SupportingMethods.shared.turnCoverView(.off)
-            print("tappedDriveCheckButton checkPatchDispatchRequest API Error: \(errorMessage)")
             
         }
+
     }
     
     func tapDetailMapButton(mapLink: String) {

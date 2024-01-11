@@ -353,12 +353,12 @@ extension DispatchTableViewCell {
         } else if info.checkRegularlyConnect.driveTime == "" {
             // 운행 시작 버튼 활성화
             self.driveCheckButton.setTitle("운행 시작", for: .normal)
-            self.checkType = .drive
+//            self.checkType = .drive
             
         } else if info.checkRegularlyConnect.departureTime == "" {
             // 출발지 도착 버튼 활성화
             self.driveCheckButton.setTitle("출발지 도착", for: .normal)
-            self.checkType = .departure
+//            self.checkType = .departure
             
         } else {
             // 버튼 비활성화
