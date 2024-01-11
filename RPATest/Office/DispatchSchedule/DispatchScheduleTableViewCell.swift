@@ -42,6 +42,16 @@ final class DispatchScheduleTableViewCell: UITableViewCell {
         return label
     }()
     
+    lazy var dispatchCountLabel: UILabel = {
+        let label = UILabel()
+        label.text = "(1/4)"
+        label.textColor = .useRGB(red: 97, green: 97, blue: 97)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     lazy var vehicleNumberLabel: UILabel = {
         let label = UILabel()
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
@@ -51,9 +61,9 @@ final class DispatchScheduleTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var pathTitleLabel: UILabel = {
+    lazy var pathNameTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "출근노선: "
+        label.text = "노선명: "
         label.textColor = .useRGB(red: 158, green: 158, blue: 158)
         label.font = .useFont(ofSize: 14, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -61,8 +71,9 @@ final class DispatchScheduleTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var pathLabel: UILabel = {
+    lazy var pathNameLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
         label.textColor = .useRGB(red: 66, green: 66, blue: 66)
         label.font = .useFont(ofSize: 14, weight: .Bold)
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -72,9 +83,9 @@ final class DispatchScheduleTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var gateTitleLabel: UILabel = {
+    lazy var takeOffTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Gate: "
+        label.text = "출발시간: "
         label.textColor = .useRGB(red: 158, green: 158, blue: 158)
         label.font = .useFont(ofSize: 14, weight: .Medium)
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -84,7 +95,7 @@ final class DispatchScheduleTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var gateLabel: UILabel = {
+    lazy var takeOffLabel: UILabel = {
         let label = UILabel()
         label.textColor = .useRGB(red: 66, green: 66, blue: 66)
         label.font = .useFont(ofSize: 14, weight: .Bold)
@@ -93,25 +104,46 @@ final class DispatchScheduleTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var noteTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "비고: "
-        label.textColor = .useRGB(red: 158, green: 158, blue: 158)
-        label.font = .useFont(ofSize: 14, weight: .Medium)
-        label.translatesAutoresizingMaskIntoConstraints = false
+    lazy var wakeButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("기상", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
+        button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        button.layer.cornerRadius = 15
+        button.isEnabled = false
+        button.translatesAutoresizingMaskIntoConstraints = false
         
-        return label
+        return button
     }()
     
-    lazy var noteLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 2
-        label.textColor = .useRGB(red: 66, green: 66, blue: 66)
-        label.font = .useFont(ofSize: 14, weight: .Bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
+    lazy var boardingButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("탑승", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
+        button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        button.layer.cornerRadius = 15
+        button.isEnabled = false
+        button.translatesAutoresizingMaskIntoConstraints = false
         
-        return label
+        return button
     }()
+    
+    lazy var drivingButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("운행", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
+        button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        button.layer.cornerRadius = 15
+        button.isEnabled = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
+    var isBlinking = false
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -170,13 +202,15 @@ extension DispatchScheduleTableViewCell {
         SupportingMethods.shared.addSubviews([
             self.busImageView,
             self.nameLabel,
+            self.dispatchCountLabel,
             self.vehicleNumberLabel,
-            self.pathTitleLabel,
-            self.pathLabel,
-            self.gateTitleLabel,
-            self.gateLabel,
-            self.noteTitleLabel,
-            self.noteLabel
+            self.pathNameTitleLabel,
+            self.pathNameLabel,
+            self.takeOffTitleLabel,
+            self.takeOffLabel,
+            self.wakeButton,
+            self.boardingButton,
+            self.drivingButton
         ], to: self.mainView)
     }
     
@@ -206,48 +240,67 @@ extension DispatchScheduleTableViewCell {
             self.nameLabel.centerYAnchor.constraint(equalTo: self.busImageView.centerYAnchor)
         ])
         
+        // dispatchCountLabel
+        NSLayoutConstraint.activate([
+            self.dispatchCountLabel.leadingAnchor.constraint(equalTo: self.nameLabel.trailingAnchor, constant: 8),
+            self.dispatchCountLabel.centerYAnchor.constraint(equalTo: self.nameLabel.centerYAnchor)
+        ])
+        
         // vehicleNumberLabel
         NSLayoutConstraint.activate([
             self.vehicleNumberLabel.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: 10),
             self.vehicleNumberLabel.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor, constant: -16),
         ])
         
-        // pathTitleLabel
+        // pathNameTitleLabel
         NSLayoutConstraint.activate([
-            self.pathTitleLabel.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor, constant: 36),
-            self.pathTitleLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor, constant: 8),
+            self.pathNameTitleLabel.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor, constant: 36),
+            self.pathNameTitleLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor, constant: 8),
         ])
         
-        // pathLabel
+        // pathNameLabel
         NSLayoutConstraint.activate([
-            self.pathLabel.leadingAnchor.constraint(equalTo: self.pathTitleLabel.trailingAnchor, constant: 4),
-            self.pathLabel.centerYAnchor.constraint(equalTo: self.pathTitleLabel.centerYAnchor)
+            self.pathNameLabel.leadingAnchor.constraint(equalTo: self.pathNameTitleLabel.trailingAnchor, constant: 4),
+            self.pathNameLabel.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor, constant: -4),
+            self.pathNameLabel.centerYAnchor.constraint(equalTo: self.pathNameTitleLabel.centerYAnchor)
         ])
         
-        // gateTitleLabel
+        // takeOffTitleLabel
         NSLayoutConstraint.activate([
-            self.gateTitleLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor, constant: 8),
+            self.takeOffTitleLabel.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor, constant: 36),
+            self.takeOffTitleLabel.topAnchor.constraint(equalTo: self.pathNameLabel.bottomAnchor, constant: 8),
         ])
         
-        // gateLabel
+        // takeOffLabel
         NSLayoutConstraint.activate([
-            self.gateLabel.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor, constant: -16),
-            self.gateLabel.leadingAnchor.constraint(equalTo: self.gateTitleLabel.trailingAnchor, constant: 4),
-            self.gateLabel.centerYAnchor.constraint(equalTo: self.gateTitleLabel.centerYAnchor),
+            self.takeOffLabel.leadingAnchor.constraint(equalTo: self.takeOffTitleLabel.trailingAnchor, constant: 4),
+            self.takeOffLabel.centerYAnchor.constraint(equalTo: self.takeOffTitleLabel.centerYAnchor),
         ])
         
-        // noteTitleLabel
+        // wakeButton
         NSLayoutConstraint.activate([
-            self.noteTitleLabel.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor, constant: 36),
-            self.noteTitleLabel.topAnchor.constraint(equalTo: self.pathTitleLabel.bottomAnchor, constant: 12),
-            self.noteTitleLabel.bottomAnchor.constraint(equalTo: self.mainView.bottomAnchor, constant: -10)
+            self.wakeButton.leadingAnchor.constraint(equalTo: self.mainView.leadingAnchor, constant: 16),
+            self.wakeButton.topAnchor.constraint(equalTo: self.takeOffLabel.bottomAnchor, constant: 10),
+            self.wakeButton.widthAnchor.constraint(equalToConstant: (ReferenceValues.Size.Device.width - 80)/3),
+            self.wakeButton.heightAnchor.constraint(equalToConstant: 36),
+            self.wakeButton.bottomAnchor.constraint(equalTo: self.mainView.bottomAnchor, constant: -10),
         ])
         
-        // noteLabel
+        // boardingButton
         NSLayoutConstraint.activate([
-            self.noteLabel.leadingAnchor.constraint(equalTo: self.noteTitleLabel.trailingAnchor, constant: 4),
-            self.noteLabel.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor, constant: -16),
-            self.noteLabel.centerYAnchor.constraint(equalTo: self.noteTitleLabel.centerYAnchor)
+            self.boardingButton.leadingAnchor.constraint(equalTo: self.wakeButton.trailingAnchor, constant: 8),
+            self.boardingButton.topAnchor.constraint(equalTo: self.takeOffLabel.bottomAnchor, constant: 10),
+            self.boardingButton.widthAnchor.constraint(equalTo: self.wakeButton.widthAnchor, multiplier: 1.0),
+            self.boardingButton.heightAnchor.constraint(equalToConstant: 36)
+        ])
+        
+        // drivingButton
+        NSLayoutConstraint.activate([
+            self.drivingButton.leadingAnchor.constraint(equalTo: self.boardingButton.trailingAnchor, constant: 8),
+            self.drivingButton.trailingAnchor.constraint(equalTo: self.mainView.trailingAnchor, constant: -16),
+            self.drivingButton.topAnchor.constraint(equalTo: self.takeOffLabel.bottomAnchor, constant: 10),
+            self.drivingButton.widthAnchor.constraint(equalTo: self.wakeButton.widthAnchor, multiplier: 1.0),
+            self.drivingButton.heightAnchor.constraint(equalToConstant: 36)
         ])
     }
 }
@@ -255,11 +308,124 @@ extension DispatchScheduleTableViewCell {
 // MARK: - Extension for methods added
 extension DispatchScheduleTableViewCell {
     func setCell(schedule: DispatchScheduleItem) {
+        if schedule.check {
+            self.isBlinking = true
+            
+        } else {
+            self.isBlinking = false
+            
+        }
+        
         self.nameLabel.text = schedule.name
-        self.vehicleNumberLabel.text = schedule.vehicleNumber
-        self.pathLabel.text = "\(schedule.path) (\(schedule.time))"
-        self.gateLabel.text = schedule.gate
-        self.noteLabel.text = schedule.note
+        self.vehicleNumberLabel.text = "버스번호: \(schedule.vehicleNumber)"
+        self.pathNameLabel.text = schedule.pathName
+        self.takeOffLabel.text = schedule.time
+        
+        self.wakeButton.layer.removeAllAnimations()
+        self.wakeButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        self.wakeButton.setTitleColor(.white, for: .normal)
+        
+        self.boardingButton.layer.removeAllAnimations()
+        self.boardingButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        self.boardingButton.setTitleColor(.white, for: .normal)
+        
+        self.drivingButton.layer.removeAllAnimations()
+        self.drivingButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        self.drivingButton.setTitleColor(.white, for: .normal)
+        
+        switch schedule.status {
+        case (true, false, false):
+            self.wakeButton.setTitle("기상 완료", for: .normal)
+            self.wakeButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
+            self.wakeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            
+            self.boardingButton.setTitle("탑승", for: .normal)
+            
+            self.drivingButton.setTitle("운행", for: .normal)
+            
+        case (true, true, false):
+            self.wakeButton.setTitle("기상 완료", for: .normal)
+            self.wakeButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
+            self.wakeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            
+            self.boardingButton.setTitle("탑승 완료", for: .normal)
+            self.boardingButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
+            self.boardingButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            
+            self.drivingButton.setTitle("운행", for: .normal)
+            
+        case (true, true, true):
+            self.wakeButton.setTitle("기상 완료", for: .normal)
+            self.wakeButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
+            self.wakeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            
+            self.boardingButton.setTitle("탑승 완료", for: .normal)
+            self.boardingButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
+            self.boardingButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            
+            self.drivingButton.setTitle("운행중", for: .normal)
+            self.drivingButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
+            self.drivingButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+            
+        default:
+            if schedule.check {
+                if schedule.status.wake == false {
+                    self.wakeButton.setTitle("기상 문제", for: .normal)
+                    
+                    if self.isBlinking {
+                        UIView.animate(withDuration: 0.5, delay: 0, options: [.autoreverse, .repeat]) {
+                            self.wakeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                            
+                        }
+                        
+                    }
+                    
+                } else if schedule.status.boarding == false {
+                    self.boardingButton.setTitle("탑승 문제", for: .normal)
+                    
+                    if self.isBlinking {
+                        UIView.animate(withDuration: 0.5, delay: 0, options: [.autoreverse, .repeat]) {
+                            self.boardingButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                            
+                        }
+                        
+                    }
+                    
+                } else if schedule.status.boarding == false {
+                    self.drivingButton.setTitle("운행 문제", for: .normal)
+                    
+                    
+                    if self.isBlinking {
+                        UIView.animate(withDuration: 0.5, delay: 0, options: [.autoreverse, .repeat]) {
+                            self.drivingButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                            
+                        }
+                        
+                    }
+                    
+                } else {
+                    self.drivingButton.setTitle("운행 문제", for: .normal)
+                    
+                    if self.isBlinking {
+                        UIView.animate(withDuration: 0.5, delay: 0, options: [.autoreverse, .repeat]) {
+                            self.drivingButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                            
+                        }
+                        
+                    }
+                    
+                }
+            }
+        }
+        
+        if schedule.check {
+            self.mainView.layer.borderColor = UIColor.useRGB(red: 176, green: 0, blue: 32, alpha: 0.7).cgColor
+            self.mainView.layer.borderWidth = 4.0
+            
+        } else {
+            self.mainView.layer.borderWidth = 0.0
+            
+        }
         
     }
 }

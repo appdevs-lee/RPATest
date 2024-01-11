@@ -7,11 +7,17 @@
 
 import UIKit
 
+enum DispatchStatus: Int {
+    case wake = 0
+    case boarding = 1
+    case driving = 2
+}
+
 final class DispatchScheduleViewController: UIViewController {
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .useRGB(red: 242, green: 242, blue: 247)
         tableView.bounces = false
         tableView.keyboardDismissMode = .onDrag
         tableView.showsVerticalScrollIndicator = false
@@ -27,13 +33,11 @@ final class DispatchScheduleViewController: UIViewController {
     }()
     
     var scheduleList: [DispatchScheduleItem] = [
-        DispatchScheduleItem(name: "신공범", vehicleNumber: "7276", separateRole: "기사", phoneNumber: "010-1234-1234", time: "06:24", path: "병점 1", checkVehicleStatusPlace: "참누리 A", gate: "정문", note: "5시 15분 전까지 확인 필요", check: true),
-        DispatchScheduleItem(name: "김창수", vehicleNumber: "5022", separateRole: "기사", phoneNumber: "010-1234-1234", time: "06:17", path: "병점 2", checkVehicleStatusPlace: "나노시티롯데캐슬", gate: "정문", note: "5시 15분 전까지 확인 필요", check: true),
-        DispatchScheduleItem(name: "이용규", vehicleNumber: "5014", separateRole: "기사", phoneNumber: "010-1234-1234", time: "06:15", path: "수원 1", checkVehicleStatusPlace: "참누리 A", gate: "정문", note: "5시 15분 전까지 확인 필요", check: false),
-        DispatchScheduleItem(name: "정윤진", vehicleNumber: "7918", separateRole: "용역", phoneNumber: "010-1234-1234", time: "06:30", path: "수원 2", checkVehicleStatusPlace: "참누리 A", gate: "정문", note: "5시 15분 전까지 확인 필요", check: true),
-        DispatchScheduleItem(name: "김도윤", vehicleNumber: "6277", separateRole: "용역", phoneNumber: "010-1234-1234", time: "06:33", path: "수원 3", checkVehicleStatusPlace: "참누리 A", gate: "정문", note: "5시 15분 전까지 확인 필요", check: false),
-        DispatchScheduleItem(name: "차기상", vehicleNumber: "5003", separateRole: "기사", phoneNumber: "010-1234-1234", time: "06:15", path: "우만", checkVehicleStatusPlace: "참누리 A", gate: "정문", note: "5시 15분 전까지 확인 필요", check: true),
-        DispatchScheduleItem(name: "김유재", vehicleNumber: "7367", separateRole: "용역", phoneNumber: "010-1234-1234", time: "06:20", path: "망포 1", checkVehicleStatusPlace: "참누리 A", gate: "후문", note: "", check: true)]
+        DispatchScheduleItem(id: 1, name: "이성곤", vehicleNumber: "1701", phoneNumber: "010-1234-0234", time: "06:55", pathName: "써니밸리", arrivalName: "K1", breathalyzing: "0.0", note: "없음.", check: true, status: (wake: false, boarding: false, driving: false)),
+        DispatchScheduleItem(id: 10, name: "김성일", vehicleNumber: "3127", phoneNumber: "010-1234-1234", time: "06:45", pathName: "수원여고_H1_(리디아35분, 여산 40분, 성화45분)", arrivalName: "기존노선투가추입", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: true, driving: false)),
+        DispatchScheduleItem(id: 20, name: "최오명", vehicleNumber: "8444", phoneNumber: "010-1234-1234", time: "06:20", pathName: "수지로얄스포츠", arrivalName: "K1-DSR", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: true, driving: true)),
+        DispatchScheduleItem(id: 30, name: "송승우", vehicleNumber: "7254", phoneNumber: "010-1234-1234", time: "07:10", pathName: "구반포", arrivalName: "H1-DSR", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: false, driving: false)),
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +56,13 @@ final class DispatchScheduleViewController: UIViewController {
         super.viewWillAppear(animated)
         
         self.setViewAfterTransition()
+        
+        self.tableView.reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
     }
     
     //    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -59,14 +70,14 @@ final class DispatchScheduleViewController: UIViewController {
     //    }
     
     deinit {
-        print("----------------------------------- TemplateViewController is disposed -----------------------------------")
+        print("----------------------------------- DispatchScheduleViewController is disposed -----------------------------------")
     }
 }
 
 // MARK: Extension for essential methods
 extension DispatchScheduleViewController: EssentialViewMethods {
     func setViewFoundation() {
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = .useRGB(red: 242, green: 242, blue: 247)
     }
     
     func initializeObjects() {
@@ -183,30 +194,17 @@ extension DispatchScheduleViewController: UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchScheduleTableViewCell", for: indexPath) as! DispatchScheduleTableViewCell
         let schedule = self.scheduleList[indexPath.row]
-        var isBlinking: Bool = false
         
         cell.setCell(schedule: schedule)
-        
-        if schedule.check {
-            cell.mainView.backgroundColor = .white
-            
-        } else {
-            isBlinking.toggle()
-            if isBlinking {
-                self.startBlinkingAnimation(view: cell.mainView)
-                
-            } else {
-                self.stopBlinkingAnimation(view: cell.mainView)
-                
-            }
-        }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let schedule = self.scheduleList[indexPath.row]
+        let vc = DispatchScheduleDetailViewController(nowSchedule: schedule)
         
-        schedule.check = true
+        self.navigationController?.pushViewController(vc, animated: true)
+        
     }
 }

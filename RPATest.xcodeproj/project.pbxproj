@@ -79,6 +79,8 @@
 		0596A4472B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A4462B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift */; };
 		0596A4492B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A4482B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift */; };
 		0596A44B2B2AEFD200D2C3AA /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A44A2B2AEFD200D2C3AA /* TaskViewController.swift */; };
+		05AD00332B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */; };
+		05AD00352B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */; };
 		05C7E76A2B2716E100EEDD2C /* GarageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C7E7692B2716E100EEDD2C /* GarageListViewController.swift */; };
 		05C7E76C2B2716E700EEDD2C /* GarageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C7E76B2B2716E700EEDD2C /* GarageTableViewCell.swift */; };
 		16E2C467A0658AD11CAC6652 /* Pods_RPATest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */; };
@@ -192,6 +194,8 @@
 		0596A4462B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchRegularlyTableViewCell.swift; sourceTree = "<group>"; };
 		0596A4482B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchOrderTableViewCell.swift; sourceTree = "<group>"; };
 		0596A44A2B2AEFD200D2C3AA /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
+		05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleDetailViewController.swift; sourceTree = "<group>"; };
+		05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleDetailTableViewCell.swift; sourceTree = "<group>"; };
 		05C7E7692B2716E100EEDD2C /* GarageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageListViewController.swift; sourceTree = "<group>"; };
 		05C7E76B2B2716E700EEDD2C /* GarageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageTableViewCell.swift; sourceTree = "<group>"; };
 		06EE240AA4CC2BD5297F34A3 /* Pods-RPATest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.debug.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.debug.xcconfig"; sourceTree = "<group>"; };
@@ -347,6 +351,8 @@
 			children = (
 				059093CF2AFCAEE700E0F1DD /* DispatchScheduleViewController.swift */,
 				059093D12AFCAFA000E0F1DD /* DispatchScheduleTableViewCell.swift */,
+				05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */,
+				05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */,
 			);
 			path = DispatchSchedule;
 			sourceTree = "<group>";
@@ -723,6 +729,7 @@
 				056A346D2ABC1D4400829750 /* AddingContentCell.swift in Sources */,
 				5FD49D1B2AA31BFF00208273 /* TemplateCollectionViewCell.swift in Sources */,
 				057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */,
+				05AD00332B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift in Sources */,
 				059093D22AFCAFA000E0F1DD /* DispatchScheduleTableViewCell.swift in Sources */,
 				056A759B2B059DCE00C25711 /* OrganizationViewPagerViewController.swift in Sources */,
 				059093D02AFCAEE700E0F1DD /* DispatchScheduleViewController.swift in Sources */,
@@ -759,6 +766,7 @@
 				056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */,
 				057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */,
 				056A34622ABC072F00829750 /* NoticeDetailTextTableViewCell.swift in Sources */,
+				05AD00352B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift in Sources */,
 				058455A02B187B3C000D3448 /* GasStationListTableViewCell.swift in Sources */,
 				056A34692ABC13CC00829750 /* InspectionModel.swift in Sources */,
 				05821AA12B0DEBC1007049C9 /* TempateViewPagerViewController.swift in Sources */,

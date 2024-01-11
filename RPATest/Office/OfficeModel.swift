@@ -137,29 +137,31 @@ final class OfficeModel {
 }
 
 class DispatchScheduleItem {
-    let name: String
-    let vehicleNumber: String
-    let separateRole: String
-    let phoneNumber: String
-    let time: String
-    let path: String
-    let checkVehicleStatusPlace: String
-    let gate: String
-    let note: String
-    var check: Bool
+    let id: Int // 배차번호
+    let name: String // 기사명
+    let vehicleNumber: String // 차량번호
+    let phoneNumber: String // 핸드폰 번호
+    let time: String // 출발시간
+    let pathName: String // 노선명
+    let arrivalName: String // 도착지
+    let breathalyzing: String // 음주측정
+    let note: String // 비고
+    var check: Bool // 문제발생 여부
+    var status: (wake: Bool,boarding: Bool,driving: Bool)
     // 셔틀?
     
-    init(name: String, vehicleNumber: String, separateRole: String, phoneNumber: String, time: String, path: String, checkVehicleStatusPlace: String, gate: String, note: String, check: Bool) {
+    init(id: Int, name: String, vehicleNumber: String, phoneNumber: String, time: String, pathName: String, arrivalName: String, breathalyzing: String, note: String, check: Bool, status: (wake: Bool,boarding: Bool,driving: Bool)) {
+        self.id = id
         self.name = name
         self.vehicleNumber = vehicleNumber
-        self.separateRole = separateRole
         self.phoneNumber = phoneNumber
         self.time = time
-        self.path = path
-        self.checkVehicleStatusPlace = checkVehicleStatusPlace
-        self.gate = gate
+        self.pathName = pathName
+        self.arrivalName = arrivalName
+        self.breathalyzing = breathalyzing
         self.note = note
         self.check = check
+        self.status = status
     }
 }
 
