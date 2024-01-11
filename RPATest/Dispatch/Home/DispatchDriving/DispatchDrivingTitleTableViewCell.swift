@@ -11,7 +11,7 @@ final class DispatchDrivingTitleTableViewCell: UITableViewCell {
     
     lazy var dispatchTitleImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "")
+        imageView.image = UIImage(named: "notiIcon")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -80,23 +80,37 @@ extension DispatchDrivingTitleTableViewCell {
     
     // Set subviews
     func setSubviews() {
-        
+        SupportingMethods.shared.addSubviews([
+            self.dispatchTitleImageView,
+            self.dispatchTitleLabel
+        ], to: self)
     }
     
     // Set layouts
     func setLayouts() {
         //let safeArea = self.safeAreaLayoutGuide
         
-        //
+        // dispatchTitleImageView
         NSLayoutConstraint.activate([
-            
+            self.dispatchTitleImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.dispatchTitleImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            self.dispatchTitleImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+            self.dispatchTitleImageView.widthAnchor.constraint(equalToConstant: 50),
+            self.dispatchTitleImageView.heightAnchor.constraint(equalToConstant: 50),
+        ])
+        
+        // dispatchTitleLabel
+        NSLayoutConstraint.activate([
+            self.dispatchTitleLabel.leadingAnchor.constraint(equalTo: self.dispatchTitleImageView.trailingAnchor, constant: 8),
+            self.dispatchTitleLabel.centerYAnchor.constraint(equalTo: self.dispatchTitleImageView.centerYAnchor)
         ])
     }
 }
 
 // MARK: - Extension for methods added
 extension DispatchDrivingTitleTableViewCell {
-    func setCell() {
+    func setCell(route: String) {
+        self.dispatchTitleLabel.text = route
         
     }
 }

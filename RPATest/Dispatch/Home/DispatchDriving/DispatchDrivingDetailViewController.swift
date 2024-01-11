@@ -24,10 +24,10 @@ final class DispatchDrivingDetailViewController: UIViewController {
         tableView.register(DispatchDrivingTitleTableViewCell.self, forCellReuseIdentifier: "DispatchDrivingTitleTableViewCell")
         switch self.type {
         case .regularly:
-            tableView.register(DispatchDrivingRegularlyTableViewCell.self, forCellReuseIdentifier: "RenewalDispatchRegularlyTableViewCell")
+            tableView.register(DispatchDrivingRegularlyTableViewCell.self, forCellReuseIdentifier: "DispatchDrivingRegularlyTableViewCell")
             
         case .order:
-            tableView.register(DispatchDrivingOrderTableViewCell.self, forCellReuseIdentifier: "RenewalDispatchOrderTableViewCell")
+            tableView.register(DispatchDrivingOrderTableViewCell.self, forCellReuseIdentifier: "DispatchDrivingOrderTableViewCell")
             
         }
         tableView.register(DispatchDrivingDetailPathTableViewCell.self, forCellReuseIdentifier: "DispatchDrivingDetailPathTableViewCell")
@@ -58,6 +58,7 @@ final class DispatchDrivingDetailViewController: UIViewController {
     var type: DispatchKindType
     var regularlyItem: DispatchRegularlyItem?
     var orderItem: DispatchOrderItem?
+    var peopleCount: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,6 +107,7 @@ extension DispatchDrivingDetailViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
+        NotificationCenter.default.addObserver(self, selector: #selector(drivingDone(_:)), name: Notification.Name("NoteWriteCompleted"), object: nil)
         
     }
     
@@ -163,6 +165,14 @@ extension DispatchDrivingDetailViewController {
 extension DispatchDrivingDetailViewController {
     @objc func tappedDoneButton(_ sender: UIButton) {
         // 운행일보 작성 present
+        let vc = DispatchNoteDetailViewController(presentType: .present, type: self.type, id: (regularly: "\(self.regularlyItem?.id ?? 0)", order: ""), date: (departure: self.regularlyItem?.departureDate ?? "", arrival: self.regularlyItem?.arrivalDate ?? ""))
+        
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true)
+    }
+    
+    @objc func drivingDone(_ noti: Notification) {
+        self.navigationController?.popViewController(animated: true)
         
     }
     
@@ -184,7 +194,7 @@ extension DispatchDrivingDetailViewController: UITableViewDelegate, UITableViewD
         } else if section == 1 {
             return 1
         } else if section == 2 {
-            return 0
+            return 1
         } else {
             return 1
         }
@@ -194,7 +204,7 @@ extension DispatchDrivingDetailViewController: UITableViewDelegate, UITableViewD
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchDrivingTitleTableViewCell", for: indexPath) as! DispatchDrivingTitleTableViewCell
             
-            cell.setCell()
+            cell.setCell(route: self.regularlyItem?.route ?? "")
             
             return cell
             

@@ -278,6 +278,7 @@ extension RenewalDispatchViewController: EssentialViewMethods {
     
     func setNotificationCenters() {
         NotificationCenter.default.addObserver(self, selector: #selector(dispatchCheck(_:)), name: Notification.Name("LoginDispatchCheck"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(drivingDone(_:)), name: Notification.Name("NoteWriteCompleted"), object: nil)
         
     }
     
@@ -647,6 +648,12 @@ extension RenewalDispatchViewController {
         
         self.present(vc, animated: true)
     }
+    
+    @objc func drivingDone(_ noti: Notification) {
+        self.driveType = .done
+        
+        self.tableView.reloadData()
+    }
 }
 
 // MARK: - Extension for UITableViewDelegate, UITableViewDataSource
@@ -707,9 +714,9 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
         } else {
             self.driveType = type
             if type == .driving || type == .drivingStart {
-//                let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: item)
-//                
-//                self.navigationController?.pushViewController(vc, animated: true)
+                let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: item)
+                
+                self.navigationController?.pushViewController(vc, animated: true)
                 
                 DispatchQueue.main.async {
                     self.tableView.reloadData()

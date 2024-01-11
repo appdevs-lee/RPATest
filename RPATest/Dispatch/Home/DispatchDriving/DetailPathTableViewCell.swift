@@ -11,8 +11,9 @@ final class DetailPathTableViewCell: UITableViewCell {
     
     lazy var pathLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
         label.textColor = .useRGB(red: 66, green: 66, blue: 66)
-        label.font = .useFont(ofSize: 16, weight: .Bold)
+        label.font = .useFont(ofSize: 14, weight: .Bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -28,6 +29,17 @@ final class DetailPathTableViewCell: UITableViewCell {
         return label
     }()
     
+    lazy var buttonStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.minusButton, self.countLabel, self.plusButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
     lazy var minusButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "minus.circle.fill"), for: .normal)
@@ -38,6 +50,7 @@ final class DetailPathTableViewCell: UITableViewCell {
     
     lazy var countLabel: UILabel = {
         let label = UILabel()
+        label.text = "탑승인원: 0명"
         label.textColor = .useRGB(red: 66, green: 66, blue: 66)
         label.font = .useFont(ofSize: 14, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -108,9 +121,10 @@ extension DetailPathTableViewCell {
         SupportingMethods.shared.addSubviews([
             self.pathLabel,
             self.countTitleLabel,
-            self.minusButton,
-            self.countLabel,
-            self.plusButton
+            self.buttonStackView
+//            self.minusButton,
+//            self.countLabel,
+//            self.plusButton
         ], to: self)
     }
     
@@ -130,26 +144,35 @@ extension DetailPathTableViewCell {
             self.countTitleLabel.centerXAnchor.constraint(equalTo: self.countLabel.centerXAnchor)
         ])
         
+        // buttonStackView
+        NSLayoutConstraint.activate([
+            self.buttonStackView.leadingAnchor.constraint(equalTo: self.pathLabel.trailingAnchor, constant: 4),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            self.buttonStackView.topAnchor.constraint(equalTo: self.countTitleLabel.bottomAnchor, constant: 4),
+            self.buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+        ])
+        
         // minusButton
         NSLayoutConstraint.activate([
-            self.minusButton.leadingAnchor.constraint(equalTo: self.pathLabel.trailingAnchor, constant: 4),
-            self.minusButton.centerYAnchor.constraint(equalTo: self.countLabel.centerYAnchor),
+//            self.minusButton.leadingAnchor.constraint(equalTo: self.pathLabel.trailingAnchor, constant: 4),
+//            self.minusButton.centerYAnchor.constraint(equalTo: self.countLabel.centerYAnchor),
             self.minusButton.widthAnchor.constraint(equalToConstant: 40),
             self.minusButton.heightAnchor.constraint(equalToConstant: 40)
         ])
         
         // countLabel
         NSLayoutConstraint.activate([
-            self.countLabel.leadingAnchor.constraint(equalTo: self.minusButton.trailingAnchor, constant: 10),
-            self.countLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+//            self.countLabel.topAnchor.constraint(equalTo: self.countTitleLabel.bottomAnchor, constant: 4),
+//            self.countLabel.leadingAnchor.constraint(equalTo: self.minusButton.trailingAnchor, constant: 10),
+//            self.countLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             self.countLabel.widthAnchor.constraint(equalToConstant: 80),
             self.countLabel.heightAnchor.constraint(equalToConstant: 22)
         ])
         
         // plusButton
         NSLayoutConstraint.activate([
-            self.plusButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            self.plusButton.centerYAnchor.constraint(equalTo: self.countLabel.centerYAnchor),
+//            self.plusButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+//            self.plusButton.centerYAnchor.constraint(equalTo: self.countLabel.centerYAnchor),
             self.plusButton.widthAnchor.constraint(equalToConstant: 40),
             self.plusButton.heightAnchor.constraint(equalToConstant: 40)
         ])
@@ -158,7 +181,12 @@ extension DetailPathTableViewCell {
 
 // MARK: - Extension for methods added
 extension DetailPathTableViewCell {
-    func setCell() {
+    func setCell(station: Station, index: Int) {
+        self.minusButton.tag = index
+        self.plusButton.tag = index
+        
+        self.pathLabel.text = station.pathName
+        self.countLabel.text = "탑승인원: \(station.count)명"
         
     }
 }

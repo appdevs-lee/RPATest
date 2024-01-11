@@ -7,12 +7,22 @@
 
 import UIKit
 
+class Station {
+    let pathName: String
+    var count = 0
+    
+    init(pathName: String, count: Int = 0) {
+        self.pathName = pathName
+        self.count = count
+    }
+}
+
 final class DispatchDrivingDetailPathTableViewCell: UITableViewCell {
     
     lazy var stationTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "정류장"
-        label.textColor = .useRGB(red: 176, green: 0, blue: 32)
+        label.textColor = .black 
         label.font = .useFont(ofSize: 16, weight: .Bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -34,6 +44,10 @@ final class DispatchDrivingDetailPathTableViewCell: UITableViewCell {
         
         return tableView
     }()
+    
+    
+    var stationList: [Station] = [Station(pathName: "구반포역 (반포한의원)", count: 0), Station(pathName: "신반포역4번출구 (IBK기업은행)", count: 0), Station(pathName: "반포역3번출구 (자전거보관소)", count: 0) , Station(pathName: "화성캠퍼스 H1", count: 0), Station(pathName: "DSR", count: 0)]
+    var count: Int = 0
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -87,16 +101,29 @@ extension DispatchDrivingDetailPathTableViewCell {
     
     // Set subviews
     func setSubviews() {
-        
+        SupportingMethods.shared.addSubviews([
+            self.stationTitleLabel,
+            self.tableView
+        ], to: self)
     }
     
     // Set layouts
     func setLayouts() {
         //let safeArea = self.safeAreaLayoutGuide
         
-        //
+        // stationTitleLabel
         NSLayoutConstraint.activate([
-            
+            self.stationTitleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.stationTitleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 16)
+        ])
+        
+        // tableView
+        NSLayoutConstraint.activate([
+            self.tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.stationTitleLabel.bottomAnchor, constant: 10),
+            self.tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+            self.tableView.heightAnchor.constraint(equalToConstant: 380)
         ])
     }
 }
@@ -108,13 +135,40 @@ extension DispatchDrivingDetailPathTableViewCell {
     }
 }
 
+// MARK: - Extension for selector added
+extension DispatchDrivingDetailPathTableViewCell {
+    @objc func tappedMinusButton(_ sender: UIButton) {
+        if self.stationList[sender.tag].count != 0 {
+            self.stationList[sender.tag].count -= 1
+            self.count -= 1
+            
+            self.tableView.reloadData()
+        }
+    }
+
+    @objc func tappedPlusButton(_ sender: UIButton) {
+        self.stationList[sender.tag].count += 1
+        self.count += 1
+        
+        self.tableView.reloadData()
+    }
+
+}
+
 // MARK: - Extension for UITableViewDelegate, UITableViewDataSource
 extension DispatchDrivingDetailPathTableViewCell: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return self.stationList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DetailPathTableViewCell", for: indexPath) as! DetailPathTableViewCell
+        let path = self.stationList[indexPath.row]
+        
+        cell.setCell(station: path, index: indexPath.row)
+        cell.minusButton.addTarget(self, action: #selector(tappedMinusButton(_:)), for: .touchUpInside)
+        cell.plusButton.addTarget(self, action: #selector(tappedPlusButton(_:)), for: .touchUpInside)
+        
+        return cell
     }
 }

@@ -373,7 +373,7 @@ extension RenewalDispatchRegularlyTableViewCell {
             self.statusButton.setTitle("운행중", for: .normal)
             self.checkType = .driving
             
-        } else {
+        } else if self.checkType == .done {
             self.statusButton.setTitle("운행 종료", for: .normal)
             self.statusButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
             self.statusButton.isEnabled = false
@@ -393,4 +393,5 @@ extension RenewalDispatchRegularlyTableViewCell {
         self.delegate?.tappedStatusButton(type: self.checkType, item: self.item)
         
     }
+    
 }

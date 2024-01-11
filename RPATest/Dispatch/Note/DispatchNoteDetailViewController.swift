@@ -12,6 +12,11 @@ enum SelectDispatchTypeForTime {
     case arrival
 }
 
+enum PresentType {
+    case push
+    case present
+}
+
 final class DispatchNoteDetailViewController: UIViewController {
     
     lazy var carNumberLabel: UILabel = {
@@ -21,6 +26,25 @@ final class DispatchNoteDetailViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
+    }()
+    
+    lazy var dismissButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("나중에 작성하기", for: .normal)
+        button.setTitleColor(.useRGB(red: 176, green: 0, blue: 32), for: .normal)
+        button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
+        button.addTarget(self, action: #selector(rightBarButtonItem(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        if self.presentType == .present {
+            button.isHidden = false
+            
+        } else {
+            button.isHidden = true
+            
+        }
+        
+        return button
     }()
     
     lazy var departureBaseView: UIView = {
@@ -318,10 +342,11 @@ final class DispatchNoteDetailViewController: UIViewController {
         return button
     }()
     
-    init(type: DispatchKindType, id: (regularly: String, order: String), date: (departure: String, arrival: String)) {
+    init(presentType: PresentType = .push, type: DispatchKindType, id: (regularly: String, order: String), date: (departure: String, arrival: String)) {
         self.type = type
         self.id = id
         self.date = date
+        self.presentType = presentType
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -331,6 +356,7 @@ final class DispatchNoteDetailViewController: UIViewController {
     }
     
     var type: DispatchKindType
+    var presentType: PresentType
     var id: (regularly: String, order: String)
     var date: (departure: String, arrival: String)
     var selectDispatchTypeForTime: SelectDispatchTypeForTime?
@@ -397,6 +423,7 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
             self.carNumberLabel,
+            self.dismissButton,
             
             self.departureBaseView,
             self.departureTitleLabel,
@@ -446,6 +473,13 @@ extension DispatchNoteDetailViewController: EssentialViewMethods {
             self.carNumberLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
             self.carNumberLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 16),
             self.carNumberLabel.heightAnchor.constraint(equalToConstant: 25)
+        ])
+        
+        // dismissButton
+        NSLayoutConstraint.activate([
+            self.dismissButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            self.dismissButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 16),
+            self.dismissButton.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         // departureBaseView
@@ -772,6 +806,13 @@ extension DispatchNoteDetailViewController {
         
     }
     
+    @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
+        self.dismiss(animated: true) {
+            NotificationCenter.default.post(name: Notification.Name("NoteWriteCompleted"), object: nil)
+        }
+        
+    }
+    
     @objc func tappedDepartureTimeButton(_ sender: UIButton) {
         let vc = DispatchNoteSelectTimeViewController(date: self.departureTimeLabel.text!)
         
@@ -813,7 +854,15 @@ extension DispatchNoteDetailViewController {
             SupportingMethods.shared.showAlertNoti(title: "운행일보 등록이 완료되었습니다.")
             SupportingMethods.shared.turnCoverView(.off)
             
-            self.navigationController?.popViewController(animated: true)
+            if self.presentType == .present {
+                self.dismiss(animated: true) {
+                    NotificationCenter.default.post(name: Notification.Name("NoteWriteCompleted"), object: nil)
+                }
+                
+            } else {
+                self.navigationController?.popViewController(animated: true)
+                
+            }
             
         } failure: { errorMessage in
             SupportingMethods.shared.turnCoverView(.off)
