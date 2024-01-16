@@ -90,6 +90,7 @@
 		2D4D26982B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */; };
 		2DCBDFEB2AEE33C1000685F5 /* OrganizationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCBDFEA2AEE33C1000685F5 /* OrganizationModel.swift */; };
 		2DE378552B1C6850000741DD /* DispatchMonthlyNoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE378542B1C6850000741DD /* DispatchMonthlyNoteViewController.swift */; };
+		2DE6AAD02B569C9F002FBCA6 /* RenewalDispatchSearchListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE6AACF2B569C9F002FBCA6 /* RenewalDispatchSearchListTableViewCell.swift */; };
 		2DF808AA2B30499700DEE24C /* DispatchNoteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF808A92B30499700DEE24C /* DispatchNoteDetailViewController.swift */; };
 		5F1A16182A74E23400132D29 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F1A16162A74E23400132D29 /* Pretendard-Bold.otf */; };
 		5F1A16192A74E23400132D29 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F1A16172A74E23400132D29 /* Pretendard-Medium.otf */; };
@@ -208,6 +209,7 @@
 		2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteSelectTimeViewController.swift; sourceTree = "<group>"; };
 		2DCBDFEA2AEE33C1000685F5 /* OrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationModel.swift; sourceTree = "<group>"; };
 		2DE378542B1C6850000741DD /* DispatchMonthlyNoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchMonthlyNoteViewController.swift; sourceTree = "<group>"; };
+		2DE6AACF2B569C9F002FBCA6 /* RenewalDispatchSearchListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchSearchListTableViewCell.swift; sourceTree = "<group>"; };
 		2DF808A92B30499700DEE24C /* DispatchNoteDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteDetailViewController.swift; sourceTree = "<group>"; };
 		5F1A16162A74E23400132D29 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		5F1A16172A74E23400132D29 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 				0594D3262B56570D00283C6D /* RenewalDispatchSearchViewController.swift */,
 				0594D3292B56615200283C6D /* SearchClassificationCollectionViewCell.swift */,
 				0594D32B2B5673B800283C6D /* RenewalDispatchSearchListViewController.swift */,
+				2DE6AACF2B569C9F002FBCA6 /* RenewalDispatchSearchListTableViewCell.swift */,
 			);
 			path = Renewal;
 			sourceTree = "<group>";
@@ -706,6 +709,7 @@
 			files = (
 				2DE378552B1C6850000741DD /* DispatchMonthlyNoteViewController.swift in Sources */,
 				5F6B62F02AAF364A001FEED2 /* DispatchMonthlyViewController.swift in Sources */,
+				2DE6AAD02B569C9F002FBCA6 /* RenewalDispatchSearchListTableViewCell.swift in Sources */,
 				055C2E6E2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift in Sources */,
 				5FCC11742AA46DD900550534 /* OfficeViewController.swift in Sources */,
 				0596A4432B2A8F2A00D2C3AA /* DispatchInspectionViewController.swift in Sources */,

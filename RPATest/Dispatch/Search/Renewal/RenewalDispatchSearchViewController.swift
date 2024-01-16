@@ -224,6 +224,7 @@ final class RenewalDispatchSearchViewController: UIViewController {
         button.titleLabel?.font = .useFont(ofSize: 22, weight: .Bold)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(tappedSearchButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -504,6 +505,12 @@ extension RenewalDispatchSearchViewController {
         self.navigationController?.popViewController(animated: true)
         
     }
+    
+    @objc func tappedSearchButton(_ sender: UIButton) {
+        let vc = RenewalDispatchSearchListViewController()
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 // MARK: - Extension for
@@ -520,9 +527,11 @@ extension RenewalDispatchSearchViewController: UICollectionViewDelegateFlowLayou
         
         if self.selectedIndex == indexPath.row {
             cell.checkImageView.image = UIImage(named: "SelectSearchWay")
+            cell.titleLabel.textColor = .useRGB(red: 97, green: 97, blue: 97)
             
         } else {
             cell.checkImageView.image = UIImage(named: "Check_No")
+            cell.titleLabel.textColor = .useRGB(red: 189, green: 189, blue: 189)
             
         }
         
