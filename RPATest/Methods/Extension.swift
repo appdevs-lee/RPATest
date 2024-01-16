@@ -30,3 +30,18 @@ extension UIView {
         return nil
     }
 }
+
+extension UITextField {
+    func setBorder() {
+        self.layer.borderColor = UIColor.useRGB(red: 224, green: 224, blue: 224).cgColor
+        self.layer.borderWidth = 1.0
+        self.layer.cornerRadius = 8
+        self.addLeftPadding()
+    }
+    
+    func addLeftPadding() {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: self.frame.height))
+        self.leftView = view
+        self.leftViewMode = ViewMode.always
+    }
+}

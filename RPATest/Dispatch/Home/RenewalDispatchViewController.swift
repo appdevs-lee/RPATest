@@ -31,7 +31,7 @@ final class RenewalDispatchViewController: UIViewController {
     
     lazy var searchButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ""), for: .normal)
+        button.setImage(UIImage(named: "homeSearch"), for: .normal)
         button.addTarget(self, action: #selector(tappedSearchButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -326,9 +326,9 @@ extension RenewalDispatchViewController: EssentialViewMethods {
         // searchButton
         NSLayoutConstraint.activate([
             self.searchButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            self.searchButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-            self.searchButton.widthAnchor.constraint(equalToConstant: 16),
-            self.searchButton.heightAnchor.constraint(equalToConstant: 16)
+            self.searchButton.centerYAnchor.constraint(equalTo: self.nameTitleLabel.centerYAnchor),
+            self.searchButton.widthAnchor.constraint(equalToConstant: 25),
+            self.searchButton.heightAnchor.constraint(equalToConstant: 25)
         ])
         
         // dispatchCheckView
@@ -558,18 +558,22 @@ extension RenewalDispatchViewController {
 // MARK: - Extension for selector methods
 extension RenewalDispatchViewController {
     @objc func tappedSearchButton(_ sender: UIButton) {
-        SupportingMethods.shared.turnCoverView(.on)
-        self.loadDispatchGroupListRequest { groupList in
-            let vc = DispatchSearchViewController(groupList: groupList)
-            
-            self.navigationController?.pushViewController(vc, animated: true)
-            SupportingMethods.shared.turnCoverView(.off)
-            
-        } failure: { errorMessage in
-            SupportingMethods.shared.turnCoverView(.off)
-            print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
-            
-        }
+//        SupportingMethods.shared.turnCoverView(.on)
+//        self.loadDispatchGroupListRequest { groupList in
+//            let vc = DispatchSearchViewController(groupList: groupList)
+//            
+//            self.navigationController?.pushViewController(vc, animated: true)
+//            SupportingMethods.shared.turnCoverView(.off)
+//            
+//        } failure: { errorMessage in
+//            SupportingMethods.shared.turnCoverView(.off)
+//            print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
+//            
+//        }
+        
+        let vc = RenewalDispatchSearchViewController()
+        
+        self.navigationController?.pushViewController(vc, animated: true)
         
     }
     
