@@ -239,19 +239,9 @@ extension OfficeViewController: UICollectionViewDelegateFlowLayout, UICollection
             self.present(vc, animated: false)
             
         case .accident:
-            let vc = AlertPopViewController(.normalOneButton(messageTitle: "승객 명단 작성 및 안전 유무 확인", messageContent: "승객의 안전을 우선으로 확인해주시고, 명단 작성을 해주세요.", buttonTitle: "관리자에게 전화하기", action: {
-                
-                if let url = URL(string: "tel://010-1234-1234") {
-                    UIApplication.shared.open(url)
-                    
-                    let vc = AccidentPhotoViewController()
-                    
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }
-                
-            }))
+            let vc = AccidentResponseViewController()
             
-            self.present(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
         default:
             break
         }
