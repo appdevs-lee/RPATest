@@ -12,6 +12,16 @@ struct ReferenceValues {
     static weak var keyWindow: UIWindow!
     
     static weak var firstVC: LoginViewController?
+    
+    static var isDoingAccidentResponse: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "isDoingAccidentResponse")
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "isDoingAccidentResponse")
+        }
+    }
 }
 
 // MARK: - Extension of referenceValues

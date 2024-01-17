@@ -220,6 +220,18 @@ final class RenewalDispatchViewController: UIViewController {
         return label
     }()
     
+    lazy var accidentResponseButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("사고 발생", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
+        button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        button.layer.cornerRadius = 20
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     let dispatchModel = DispatchModel()
     var regularlyList: [DispatchRegularlyItem] = []
     var orderList: [DispatchOrderItem] = []
@@ -302,7 +314,8 @@ extension RenewalDispatchViewController: EssentialViewMethods {
             self.taskButton,
             self.todayDispatchLabel,
             self.tableView,
-            self.noDataStackView
+            self.noDataStackView,
+            self.accidentResponseButton
         ], to: self.view)
     }
     
@@ -448,6 +461,14 @@ extension RenewalDispatchViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.noDataStackView.centerXAnchor.constraint(equalTo: self.tableView.centerXAnchor),
             self.noDataStackView.centerYAnchor.constraint(equalTo: self.tableView.centerYAnchor)
+        ])
+        
+        // accidentResponseButton
+        NSLayoutConstraint.activate([
+            self.accidentResponseButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -10),
+            self.accidentResponseButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
+            self.accidentResponseButton.heightAnchor.constraint(equalToConstant: 40),
+            self.accidentResponseButton.widthAnchor.constraint(equalToConstant: 100)
         ])
     }
     

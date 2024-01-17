@@ -36,7 +36,7 @@ final class AddingContentCell: UICollectionViewCell {
     
     lazy var deleteButton: IndexPathButton = {
         let button = IndexPathButton()
-        button.setImage(UIImage(named: "deleteContentButton"), for: .normal)
+        button.setImage(UIImage(named: "deleteImage"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.translatesAutoresizingMaskIntoConstraints = false
         

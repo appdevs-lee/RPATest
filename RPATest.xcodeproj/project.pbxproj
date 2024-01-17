@@ -84,6 +84,10 @@
 		0596A44B2B2AEFD200D2C3AA /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A44A2B2AEFD200D2C3AA /* TaskViewController.swift */; };
 		05AD00332B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */; };
 		05AD00352B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */; };
+		05AD44082B57653A007FB0CF /* AccidentResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD44072B57653A007FB0CF /* AccidentResponseViewController.swift */; };
+		05AD442C2B57A398007FB0CF /* AccidentPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD442B2B57A398007FB0CF /* AccidentPhotoViewController.swift */; };
+		05AD442E2B57A463007FB0CF /* AccidentPhotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD442D2B57A463007FB0CF /* AccidentPhotoTableViewCell.swift */; };
+		05AD44322B57AD29007FB0CF /* AccidentReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD44312B57AD29007FB0CF /* AccidentReasonViewController.swift */; };
 		05C7E76A2B2716E100EEDD2C /* GarageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C7E7692B2716E100EEDD2C /* GarageListViewController.swift */; };
 		05C7E76C2B2716E700EEDD2C /* GarageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C7E76B2B2716E700EEDD2C /* GarageTableViewCell.swift */; };
 		16E2C467A0658AD11CAC6652 /* Pods_RPATest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */; };
@@ -203,6 +207,10 @@
 		0596A44A2B2AEFD200D2C3AA /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
 		05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleDetailViewController.swift; sourceTree = "<group>"; };
 		05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleDetailTableViewCell.swift; sourceTree = "<group>"; };
+		05AD44072B57653A007FB0CF /* AccidentResponseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentResponseViewController.swift; sourceTree = "<group>"; };
+		05AD442B2B57A398007FB0CF /* AccidentPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentPhotoViewController.swift; sourceTree = "<group>"; };
+		05AD442D2B57A463007FB0CF /* AccidentPhotoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentPhotoTableViewCell.swift; sourceTree = "<group>"; };
+		05AD44312B57AD29007FB0CF /* AccidentReasonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentReasonViewController.swift; sourceTree = "<group>"; };
 		05C7E7692B2716E100EEDD2C /* GarageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageListViewController.swift; sourceTree = "<group>"; };
 		05C7E76B2B2716E700EEDD2C /* GarageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageTableViewCell.swift; sourceTree = "<group>"; };
 		06EE240AA4CC2BD5297F34A3 /* Pods-RPATest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.debug.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.debug.xcconfig"; sourceTree = "<group>"; };
@@ -391,6 +399,17 @@
 			path = Renewal;
 			sourceTree = "<group>";
 		};
+		05AD44062B57651F007FB0CF /* AccidentResponse */ = {
+			isa = PBXGroup;
+			children = (
+				05AD44072B57653A007FB0CF /* AccidentResponseViewController.swift */,
+				05AD442B2B57A398007FB0CF /* AccidentPhotoViewController.swift */,
+				05AD442D2B57A463007FB0CF /* AccidentPhotoTableViewCell.swift */,
+				05AD44312B57AD29007FB0CF /* AccidentReasonViewController.swift */,
+			);
+			path = AccidentResponse;
+			sourceTree = "<group>";
+		};
 		2DE378532B1C6829000741DD /* Note */ = {
 			isa = PBXGroup;
 			children = (
@@ -529,6 +548,7 @@
 				056A34632ABC0EDE00829750 /* Inspection */,
 				056A34742ABC38BF00829750 /* Consulting */,
 				059093CE2AFCAE8100E0F1DD /* DispatchSchedule */,
+				05AD44062B57651F007FB0CF /* AccidentResponse */,
 			);
 			path = Office;
 			sourceTree = "<group>";
@@ -782,15 +802,18 @@
 				057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */,
 				056A34542ABBDAA700829750 /* OfficeCollectionViewCell.swift in Sources */,
 				056A34602ABC071200829750 /* NoticeDetailTitleTableViewCell.swift in Sources */,
+				05AD44322B57AD29007FB0CF /* AccidentReasonViewController.swift in Sources */,
 				056A75A32B05D03600C25711 /* OrganizationSearchViewController.swift in Sources */,
 				056A75A52B05D18800C25711 /* OrganizationSearchTableViewCell.swift in Sources */,
 				0596A44B2B2AEFD200D2C3AA /* TaskViewController.swift in Sources */,
+				05AD442C2B57A398007FB0CF /* AccidentPhotoViewController.swift in Sources */,
 				056B494C2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift in Sources */,
 				056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */,
 				057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */,
 				0594D3272B56570D00283C6D /* RenewalDispatchSearchViewController.swift in Sources */,
 				056A34622ABC072F00829750 /* NoticeDetailTextTableViewCell.swift in Sources */,
 				05AD00352B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift in Sources */,
+				05AD44082B57653A007FB0CF /* AccidentResponseViewController.swift in Sources */,
 				058455A02B187B3C000D3448 /* GasStationListTableViewCell.swift in Sources */,
 				056A34692ABC13CC00829750 /* InspectionModel.swift in Sources */,
 				05821AA12B0DEBC1007049C9 /* TempateViewPagerViewController.swift in Sources */,
@@ -806,6 +829,7 @@
 				5F1BB0B72A03D6B30081DBBE /* LoginModel.swift in Sources */,
 				056B49502B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift in Sources */,
 				0573B50A2B22D28B005F1F4F /* SelectTimeViewController.swift in Sources */,
+				05AD442E2B57A463007FB0CF /* AccidentPhotoTableViewCell.swift in Sources */,
 				056A34502ABBC53C00829750 /* OfficeModel.swift in Sources */,
 				5FD49D102AA31A7700208273 /* DispatchViewController.swift in Sources */,
 				056A34732ABC31B400829750 /* InspectionVehicleListTableViewCell.swift in Sources */,
