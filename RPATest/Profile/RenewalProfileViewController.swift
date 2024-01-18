@@ -648,18 +648,9 @@ extension RenewalProfileViewController: UICollectionViewDelegateFlowLayout, UICo
         switch profile {
         case .driveWay:
             // Search
-            SupportingMethods.shared.turnCoverView(.on)
-            self.loadDispatchGroupListRequest { groupList in
-                let vc = DispatchSearchViewController(groupList: groupList)
-                
-                self.navigationController?.pushViewController(vc, animated: true)
-                SupportingMethods.shared.turnCoverView(.off)
-                
-            } failure: { errorMessage in
-                SupportingMethods.shared.turnCoverView(.off)
-                print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
-                
-            }
+            let vc = RenewalDispatchSearchViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
             
         case .myInfo:
             break

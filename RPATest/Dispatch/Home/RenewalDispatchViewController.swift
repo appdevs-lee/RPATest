@@ -227,6 +227,7 @@ final class RenewalDispatchViewController: UIViewController {
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.layer.cornerRadius = 20
+        button.addTarget(self, action: #selector(tappedAccidentResponseButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -678,6 +679,12 @@ extension RenewalDispatchViewController {
         self.driveType = .done
         
         self.tableView.reloadData()
+    }
+    
+    @objc func tappedAccidentResponseButton(_ sender: UIButton) {
+        let vc = AccidentResponseViewController()
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
