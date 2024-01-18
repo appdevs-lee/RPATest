@@ -243,4 +243,36 @@ extension AccidentResponseViewController: UITableViewDelegate, UITableViewDataSo
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.row {
+        case 0:
+            // 승객 안전 확인
+            let vc = AccidentSafeCheckViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 1:
+            // 승객 명단 작성
+            let vc = AccidentNameListViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 2:
+            // 관리자에게 보고
+            let vc = AccidentCallListViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 3:
+            // 차량 사진
+            let vc = AccidentPhotoViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 4:
+            // 경위서 작성
+            let vc = AccidentReasonViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
+        }
+    }
 }

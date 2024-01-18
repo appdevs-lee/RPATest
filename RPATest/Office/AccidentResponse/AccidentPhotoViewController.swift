@@ -22,6 +22,16 @@ class PhotoData {
 
 final class AccidentPhotoViewController: UIViewController {
     
+    lazy var progressView: UIProgressView = {
+        let view = UIProgressView()
+        view.progress = 4/7
+        view.trackTintColor = .useRGB(red: 233, green: 236, blue: 239)
+        view.progressTintColor = .useRGB(red: 33, green: 37, blue: 41)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
     lazy var accidentPhotoTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "차량 사진을 찍어주세요."
@@ -60,7 +70,7 @@ final class AccidentPhotoViewController: UIViewController {
         return button
     }()
     
-    var photoList: [PhotoData] = [PhotoData(title: "내 차량"), PhotoData(title: "상대방 차량"), PhotoData(title: "가까운 사진"), PhotoData(title: "먼 사진")]
+    var photoList: [PhotoData] = [PhotoData(title: "내 차량만"), PhotoData(title: "상대방 차량만"), PhotoData(title: "내 차량/상대방 차량 동시"), PhotoData(title: "가까운 사진(접촉 부위)"), PhotoData(title: "먼 사진")]
     
     var index: Int = 0
     var selectedImageIdentifiers: [String] = []
@@ -119,6 +129,7 @@ extension AccidentPhotoViewController: EssentialViewMethods {
     
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
+            self.progressView,
             self.accidentPhotoTitleLabel,
             self.tableView,
             self.sendButton
@@ -128,17 +139,25 @@ extension AccidentPhotoViewController: EssentialViewMethods {
     func setLayouts() {
         let safeArea = self.view.safeAreaLayoutGuide
         
+        // progressView
+        NSLayoutConstraint.activate([
+            self.progressView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.progressView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.progressView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.progressView.heightAnchor.constraint(equalToConstant: 3)
+        ])
+        
         // accidentPhotoTitleLabel
         NSLayoutConstraint.activate([
             self.accidentPhotoTitleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            self.accidentPhotoTitleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10)
+            self.accidentPhotoTitleLabel.topAnchor.constraint(equalTo: self.progressView.bottomAnchor, constant: 10)
         ])
         
         // tableView
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.accidentPhotoTitleLabel.bottomAnchor, constant: 10),
             self.tableView.bottomAnchor.constraint(equalTo: self.sendButton.topAnchor)
         ])
         
@@ -172,10 +191,15 @@ extension AccidentPhotoViewController: EssentialViewMethods {
         self.navigationItem.standardAppearance = appearance
         self.navigationItem.compactAppearance = appearance
         
-        self.navigationItem.title = "현장 사진 촬영"
+        self.navigationItem.title = "4. 사진 촬영"
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "phone.fill")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(rightBarButtonItem(_:)))
+        let rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(rightBarButtonItem(_:)))
+        rightBarButtonItem.setTitleTextAttributes([
+            .foregroundColor:UIColor.useRGB(red: 176, green: 0, blue: 32),
+            .font:UIFont.useFont(ofSize: 16, weight: .Bold)
+        ], for: .normal)
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
 }
 
@@ -200,15 +224,14 @@ extension AccidentPhotoViewController {
 // MARK: - Extension for selector methods
 extension AccidentPhotoViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: false)
         
     }
     
     @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        if let url = URL(string: "tel://010-1234-1234") {
-            UIApplication.shared.open(url)
-            
-        }
+        let vc = AccidentReasonViewController()
+        
+        self.navigationController?.pushViewController(vc, animated: false)
     }
     
     @objc func plusButton(_ sender: UIButton) {

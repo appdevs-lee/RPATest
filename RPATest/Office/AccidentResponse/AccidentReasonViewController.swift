@@ -9,6 +9,16 @@ import UIKit
 
 final class AccidentReasonViewController: UIViewController {
     
+    lazy var progressView: UIProgressView = {
+        let view = UIProgressView()
+        view.progress = 5/7
+        view.trackTintColor = .useRGB(red: 233, green: 236, blue: 239)
+        view.progressTintColor = .useRGB(red: 33, green: 37, blue: 41)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
     lazy var guideLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -151,6 +161,7 @@ extension AccidentReasonViewController: EssentialViewMethods {
     
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
+            self.progressView,
             self.guideLabel,
             self.subGuideLabel,
             self.commentTextViewLineView,
@@ -164,11 +175,19 @@ extension AccidentReasonViewController: EssentialViewMethods {
     func setLayouts() {
         let safeArea = self.view.safeAreaLayoutGuide
         
+        // progressView
+        NSLayoutConstraint.activate([
+            self.progressView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.progressView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.progressView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.progressView.heightAnchor.constraint(equalToConstant: 3)
+        ])
+        
         // guideLabel
         NSLayoutConstraint.activate([
             self.guideLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
             self.guideLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            self.guideLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10)
+            self.guideLabel.topAnchor.constraint(equalTo: self.progressView.bottomAnchor, constant: 10)
         ])
         
         // subGuideLabel
@@ -243,7 +262,7 @@ extension AccidentReasonViewController: EssentialViewMethods {
         self.navigationItem.standardAppearance = appearance
         self.navigationItem.compactAppearance = appearance
         
-        self.navigationItem.title = "경위서 작성"
+        self.navigationItem.title = "5. 경위서 작성"
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
         
@@ -256,7 +275,6 @@ extension AccidentReasonViewController: EssentialViewMethods {
             .foregroundColor:UIColor.useRGB(red: 176, green: 0, blue: 32),
             .font:UIFont.useFont(ofSize: 16, weight: .Bold)
         ], for: .normal)
-        rightBarButtonItem.isEnabled = false
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
 }
@@ -266,7 +284,7 @@ extension AccidentReasonViewController {
     @objc func leftBarButtonItem(_ sender: UIBarButtonItem) {
         self.commentTextView.resignFirstResponder()
         
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: false)
         
 //        let comment = self.commentTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
 //        
@@ -287,9 +305,9 @@ extension AccidentReasonViewController {
     
     @objc func rightBarButtonItem(_ sender: UIBarButtonItem) {
         self.commentTextView.resignFirstResponder()
-        SupportingMethods.shared.showAlertNoti(title: "사고가 등록되었습니다.")
+        let vc = AccidentBeforeDrivingViewController()
         
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.pushViewController(vc, animated: false)
     }
 }
 

@@ -1,17 +1,23 @@
 //
-//  AccidentSafeCheckViewController.swift
+//  AccidenCallListViewController.swift
 //  RPATest
 //
-//  Created by 이주성 on 1/17/24.
+//  Created by Awesomepia on 1/18/24.
 //
 
 import UIKit
 
-final class AccidentSafeCheckViewController: UIViewController {
+struct EmergencyPhoneBook {
+    let name: String
+    let part: String
+    let phoneNumber: String
+}
+
+final class AccidentCallListViewController: UIViewController {
     
     lazy var progressView: UIProgressView = {
         let view = UIProgressView()
-        view.progress = 1/7
+        view.progress = 3/7
         view.trackTintColor = .useRGB(red: 233, green: 236, blue: 239)
         view.progressTintColor = .useRGB(red: 33, green: 37, blue: 41)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -21,7 +27,7 @@ final class AccidentSafeCheckViewController: UIViewController {
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "안내 문구"
+        label.text = "해당하는 관리자에게 보고"
         label.textColor = .black
         label.font = .useFont(ofSize: 20, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -29,29 +35,29 @@ final class AccidentSafeCheckViewController: UIViewController {
         return label
     }()
     
-    lazy var textView: UITextView = {
-        let textView = UITextView()
-        textView.text =
-        """
-        죄송합니다!\n
-        상대차량과 접촉사고가 있었습니다.\n
-        불편한 분 계신가요?\n
-        탑승자 확인을 위해 명단 작성 부탁드립닌다.\n
-        (추후 후유증 발생시 필요, 명단 작성 필수)\n\n
-
-        방송 후,\n
-        명단 작성 거부, 상대 차량의 위협, 고통 호소시 119 연락, 불이 날 시 일단 대피
-        """
-        textView.isEditable = false
-        textView.isSelectable = false
-        textView.textColor = .black
-        textView.font = .useFont(ofSize: 20 , weight: .Medium)
-        textView.layer.borderColor = UIColor.useRGB(red: 176, green: 0, blue: 32).cgColor
-        textView.layer.borderWidth = 1.0
-        textView.translatesAutoresizingMaskIntoConstraints = false
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        tableView.bounces = false
+        tableView.keyboardDismissMode = .onDrag
+        tableView.showsVerticalScrollIndicator = false
+        tableView.register(AccidentCallListTableViewCell.self, forCellReuseIdentifier: "AccidentCallListTableViewCell")
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.sectionHeaderTopPadding = 0
+        tableView.separatorStyle = .none
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        return textView
+        return tableView
     }()
+    
+    var phoneList: [EmergencyPhoneBook] = [
+        EmergencyPhoneBook(name: "이학현", part: "반도체", phoneNumber: "010-1234-1234"),
+        EmergencyPhoneBook(name: "문병근", part: "반도체", phoneNumber: "010-1234-1234"),
+        EmergencyPhoneBook(name: "이세명", part: "남양/학단", phoneNumber: "010-1234-1234"),
+        EmergencyPhoneBook(name: "김인숙", part: "기타", phoneNumber: "010-1234-1234"),
+        EmergencyPhoneBook(name: "홍성철", part: "기타", phoneNumber: "010-1234-1234")
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,12 +79,12 @@ final class AccidentSafeCheckViewController: UIViewController {
     }
     
     deinit {
-        print("----------------------------------- AccidentSafeCheckViewController is disposed -----------------------------------")
+        print("----------------------------------- AccidenCallListViewController is disposed -----------------------------------")
     }
 }
 
 // MARK: Extension for essential methods
-extension AccidentSafeCheckViewController: EssentialViewMethods {
+extension AccidentCallListViewController: EssentialViewMethods {
     func setViewFoundation() {
         
     }
@@ -103,7 +109,7 @@ extension AccidentSafeCheckViewController: EssentialViewMethods {
         SupportingMethods.shared.addSubviews([
             self.progressView,
             self.titleLabel,
-            self.textView
+            self.tableView
         ], to: self.view)
     }
     
@@ -124,20 +130,19 @@ extension AccidentSafeCheckViewController: EssentialViewMethods {
             self.titleLabel.topAnchor.constraint(equalTo: self.progressView.bottomAnchor, constant: 10),
         ])
         
-        // textView
+        // tableView
         NSLayoutConstraint.activate([
-            self.textView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            self.textView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            self.textView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 10),
-            self.textView.heightAnchor.constraint(equalToConstant: 400)
+            self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            self.tableView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 10),
+            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -16)
         ])
     }
     
     func setViewAfterTransition() {
-        //self.navigationController?.setNavigationBarHidden(false, animated: true)
-        //self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.tabBarController?.tabBar.isHidden = true
     }
-    
     
     func setUpNavigationItem() {
         self.view.backgroundColor = .white
@@ -155,10 +160,9 @@ extension AccidentSafeCheckViewController: EssentialViewMethods {
         self.navigationItem.standardAppearance = appearance
         self.navigationItem.compactAppearance = appearance
         
-        self.navigationItem.title = "1. 승객 안전 유무 확인"
+        self.navigationItem.title = "3. 관리자에게 보고"
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
-        
         let rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(rightBarButtonItem(_:)))
         rightBarButtonItem.setTitleTextAttributes([
             .foregroundColor:UIColor.useRGB(red: 176, green: 0, blue: 32),
@@ -169,21 +173,53 @@ extension AccidentSafeCheckViewController: EssentialViewMethods {
 }
 
 // MARK: - Extension for methods added
-extension AccidentSafeCheckViewController {
+extension AccidentCallListViewController {
     
 }
 
 // MARK: - Extension for selector methods
-extension AccidentSafeCheckViewController {
+extension AccidentCallListViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: false)
         
     }
     
     @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        let vc = AccidentNameListViewController()
+        let vc = AccidentPhotoViewController()
         
         self.navigationController?.pushViewController(vc, animated: false)
+    }
+    
+    @objc func tappedCallButton(_ sender: UIButton) {
+        if let url = URL(string: "tel://\(self.phoneList[sender.tag].phoneNumber)") {
+            UIApplication.shared.open(url)
+            
+        }
         
+    }
+    
+}
+
+extension AccidentCallListViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.phoneList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "AccidentCallListTableViewCell", for: indexPath) as! AccidentCallListTableViewCell
+        let data = self.phoneList[indexPath.row]
+        
+        cell.setCell(data: data, index: indexPath.row)
+        cell.callButton.addTarget(self, action: #selector(tappedCallButton(_:)), for: .touchUpInside)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let data = self.phoneList[indexPath.row]
+        if let url = URL(string: "tel://\(data.phoneNumber)") {
+            UIApplication.shared.open(url)
+            
+        }
     }
 }

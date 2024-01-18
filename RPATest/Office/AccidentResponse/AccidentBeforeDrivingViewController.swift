@@ -1,17 +1,17 @@
 //
-//  AccidentSafeCheckViewController.swift
+//  AccidentBeforeDrivingViewController.swift
 //  RPATest
 //
-//  Created by 이주성 on 1/17/24.
+//  Created by Awesomepia on 1/18/24.
 //
 
 import UIKit
 
-final class AccidentSafeCheckViewController: UIViewController {
+final class AccidentBeforeDrivingViewController: UIViewController {
     
     lazy var progressView: UIProgressView = {
         let view = UIProgressView()
-        view.progress = 1/7
+        view.progress = 6/7
         view.trackTintColor = .useRGB(red: 233, green: 236, blue: 239)
         view.progressTintColor = .useRGB(red: 33, green: 37, blue: 41)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -33,14 +33,11 @@ final class AccidentSafeCheckViewController: UIViewController {
         let textView = UITextView()
         textView.text =
         """
-        죄송합니다!\n
-        상대차량과 접촉사고가 있었습니다.\n
-        불편한 분 계신가요?\n
-        탑승자 확인을 위해 명단 작성 부탁드립닌다.\n
-        (추후 후유증 발생시 필요, 명단 작성 필수)\n\n
-
-        방송 후,\n
-        명단 작성 거부, 상대 차량의 위협, 고통 호소시 119 연락, 불이 날 시 일단 대피
+        경미한 사고일 경우,\n
+        사고처리 완료하여 다시 운행하겠습니다!\n
+        \n
+        운행 재개가 어려운 사고일 경우,\n
+        예비 차량이 오고 있으니, 잠시 기다려주시기 바랍니다.\n
         """
         textView.isEditable = false
         textView.isSelectable = false
@@ -78,7 +75,7 @@ final class AccidentSafeCheckViewController: UIViewController {
 }
 
 // MARK: Extension for essential methods
-extension AccidentSafeCheckViewController: EssentialViewMethods {
+extension AccidentBeforeDrivingViewController: EssentialViewMethods {
     func setViewFoundation() {
         
     }
@@ -155,7 +152,7 @@ extension AccidentSafeCheckViewController: EssentialViewMethods {
         self.navigationItem.standardAppearance = appearance
         self.navigationItem.compactAppearance = appearance
         
-        self.navigationItem.title = "1. 승객 안전 유무 확인"
+        self.navigationItem.title = "6. 탑승객 안내 방송 재실시"
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
         
@@ -169,21 +166,20 @@ extension AccidentSafeCheckViewController: EssentialViewMethods {
 }
 
 // MARK: - Extension for methods added
-extension AccidentSafeCheckViewController {
+extension AccidentBeforeDrivingViewController {
     
 }
 
 // MARK: - Extension for selector methods
-extension AccidentSafeCheckViewController {
+extension AccidentBeforeDrivingViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: false)
         
     }
     
     @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        let vc = AccidentNameListViewController()
+        let vc = AccidentLastFlowViewController()
         
         self.navigationController?.pushViewController(vc, animated: false)
-        
     }
 }
