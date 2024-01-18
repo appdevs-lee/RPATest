@@ -70,6 +70,7 @@ final class RenewalDispatchSearchViewController: UIViewController {
     
     lazy var placeButton: UIButton = {
         let button = UIButton()
+        button.addTarget(self, action: #selector(tappedPlaceButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -233,6 +234,10 @@ final class RenewalDispatchSearchViewController: UIViewController {
     var classificationList: [String] = ["노선명", "정류장", "내위치", "지역명", "지 도"]
     var selectedIndex: Int = 0
     
+    let dispatchModel = DispatchModel()
+    var group: DispatchSearchItemGroupList?
+    var search: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -281,6 +286,7 @@ extension RenewalDispatchSearchViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
+        NotificationCenter.default.addObserver(self, selector: #selector(addGroupData(_:)), name: Notification.Name("SendGroup"), object: nil)
         
     }
     
@@ -496,6 +502,20 @@ extension RenewalDispatchSearchViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension RenewalDispatchSearchViewController {
+    func loadDispatchGroupListRequest(success: (([DispatchSearchItemGroupList]) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.loadDispatchGroupListRequest { groupList in
+            success?(groupList)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+        
+    }
+    
     
 }
 
@@ -507,9 +527,43 @@ extension RenewalDispatchSearchViewController {
     }
     
     @objc func tappedSearchButton(_ sender: UIButton) {
-        let vc = RenewalDispatchSearchListViewController()
+        guard let group = self.group else {
+            SupportingMethods.shared.showAlertNoti(title: "사업장을 선택해주세요.")
+            return
+        }
+        self.search = self.searchClassificationTextField.text ?? ""
+        let vc = RenewalDispatchSearchListViewController(group: group, search: self.search)
         
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func tappedPlaceButton(_ sender: UIButton) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDispatchGroupListRequest { groupList in
+            let vc = DispatchCategoryViewController(groupList: groupList)
+            
+            self.present(vc, animated: true)
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("rightBarButtonItem loadDispatchGroupListRequest API Error: \(errorMessage)")
+            
+        }
+        
+    }
+    
+    @objc func addGroupData(_ noti: Notification) {
+        SupportingMethods.shared.turnCoverView(.on)
+        guard let group = noti.userInfo?["group"] as? DispatchSearchItemGroupList else {
+            SupportingMethods.shared.turnCoverView(.off)
+            return
+        }
+        
+        self.group = group
+        self.placeLabel.text = group.name
+        
+        SupportingMethods.shared.turnCoverView(.off)
     }
 }
 

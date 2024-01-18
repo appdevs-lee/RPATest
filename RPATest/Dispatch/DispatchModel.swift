@@ -1157,9 +1157,9 @@ struct DispatchPathItem: Codable {
     }
 }
 
-struct DispatchPathRegularlyList: Codable {
+class DispatchPathRegularlyList: Codable {
     let id: Int
-    let know: String
+    var know: String
     let references: String
     let departure: String
     let arrival: String
@@ -1179,6 +1179,8 @@ struct DispatchPathRegularlyList: Codable {
     let maplink: String
     let use: String
     let creator: Int
+    
+    var isBookmark: Bool = false
     
     enum CodingKeys: String ,CodingKey {
         case id

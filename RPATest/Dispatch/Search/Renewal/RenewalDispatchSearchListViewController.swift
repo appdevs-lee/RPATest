@@ -109,6 +109,55 @@ final class RenewalDispatchSearchListViewController: UIViewController {
         return tableView
     }()
     
+    lazy var noDataStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [self.noDataImageView, self.noDataLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.isHidden = true
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    lazy var noDataImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "NoDataImage")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return imageView
+    }()
+    
+    lazy var noDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "노선이 없습니다"
+        label.font = .useFont(ofSize: 14, weight: .Bold)
+        label.textColor = .useRGB(red: 189, green: 189, blue: 189)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    init(group: DispatchSearchItemGroupList, search: String) {
+        self.group = group
+        self.search = search
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let dispatchModel = DispatchModel()
+    var group: DispatchSearchItemGroupList
+    var search: String
+    var page: Int = 1
+    var nextRequest: String?
+    var pathList: [DispatchPathRegularlyList] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -120,6 +169,7 @@ final class RenewalDispatchSearchListViewController: UIViewController {
         self.setSubviews()
         self.setLayouts()
         self.setUpNavigationItem()
+        self.loadDispatchPathRequestAtBeginning()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -282,7 +332,103 @@ extension RenewalDispatchSearchListViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension RenewalDispatchSearchListViewController {
+    func loadDispatchPathRequest(page: Int, search: String, success: ((DispatchPathItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.loadDispatchPathRequest(page: page, search: search, id: self.group.id) { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+    }
     
+    func loadDispatchPathRequestAtBeginning() {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDispatchPathRequest(page: 1, search: self.search) { item in
+            self.page = 1
+            self.pathList = item.regularlyList
+            self.nextRequest = item.next
+            
+            self.tableView.reloadData()
+            
+            if self.pathList.isEmpty {
+                self.noDataStackView.isHidden = false
+                
+            } else {
+                self.noDataStackView.isHidden = true
+                
+            }
+            
+            DispatchQueue.main.async {
+                SupportingMethods.shared.turnCoverView(.off)
+            }
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("loadDispatchPathRequestAtBeginning API Error: \(errorMessage)")
+        }
+    }
+    
+    func loadDispatchPathRequest(page: Int) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDispatchPathRequest(page: page, search: self.search) { item in
+            self.page = page
+            self.nextRequest = item.next
+            
+            let list = item.regularlyList
+            self.pathList.append(contentsOf: list)
+            
+            if !list.isEmpty {
+                self.tableView.reloadData()
+            }
+            
+            if self.pathList.isEmpty {
+                self.noDataStackView.isHidden = false
+                
+            } else {
+                self.noDataStackView.isHidden = true
+                
+            }
+            
+            DispatchQueue.main.async {
+                SupportingMethods.shared.turnCoverView(.off)
+            }
+        } failure: { errorMessage in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("loadDispatchPathRequest API Error: \(errorMessage)")
+        }
+
+    }
+    
+    func pathKnowRequest(id: Int, success: ((DispatchPathKnowItem) -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.pathKnowRequest(id: id) { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
+    }
+    
+    func pathKnowDeleteRequest(id: Int, success: (() -> ())?, failure: ((String) -> ())?) {
+        self.dispatchModel.pathKnowDeleteRequest(id: id) {
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -291,18 +437,78 @@ extension RenewalDispatchSearchListViewController {
         self.navigationController?.popViewController(animated: true)
         
     }
+    
+    @objc func tappedMapButton(_ sender: UIButton) {
+        guard let url = URL(string: self.pathList[sender.tag].maplink) else { return }
+        UIApplication.shared.open(url)
+        
+    }
+    
+    @objc func tappedBookmarkButton(_ sender: UIButton) {
+        self.pathList[sender.tag].isBookmark.toggle()
+        
+        self.tableView.reloadData()
+    }
+    
+    @objc func tappedDispatchKnowButton(_ sender: UIButton) {
+        if self.pathList[sender.tag].know == "true" {
+            let vc = AlertPopViewController(.normalTwoButton(messageTitle: "노선 숙지를 취소하시겠습니까?", messageContent: "", leftButtonTitle: "취소", leftAction: { }, rightButtonTitle: "확인", rightAction: {
+                SupportingMethods.shared.turnCoverView(.on)
+                self.pathKnowDeleteRequest(id: self.pathList[sender.tag].id) {
+                    self.pathList[sender.tag].know = "false"
+                    
+                    self.tableView.reloadData()
+                    SupportingMethods.shared.turnCoverView(.off)
+                    
+                } failure: { errorMessage in
+                    SupportingMethods.shared.turnCoverView(.off)
+                    print("tapPathKnowDeleteButton pathKnowDeleteRequest API Error: \(errorMessage)")
+                    
+                }
+            }))
+            
+            self.present(vc, animated: false)
+            
+        } else {
+            let vc = AlertPopViewController(.normalTwoButton(messageTitle: "노선 숙지가 완료되었습니까?", messageContent: "", leftButtonTitle: "취소", leftAction: { }, rightButtonTitle: "확인", rightAction: {
+                SupportingMethods.shared.turnCoverView(.on)
+                self.pathKnowRequest(id: self.pathList[sender.tag].id) { item in
+                    self.pathList[sender.tag].know = "true"
+                    
+                    self.tableView.reloadData()
+                    SupportingMethods.shared.turnCoverView(.off)
+                    
+                } failure: { errorMessage in
+                    SupportingMethods.shared.turnCoverView(.off)
+                    print("tapPathKnowButton pathKnowRequest API Error: \(errorMessage)")
+                    
+                }
+            }))
+            
+            self.present(vc, animated: false)
+            
+        }
+    }
 }
 
 // MARK: - Extension for
 extension RenewalDispatchSearchListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return self.pathList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RenewalDispatchSearchListTableViewCell", for: indexPath) as! RenewalDispatchSearchListTableViewCell
+        let path = self.pathList[indexPath.row]
         
-        cell.setCell()
+        cell.setCell(path: path, index: indexPath.row)
+        cell.mapButton.addTarget(self, action: #selector(tappedMapButton(_:)), for: .touchUpInside)
+        cell.starButton.addTarget(self, action: #selector(tappedBookmarkButton(_:)), for: .touchUpInside)
+        cell.dispatchKnowButton.addTarget(self, action: #selector(tappedDispatchKnowButton(_:)), for: .touchUpInside)
+        
+        if indexPath.row == self.pathList.count - 1 && self.nextRequest != nil {
+            self.loadDispatchPathRequest(page: self.page + 1)
+        }
         
         return cell
     }

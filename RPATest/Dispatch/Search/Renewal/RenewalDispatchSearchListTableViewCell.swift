@@ -39,9 +39,10 @@ final class RenewalDispatchSearchListTableViewCell: UITableViewCell {
     
     lazy var startTimeLabel: UILabel = {
         let label = UILabel()
-        label.text = "20:20"
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
         label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -59,7 +60,6 @@ final class RenewalDispatchSearchListTableViewCell: UITableViewCell {
     
     lazy var finishTimeLabel: UILabel = {
         let label = UILabel()
-        label.text = "20:20"
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
         label.font = .useFont(ofSize: 14, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -72,6 +72,8 @@ final class RenewalDispatchSearchListTableViewCell: UITableViewCell {
         label.text = "출발지"
         label.textColor = .useRGB(red: 176, green: 0, blue: 32)
         label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -79,9 +81,11 @@ final class RenewalDispatchSearchListTableViewCell: UITableViewCell {
     
     lazy var departureLabel: UILabel = {
         let label = UILabel()
-        label.text = "출발지"
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
         label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -92,6 +96,8 @@ final class RenewalDispatchSearchListTableViewCell: UITableViewCell {
         label.text = "도착지"
         label.textColor = .useRGB(red: 176, green: 0, blue: 32)
         label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -99,9 +105,11 @@ final class RenewalDispatchSearchListTableViewCell: UITableViewCell {
     
     lazy var arrivalLabel: UILabel = {
         let label = UILabel()
-        label.text = "도착지"
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .useRGB(red: 97, green: 97, blue: 97)
         label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -134,7 +142,6 @@ final class RenewalDispatchSearchListTableViewCell: UITableViewCell {
     lazy var detailedRouteLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "모아미래도(무봉초버스정류장)-KCC스위첸(버스정류장)-시범반도4차(버스정류장)-호반베르디움(버스정류장)-대원칸타빌(버스정류장)-한화꿈에그린(버스정류장)-더샵센트럴시티(청계중앙공원)버스정류장-동탄2지구자이(버스정류장)-화성캠퍼스H2-화성캠퍼스H1"
         label.textColor = .black
         label.font = .useFont(ofSize: 12, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -287,6 +294,7 @@ extension RenewalDispatchSearchListTableViewCell {
         // departureLabel
         NSLayoutConstraint.activate([
             self.departureLabel.leadingAnchor.constraint(equalTo: self.departureTitleLabel.trailingAnchor, constant: 16),
+            self.departureLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -8),
             self.departureLabel.centerYAnchor.constraint(equalTo: self.startTimeTitleLabel.centerYAnchor)
         ])
         
@@ -331,7 +339,43 @@ extension RenewalDispatchSearchListTableViewCell {
 
 // MARK: - Extension for methods added
 extension RenewalDispatchSearchListTableViewCell {
-    func setCell() {
+    func setCell(path: DispatchPathRegularlyList, index: Int) {
+        self.mapButton.tag = index
+        self.starButton.tag = index
+        self.dispatchKnowButton.tag = index
         
+        self.pathNameLabel.text = path.route
+        
+        self.departureLabel.text = "\(path.departure)"
+        self.arrivalLabel.text = "\(path.arrival)"
+        
+        self.startTimeLabel.text = "\(path.departureTime)"
+        self.finishTimeLabel.text = "\(path.arrivalTime)"
+        
+        self.detailedRouteLabel.text = path.detailedRoute
+        
+        if path.know == "true"{
+            self.dispatchKnowButton.setImage(UIImage(named: "Check_Yes"), for: .normal)
+            
+        } else {
+            self.dispatchKnowButton.setImage(UIImage(named: "Check_No"), for: .normal)
+            
+        }
+        
+        if path.maplink == "" {
+            self.mapButton.isHidden = true
+            
+        } else {
+            self.mapButton.isHidden = false
+            
+        }
+        
+        if path.isBookmark {
+            self.starButton.setImage(UIImage(named: "BookmarkPath"), for: .normal)
+            
+        } else {
+            self.starButton.setImage(UIImage(named: "NoBookmarkPath"), for: .normal)
+            
+        }
     }
 }
