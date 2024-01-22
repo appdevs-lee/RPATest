@@ -59,6 +59,142 @@ final class CarManageViewController: UIViewController {
         return button
     }()
     
+    lazy var baseView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var monthlyBaseView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var monthlyTitleLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "월간점검"
+        label.textColor = .black
+        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var monthlyLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "완료"
+        label.textColor = .blue
+        label.font = .useFont(ofSize: 20, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var weeklyBaseView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var weeklyTitleLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "주간점검"
+        label.textColor = .black
+        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var weeklyLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "4/5"
+        label.textColor = .black
+        label.font = .useFont(ofSize: 20, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var dailyBaseView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var dailyTitleLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "일일점검"
+        label.textColor = .black
+        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var dailyLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "완료"
+        label.textColor = .blue
+        label.font = .useFont(ofSize: 20, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var regularBaseView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var regularTitleLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "45점검"
+        label.textColor = .black
+        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var regularLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "D-45"
+        label.textColor = .blue
+        label.font = .useFont(ofSize: 20, weight: .Medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var separateView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
@@ -138,6 +274,20 @@ extension CarManageViewController: EssentialViewMethods {
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
             self.dateStackView,
+            self.baseView,
+            self.monthlyBaseView,
+            self.monthlyTitleLabel,
+            self.monthlyLabel,
+            self.weeklyBaseView,
+            self.weeklyTitleLabel,
+            self.weeklyLabel,
+            self.dailyBaseView,
+            self.dailyTitleLabel,
+            self.dailyLabel,
+            self.regularBaseView,
+            self.regularTitleLabel,
+            self.regularLabel,
+            self.separateView,
             self.tableView
         ], to: self.view)
     }
@@ -163,11 +313,112 @@ extension CarManageViewController: EssentialViewMethods {
             self.rightButton.heightAnchor.constraint(equalToConstant: 24)
         ])
         
+        // baseView
+        NSLayoutConstraint.activate([
+            self.baseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 10),
+            self.baseView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+        
+        // monthlyBaseView
+        NSLayoutConstraint.activate([
+            self.monthlyBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
+            self.monthlyBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.monthlyBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+            self.monthlyBaseView.widthAnchor.constraint(equalToConstant: (ReferenceValues.Size.Device.width - 56) / 4),
+        ])
+        
+        // monthlyTitleLabel
+        NSLayoutConstraint.activate([
+            self.monthlyTitleLabel.topAnchor.constraint(equalTo: self.monthlyBaseView.topAnchor),
+            self.monthlyTitleLabel.leadingAnchor.constraint(equalTo: self.monthlyBaseView.leadingAnchor),
+            self.monthlyTitleLabel.trailingAnchor.constraint(equalTo: self.monthlyBaseView.trailingAnchor),
+        ])
+        
+        // monthlyLabel
+        NSLayoutConstraint.activate([
+            self.monthlyLabel.centerXAnchor.constraint(equalTo: self.monthlyBaseView.centerXAnchor),
+            self.monthlyLabel.centerYAnchor.constraint(equalTo: self.monthlyBaseView.centerYAnchor)
+        ])
+        
+        // weeklyBaseView
+        NSLayoutConstraint.activate([
+            self.weeklyBaseView.leadingAnchor.constraint(equalTo: self.monthlyBaseView.trailingAnchor, constant: 8),
+            self.weeklyBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.weeklyBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+            self.weeklyBaseView.widthAnchor.constraint(equalToConstant: (ReferenceValues.Size.Device.width - 56) / 4),
+        ])
+        
+        // weeklyTitleLabel
+        NSLayoutConstraint.activate([
+            self.weeklyTitleLabel.topAnchor.constraint(equalTo: self.weeklyBaseView.topAnchor),
+            self.weeklyTitleLabel.leadingAnchor.constraint(equalTo: self.weeklyBaseView.leadingAnchor),
+            self.weeklyTitleLabel.trailingAnchor.constraint(equalTo: self.weeklyBaseView.trailingAnchor),
+        ])
+        
+        // weeklyLabel
+        NSLayoutConstraint.activate([
+            self.weeklyLabel.centerXAnchor.constraint(equalTo: self.weeklyBaseView.centerXAnchor),
+            self.weeklyLabel.centerYAnchor.constraint(equalTo: self.weeklyBaseView.centerYAnchor)
+        ])
+        
+        // dailyBaseView
+        NSLayoutConstraint.activate([
+            self.dailyBaseView.leadingAnchor.constraint(equalTo: self.weeklyBaseView.trailingAnchor, constant: 8),
+            self.dailyBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.dailyBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+            self.dailyBaseView.widthAnchor.constraint(equalToConstant: (ReferenceValues.Size.Device.width - 56) / 4),
+        ])
+        
+        // dailyTitleLabel
+        NSLayoutConstraint.activate([
+            self.dailyTitleLabel.topAnchor.constraint(equalTo: self.dailyBaseView.topAnchor),
+            self.dailyTitleLabel.leadingAnchor.constraint(equalTo: self.dailyBaseView.leadingAnchor),
+            self.dailyTitleLabel.trailingAnchor.constraint(equalTo: self.dailyBaseView.trailingAnchor),
+        ])
+        
+        // dailyLabel
+        NSLayoutConstraint.activate([
+            self.dailyLabel.centerXAnchor.constraint(equalTo: self.dailyBaseView.centerXAnchor),
+            self.dailyLabel.centerYAnchor.constraint(equalTo: self.dailyBaseView.centerYAnchor)
+        ])
+        
+        // regularBaseView
+        NSLayoutConstraint.activate([
+            self.regularBaseView.leadingAnchor.constraint(equalTo: self.dailyBaseView.trailingAnchor, constant: 8),
+            self.regularBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+            self.regularBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.regularBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+            self.regularBaseView.widthAnchor.constraint(equalToConstant: (ReferenceValues.Size.Device.width - 56) / 4),
+        ])
+        
+        // regularTitleLabel
+        NSLayoutConstraint.activate([
+            self.regularTitleLabel.topAnchor.constraint(equalTo: self.regularBaseView.topAnchor),
+            self.regularTitleLabel.leadingAnchor.constraint(equalTo: self.regularBaseView.leadingAnchor),
+            self.regularTitleLabel.trailingAnchor.constraint(equalTo: self.regularBaseView.trailingAnchor),
+        ])
+        
+        // regularLabel
+        NSLayoutConstraint.activate([
+            self.regularLabel.centerXAnchor.constraint(equalTo: self.regularBaseView.centerXAnchor),
+            self.regularLabel.centerYAnchor.constraint(equalTo: self.regularBaseView.centerYAnchor)
+        ])
+        
+        // separateView
+        NSLayoutConstraint.activate([
+            self.separateView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            self.separateView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            self.separateView.topAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+            self.separateView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+        
         // tableView
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.dateStackView.bottomAnchor, constant: 10),
+            self.tableView.topAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: 10),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }

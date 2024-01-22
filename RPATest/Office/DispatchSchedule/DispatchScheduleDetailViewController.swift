@@ -25,11 +25,12 @@ final class DispatchScheduleDetailViewController: UIViewController {
         return tableView
     }()
     
-    init(name: String, id: Int, check: Bool, status: (wake: String, boarding: String, driving: String)) {
+    init(route: String, name: String, id: Int, check: Bool, status: (wake: String, boarding: String, driving: String)) {
         self.id = id
         self.name = name
         self.check = check
         self.status = status
+        self.route = route
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -47,6 +48,7 @@ final class DispatchScheduleDetailViewController: UIViewController {
 //    ]
     
     var id: Int
+    var route: String
     var name: String
     var check: Bool
     var status: (wake: String, boarding: String, driving: String)
@@ -214,7 +216,7 @@ extension DispatchScheduleDetailViewController: UITableViewDelegate, UITableView
         let schedule = self.scheduleDetailList[indexPath.row]
         
         cell.setCell(schedule: schedule)
-        if self.id == schedule.id {
+        if self.route == schedule.route {
             cell.mainView.layer.borderColor = UIColor.blue.cgColor
             cell.mainView.layer.borderWidth = 2.0
             

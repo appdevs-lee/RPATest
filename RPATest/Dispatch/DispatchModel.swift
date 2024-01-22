@@ -1541,19 +1541,17 @@ struct TeamScheduleDetailItem: Codable {
 }
 
 struct TeamScheduleDispatchItem: Codable {
-    let id: Int
     let bus: String // 버스 번호
     let route: String // 노선명
+    let departure: String // 출발지
     let departureTime: String // 출발 시간
-    let arrivalName: String // 도착지
     let note: String // 비고
     
     enum CodingKeys: String, CodingKey {
-        case id
-        case bus
+        case bus = "vehicle_num"
         case route
+        case departure
         case departureTime = "departure_time"
-        case arrivalName = "" // FIXME: 도착지 Key 추가
-        case note
+        case note = "references"
     }
 }

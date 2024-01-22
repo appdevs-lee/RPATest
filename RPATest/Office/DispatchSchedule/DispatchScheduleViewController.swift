@@ -238,7 +238,7 @@ extension DispatchScheduleViewController: UITableViewDelegate, UITableViewDataSo
         let schedule = self.scheduleList[indexPath.row]
         let status: (wake: String, boarding: String, driving: String) = (schedule.wakeCheck, schedule.boardingCheck, schedule.drivingCheck)
         
-        let vc = DispatchScheduleDetailViewController(name: schedule.member, id: schedule.memberId, check: schedule.isProblem(), status: status)
+        let vc = DispatchScheduleDetailViewController(route: schedule.route, name: schedule.member, id: schedule.memberId, check: schedule.isProblem(), status: status)
         
         self.navigationController?.pushViewController(vc, animated: true)
         

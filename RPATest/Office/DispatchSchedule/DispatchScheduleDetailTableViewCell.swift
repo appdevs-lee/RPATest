@@ -325,7 +325,7 @@ extension DispatchScheduleDetailTableViewCell {
     func setCell(schedule: TeamScheduleDispatchItem) {
         self.pathNameLabel.text = schedule.route
         self.vehicleNumberLabel.text = "버스번호: \(schedule.bus)"
-        self.arrivalNameLabel.text = schedule.arrivalName
+        self.arrivalNameLabel.text = ""
         self.takeOffTimeLabel.text = schedule.departureTime
         self.noteLabel.text = schedule.note
 
