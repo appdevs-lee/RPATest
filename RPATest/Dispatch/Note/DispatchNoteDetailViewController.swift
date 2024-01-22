@@ -814,7 +814,7 @@ extension DispatchNoteDetailViewController {
     }
     
     @objc func tappedDepartureTimeButton(_ sender: UIButton) {
-        let vc = DispatchNoteSelectTimeViewController(date: self.departureTimeLabel.text!)
+        let vc = DispatchNoteSelectTimeViewController(type: self.type, id: self.id, allTime: self.date, selectTypeForTime: .departure)
         
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overFullScreen
@@ -824,7 +824,7 @@ extension DispatchNoteDetailViewController {
     }
     
     @objc func tappedArrivalTimeButton(_ sender: UIButton) {
-        let vc = DispatchNoteSelectTimeViewController(date: self.arrivalTimeLabel.text!)
+        let vc = DispatchNoteSelectTimeViewController(type: self.type, id: self.id, allTime: self.date, selectTypeForTime: .arrival)
         
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overFullScreen

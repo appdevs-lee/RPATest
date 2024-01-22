@@ -56,8 +56,20 @@ final class DispatchNoteSelectTimeViewController: UIViewController {
         return button
     }()
     
-    init(date: String) {
-        self.date = date
+    init(presentType: PresentType = .push, type: DispatchKindType, id: (regularly: String, order: String), allTime: (departure: String, arrival: String), selectTypeForTime: SelectDispatchTypeForTime) {
+        self.type = type
+        self.id = id
+        self.allTime = allTime
+        self.selectTypeForTime = selectTypeForTime
+        
+        switch selectTypeForTime {
+        case .departure:
+            self.date = allTime.departure
+            
+        case .arrival:
+            self.date = allTime.arrival
+            
+        }
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -65,8 +77,13 @@ final class DispatchNoteSelectTimeViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     var date: String
+    var id: (regularly: String, order: String)
+    var allTime: (departure: String, arrival: String)
+    var selectTypeForTime: SelectDispatchTypeForTime
+    var type: DispatchKindType
+    let dispatchModel = DispatchModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -175,7 +192,18 @@ extension DispatchNoteSelectTimeViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension DispatchNoteSelectTimeViewController {
-    
+    func sendDispatchNoteDetailRequest(departureTime: String, arrivalTime: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        self.dispatchModel.sendDispatchNoteDetailRequest(type: self.type, regularlyId: self.id.regularly, orderId: self.id.order, departureTime: departureTime, arrivalTime: arrivalTime, departureFigure: "", arrivalFigure: "", passengerNumber: "0", specialNotes: "") {
+            success?()
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -186,10 +214,28 @@ extension DispatchNoteSelectTimeViewController {
     }
     
     @objc func tappedCheckButton(_ sender: UIButton) {
-        self.dismiss(animated: true) {
-            NotificationCenter.default.post(name: Notification.Name("SelectTime"), object: nil, userInfo: ["time": SupportingMethods.shared.convertDate(intoString: self.datePicker.date, "yyyy-MM-dd HH:mm")])
+        switch self.selectTypeForTime {
+        case .departure:
+            self.allTime.departure = SupportingMethods.shared.convertDate(intoString: self.datePicker.date, "yyyy-MM-dd HH:mm")
+        case .arrival:
+            self.allTime.arrival = SupportingMethods.shared.convertDate(intoString: self.datePicker.date, "yyyy-MM-dd HH:mm")
+        
+        }
+        
+        SupportingMethods.shared.turnCoverView(.on)
+        self.sendDispatchNoteDetailRequest(departureTime: self.allTime.departure, arrivalTime: self.allTime.arrival) {
+            self.dismiss(animated: true) {
+                NotificationCenter.default.post(name: Notification.Name("SelectTime"), object: nil, userInfo: ["time": SupportingMethods.shared.convertDate(intoString: self.datePicker.date, "yyyy-MM-dd HH:mm")])
+                SupportingMethods.shared.turnCoverView(.off)
+                
+            }
+            
+        } failure: { errorMessage in
+            print("tappedCheckButton sendDispatchNoteDetailRequest API Error: \(errorMessage)")
+            SupportingMethods.shared.turnCoverView(.off)
             
         }
+
     }
 }
 
