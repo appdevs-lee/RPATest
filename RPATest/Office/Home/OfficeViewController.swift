@@ -65,7 +65,8 @@ final class OfficeViewController: UIViewController {
         return collectionView
     }()
     
-    let officeList: [Office] = [.notice, .vehicle, .consulting, .csEdu, .accident, .fuel, .estimate, .dispatchTeam, .rules]
+    let officeList: [Office] = UserInfo.shared.role == "팀장" ? [.notice, .vehicle, .consulting, .csEdu, .accident, .fuel, .estimate, .dispatchTeam, .rules] :
+    [.notice, .vehicle, .consulting, .csEdu, .accident, .fuel, .estimate, .rules]
     
     let noticeModel = NoticeModel()
     
@@ -215,7 +216,8 @@ extension OfficeViewController: UICollectionViewDelegateFlowLayout, UICollection
             
         case .vehicle:
             // Vehicle
-            let vc = InspectionViewController()
+//            let vc = InspectionViewController()
+            let vc = CarManageViewController()
             
             self.navigationController?.pushViewController(vc, animated: true)
             

@@ -28,6 +28,7 @@ final class DispatchModel {
     private(set) var loadDispatchScheduleListRequest: DataRequest?
     private(set) var loadDispatchScheduleDetailRequest: DataRequest?
     
+    
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
         
@@ -1545,7 +1546,6 @@ struct TeamScheduleDispatchItem: Codable {
     let route: String // 노선명
     let departureTime: String // 출발 시간
     let arrivalName: String // 도착지
-    let breathalyzing: String // 음주 측정
     let note: String // 비고
     
     enum CodingKeys: String, CodingKey {
@@ -1554,7 +1554,6 @@ struct TeamScheduleDispatchItem: Codable {
         case route
         case departureTime = "departure_time"
         case arrivalName = "" // FIXME: 도착지 Key 추가
-        case breathalyzing = "alcohol_test"
         case note
     }
 }

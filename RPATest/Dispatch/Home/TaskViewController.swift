@@ -165,7 +165,7 @@ extension TaskViewController: EssentialViewMethods {
             self.equipmentButton.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 16),
             self.equipmentButton.leadingAnchor.constraint(equalTo: self.weeklyButton.trailingAnchor, constant: 16),
             self.equipmentButton.widthAnchor.constraint(equalToConstant: 72),
-            self.equipmentButton.heightAnchor.constraint(equalToConstant: 44),
+            self.equipmentButton.heightAnchor.constraint(equalToConstant: 50),
         ])
         
         // doneButton
@@ -205,7 +205,7 @@ extension TaskViewController {
     }
     
     @objc func tappedEquipmentButton(_ sender: UIButton) {
-        let vc = DispatchInspectionViewController(type: .equipment, carNumber: "Test")
+        let vc = DispatchInspectionViewController(type: .monthly, carNumber: "Test")
         
         vc.modalPresentationStyle = .overFullScreen
         self.present(vc, animated: false)

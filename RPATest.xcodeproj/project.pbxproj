@@ -58,6 +58,10 @@
 		057DDD642B58A24C00EE110A /* AccidentCallListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057DDD632B58A24C00EE110A /* AccidentCallListTableViewCell.swift */; };
 		057DDD682B58C0F900EE110A /* AccidentBeforeDrivingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057DDD672B58C0F900EE110A /* AccidentBeforeDrivingViewController.swift */; };
 		057DDD6A2B58C22600EE110A /* AccidentLastFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057DDD692B58C22600EE110A /* AccidentLastFlowViewController.swift */; };
+		057E24822B5E48C600633D2F /* CarManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057E24812B5E48C600633D2F /* CarManageViewController.swift */; };
+		057E24842B5E4C2400633D2F /* CarManageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057E24832B5E4C2400633D2F /* CarManageTableViewCell.swift */; };
+		057E24862B5E567600633D2F /* CarManageInspectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057E24852B5E567600633D2F /* CarManageInspectionViewController.swift */; };
+		057E24882B5E569000633D2F /* CarManageInspectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057E24872B5E569000633D2F /* CarManageInspectionTableViewCell.swift */; };
 		05821A952B0DCDEA007049C9 /* RenewalDispatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A942B0DCDEA007049C9 /* RenewalDispatchViewController.swift */; };
 		05821A992B0DD443007049C9 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A982B0DD443007049C9 /* ProfileModel.swift */; };
 		05821A9D2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05821A9C2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift */; };
@@ -188,6 +192,10 @@
 		057DDD632B58A24C00EE110A /* AccidentCallListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentCallListTableViewCell.swift; sourceTree = "<group>"; };
 		057DDD672B58C0F900EE110A /* AccidentBeforeDrivingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentBeforeDrivingViewController.swift; sourceTree = "<group>"; };
 		057DDD692B58C22600EE110A /* AccidentLastFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentLastFlowViewController.swift; sourceTree = "<group>"; };
+		057E24812B5E48C600633D2F /* CarManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarManageViewController.swift; sourceTree = "<group>"; };
+		057E24832B5E4C2400633D2F /* CarManageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarManageTableViewCell.swift; sourceTree = "<group>"; };
+		057E24852B5E567600633D2F /* CarManageInspectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarManageInspectionViewController.swift; sourceTree = "<group>"; };
+		057E24872B5E569000633D2F /* CarManageInspectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarManageInspectionTableViewCell.swift; sourceTree = "<group>"; };
 		05821A942B0DCDEA007049C9 /* RenewalDispatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchViewController.swift; sourceTree = "<group>"; };
 		05821A982B0DD443007049C9 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		05821A9C2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchRegularlyTableViewCell.swift; sourceTree = "<group>"; };
@@ -311,6 +319,7 @@
 		056A34632ABC0EDE00829750 /* Inspection */ = {
 			isa = PBXGroup;
 			children = (
+				057E24802B5E48AE00633D2F /* Renewal */,
 				056A34682ABC13CC00829750 /* InspectionModel.swift */,
 				056A34642ABC0EF000829750 /* InspectionViewController.swift */,
 				056A34662ABC0FED00829750 /* InspectionTableViewCell.swift */,
@@ -331,6 +340,17 @@
 				056A34772ABC394600829750 /* ConsultingTableViewCell.swift */,
 			);
 			path = Consulting;
+			sourceTree = "<group>";
+		};
+		057E24802B5E48AE00633D2F /* Renewal */ = {
+			isa = PBXGroup;
+			children = (
+				057E24812B5E48C600633D2F /* CarManageViewController.swift */,
+				057E24832B5E4C2400633D2F /* CarManageTableViewCell.swift */,
+				057E24852B5E567600633D2F /* CarManageInspectionViewController.swift */,
+				057E24872B5E569000633D2F /* CarManageInspectionTableViewCell.swift */,
+			);
+			path = Renewal;
 			sourceTree = "<group>";
 		};
 		0582C5A42AB8215E0045CBCB /* Home */ = {
@@ -756,6 +776,7 @@
 				0596A4432B2A8F2A00D2C3AA /* DispatchInspectionViewController.swift in Sources */,
 				0561E7252AC2BB3400787B77 /* ServerInspectionViewController.swift in Sources */,
 				2DCBDFEB2AEE33C1000685F5 /* OrganizationModel.swift in Sources */,
+				057E24882B5E569000633D2F /* CarManageInspectionTableViewCell.swift in Sources */,
 				0594D32C2B5673B800283C6D /* RenewalDispatchSearchListViewController.swift in Sources */,
 				0593327E2B4E3A8A0074C13A /* DispatchDrivingDoneTableViewCell.swift in Sources */,
 				056BF5042AF3518900B4C389 /* BottomSheetViewController.swift in Sources */,
@@ -770,6 +791,7 @@
 				057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */,
 				0593327C2B4E2D9B0074C13A /* DetailPathTableViewCell.swift in Sources */,
 				5FCC116F2AA4638500550534 /* DispatchTableViewCell.swift in Sources */,
+				057E24862B5E567600633D2F /* CarManageInspectionViewController.swift in Sources */,
 				057DDD682B58C0F900EE110A /* AccidentBeforeDrivingViewController.swift in Sources */,
 				056A34782ABC394600829750 /* ConsultingTableViewCell.swift in Sources */,
 				5FCC11782AA46DE900550534 /* ProfileViewController.swift in Sources */,
@@ -805,6 +827,7 @@
 				5F1BB09F2A03D1210081DBBE /* AppDelegate.swift in Sources */,
 				056A345E2ABC054700829750 /* NoticeDetailViewController.swift in Sources */,
 				2D0F01762B57F4FD002F3160 /* AccidentSafeCheckViewController.swift in Sources */,
+				057E24842B5E4C2400633D2F /* CarManageTableViewCell.swift in Sources */,
 				056A346B2ABC193B00829750 /* InspectionCreateViewController.swift in Sources */,
 				0596A4472B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift in Sources */,
 				059332762B4E17A30074C13A /* DispatchDrivingOrderTableViewCell.swift in Sources */,
@@ -818,6 +841,7 @@
 				05821AA32B0DEBCE007049C9 /* ViewPagerCollectionViewCell.swift in Sources */,
 				2D0F01742B57EEFA002F3160 /* AccidentResponseTableViewCell.swift in Sources */,
 				05821A992B0DD443007049C9 /* ProfileModel.swift in Sources */,
+				057E24822B5E48C600633D2F /* CarManageViewController.swift in Sources */,
 				057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */,
 				057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */,
 				05709D6E2B1FFA2900748F52 /* DispatchNoteListViewController.swift in Sources */,

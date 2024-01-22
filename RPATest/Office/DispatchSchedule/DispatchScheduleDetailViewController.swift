@@ -223,6 +223,8 @@ extension DispatchScheduleDetailViewController: UITableViewDelegate, UITableView
             
         }
         
+        cell.breathalyzingLabel.text = "\(self.schedule?.alcoholTest ?? "값 없음.")"
+        
         if self.check {
             if self.status.wake == "false" {
                 cell.problemCheckLabel.text = "기상 문제 발생"

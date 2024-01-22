@@ -46,7 +46,7 @@ final class DispatchDrivingDetailPathTableViewCell: UITableViewCell {
     }()
     
     
-    var stationList: [Station] = [Station(pathName: "구반포역 (반포한의원)", count: 0), Station(pathName: "신반포역4번출구 (IBK기업은행)", count: 0), Station(pathName: "반포역3번출구 (자전거보관소)", count: 0) , Station(pathName: "화성캠퍼스 H1", count: 0), Station(pathName: "DSR", count: 0)]
+    var stationList: [Station] = []
     var count: Int = 0
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -130,8 +130,14 @@ extension DispatchDrivingDetailPathTableViewCell {
 
 // MARK: - Extension for methods added
 extension DispatchDrivingDetailPathTableViewCell {
-    func setCell() {
+    func setCell(station: String) {
+        let stationList = station.split(separator: "-")
         
+        for station in stationList {
+            self.stationList.append(Station(pathName: String(station), count: 0))
+        }
+        
+        self.tableView.reloadData()
     }
 }
 

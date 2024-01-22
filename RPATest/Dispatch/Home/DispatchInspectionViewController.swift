@@ -10,7 +10,7 @@ import UIKit
 enum DispatchInspectionType {
     case daily
     case weekly
-    case equipment
+    case monthly
     
     var data: [String] {
         switch self {
@@ -20,7 +20,7 @@ enum DispatchInspectionType {
         case .weekly:
             return ["유리/선팅", "자격증/차고지증명서/운행기록증", "타이어 휠 상태", "차량청결(외부)", "비상망치(수량 및 야과스티커)", "소화기(수량 및 충전상태)", "블랙박스 포맷확인"]
             
-        case .equipment:
+        case .monthly:
             return ["TV", "DVD", "노래방", "바닥스피커", "길성테크", "바닥파워", "인버터", "블랙박스", "전광판", "블라인드"]
             
         }
@@ -90,7 +90,7 @@ final class DispatchInspectionViewController: UIViewController {
         case .weekly:
             label.text = "주간 점검"
             
-        case .equipment:
+        case .monthly:
             label.text = "비품 점검"
             
         }

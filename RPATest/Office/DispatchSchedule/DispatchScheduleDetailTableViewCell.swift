@@ -326,7 +326,6 @@ extension DispatchScheduleDetailTableViewCell {
         self.pathNameLabel.text = schedule.route
         self.vehicleNumberLabel.text = "버스번호: \(schedule.bus)"
         self.arrivalNameLabel.text = schedule.arrivalName
-        self.breathalyzingLabel.text = schedule.breathalyzing
         self.takeOffTimeLabel.text = schedule.departureTime
         self.noteLabel.text = schedule.note
 

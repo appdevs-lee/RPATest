@@ -228,8 +228,18 @@ extension DispatchDrivingDetailViewController: UITableViewDelegate, UITableViewD
             
         } else if indexPath.section == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchDrivingDetailPathTableViewCell", for: indexPath) as! DispatchDrivingDetailPathTableViewCell
+            var station: String = ""
             
-            cell.setCell()
+            switch self.type {
+            case .regularly:
+                station = self.regularlyItem?.detailedRoute ?? ""
+                
+            case .order:
+                station = ""
+                
+            }
+            
+            cell.setCell(station: station)
             
             return cell
             
