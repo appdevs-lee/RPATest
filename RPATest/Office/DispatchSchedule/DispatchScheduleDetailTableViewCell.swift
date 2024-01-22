@@ -322,27 +322,14 @@ extension DispatchScheduleDetailTableViewCell {
 
 // MARK: - Extension for methods added
 extension DispatchScheduleDetailTableViewCell {
-    func setCell(schedule: DispatchScheduleItem) {
-        self.pathNameLabel.text = schedule.pathName
-        self.vehicleNumberLabel.text = "버스번호: \(schedule.vehicleNumber)"
+    func setCell(schedule: TeamScheduleDispatchItem) {
+        self.pathNameLabel.text = schedule.route
+        self.vehicleNumberLabel.text = "버스번호: \(schedule.bus)"
         self.arrivalNameLabel.text = schedule.arrivalName
         self.breathalyzingLabel.text = schedule.breathalyzing
-        self.takeOffTimeLabel.text = schedule.time
+        self.takeOffTimeLabel.text = schedule.departureTime
         self.noteLabel.text = schedule.note
-        
-        if schedule.check {
-            if schedule.status.wake {
-                self.problemCheckLabel.text = "기상 문제 발생"
-                
-            } else if schedule.status.boarding {
-                self.problemCheckLabel.text = "탑승 문제 발생"
-                
-            } else {
-                self.problemCheckLabel.text = "운행 문제 발생"
-                
-            }
-        }
-        self.problemCheckLabel.textColor = schedule.check ? .red : .blue
+
     }
 }
 

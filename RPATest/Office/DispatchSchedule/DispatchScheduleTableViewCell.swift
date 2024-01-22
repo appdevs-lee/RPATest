@@ -307,8 +307,10 @@ extension DispatchScheduleTableViewCell {
 
 // MARK: - Extension for methods added
 extension DispatchScheduleTableViewCell {
-    func setCell(schedule: DispatchScheduleItem) {
-        if schedule.check {
+    func setCell(schedule: TeamScheduleItem) {
+        let status: (wake: String, boarding: String, driving: String) = (schedule.wakeCheck, schedule.boardingCheck, schedule.drivingCheck)
+        
+        if schedule.isProblem() {
             self.isBlinking = true
             
         } else {
@@ -316,10 +318,11 @@ extension DispatchScheduleTableViewCell {
             
         }
         
-        self.nameLabel.text = schedule.name
-        self.vehicleNumberLabel.text = "버스번호: \(schedule.vehicleNumber)"
-        self.pathNameLabel.text = schedule.pathName
-        self.takeOffLabel.text = schedule.time
+        self.nameLabel.text = schedule.member
+        self.vehicleNumberLabel.text = "버스번호: \(schedule.bus)"
+        self.pathNameLabel.text = schedule.route
+        self.takeOffLabel.text = schedule.departureTime
+        self.dispatchCountLabel.text = "(\(schedule.currentCount)/\(schedule.totalCount))"
         
         self.wakeButton.layer.removeAllAnimations()
         self.wakeButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
@@ -333,8 +336,15 @@ extension DispatchScheduleTableViewCell {
         self.drivingButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         self.drivingButton.setTitleColor(.white, for: .normal)
         
-        switch schedule.status {
-        case (true, false, false):
+        switch status {
+        case ("", "", ""):
+            self.wakeButton.setTitle("기상", for: .normal)
+            
+            self.boardingButton.setTitle("탑승", for: .normal)
+            
+            self.drivingButton.setTitle("운행", for: .normal)
+            
+        case ("true", "", ""):
             self.wakeButton.setTitle("기상 완료", for: .normal)
             self.wakeButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
             self.wakeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
@@ -343,7 +353,7 @@ extension DispatchScheduleTableViewCell {
             
             self.drivingButton.setTitle("운행", for: .normal)
             
-        case (true, true, false):
+        case ("true", "true", ""):
             self.wakeButton.setTitle("기상 완료", for: .normal)
             self.wakeButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
             self.wakeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
@@ -354,7 +364,7 @@ extension DispatchScheduleTableViewCell {
             
             self.drivingButton.setTitle("운행", for: .normal)
             
-        case (true, true, true):
+        case ("true", "true", "true"):
             self.wakeButton.setTitle("기상 완료", for: .normal)
             self.wakeButton.setTitleColor(.useRGB(red: 66, green: 66, blue: 66), for: .normal)
             self.wakeButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
@@ -368,8 +378,8 @@ extension DispatchScheduleTableViewCell {
             self.drivingButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
             
         default:
-            if schedule.check {
-                if schedule.status.wake == false {
+            if schedule.isProblem() {
+                if schedule.wakeCheck == "false" {
                     self.wakeButton.setTitle("기상 문제", for: .normal)
                     
                     if self.isBlinking {
@@ -380,7 +390,7 @@ extension DispatchScheduleTableViewCell {
                         
                     }
                     
-                } else if schedule.status.boarding == false {
+                } else if schedule.boardingCheck == "false" {
                     self.boardingButton.setTitle("탑승 문제", for: .normal)
                     
                     if self.isBlinking {
@@ -391,7 +401,7 @@ extension DispatchScheduleTableViewCell {
                         
                     }
                     
-                } else if schedule.status.boarding == false {
+                } else if schedule.drivingCheck == "false" {
                     self.drivingButton.setTitle("운행 문제", for: .normal)
                     
                     
@@ -418,7 +428,7 @@ extension DispatchScheduleTableViewCell {
             }
         }
         
-        if schedule.check {
+        if schedule.isProblem() {
             self.mainView.layer.borderColor = UIColor.useRGB(red: 176, green: 0, blue: 32, alpha: 0.7).cgColor
             self.mainView.layer.borderWidth = 4.0
             

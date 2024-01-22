@@ -25,6 +25,8 @@ final class DispatchModel {
     private(set) var loadGarageRequest: DataRequest?
     private(set) var loadDispatchNoteDetailRequest: DataRequest?
     private(set) var sendDispatchNoteDetailRequest: DataRequest?
+    private(set) var loadDispatchScheduleListRequest: DataRequest?
+    private(set) var loadDispatchScheduleDetailRequest: DataRequest?
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
@@ -960,6 +962,118 @@ final class DispatchModel {
             }
         }
     }
+    
+    // MARK: - 팀원 배차 리스트 가져오기
+    func loadDispatchScheduleListRequest(success: (([TeamScheduleItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/team/list"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadDispatchScheduleListRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadDispatchScheduleListRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadDispatchScheduleListRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadDispatchScheduleListRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        if let decodedData = try? JSONDecoder().decode(TeamSchedule.self, from: data) {
+                            print("loadDispatchScheduleListRequest succeeded")
+                            success?(decodedData.data)
+                            
+                        } else {
+                            print("loadDispatchScheduleListRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else {
+                        print("loadDispatchScheduleListRequest failure: false")
+                        failure?("false")
+                    }
+                    
+                } else {
+                    print("loadDispatchScheduleListRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("loadDispatchScheduleListRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    // MARK: - 팀원 배차 상세 정보 가져오기
+    func loadDispatchScheduleDetailRequest(id: Int, success: ((TeamScheduleDetailItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = (Server.shared.currentURL ?? "") + "/dispatch/team/\(id)"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadDispatchScheduleDetailRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadDispatchScheduleDetailRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadDispatchScheduleDetailRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadDispatchScheduleDetailRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(DefaultResponse.self, from: data) {
+                    if decodedData.result == "true" {
+                        if let decodedData = try? JSONDecoder().decode(TeamScheduleDetail.self, from: data) {
+                            print("loadDispatchScheduleDetailRequest succeeded")
+                            success?(decodedData.data)
+                            
+                        } else {
+                            print("loadDispatchScheduleDetailRequest failure: API 성공, Parsing 실패")
+                            failure?("API 성공, Parsing 실패")
+                        }
+                        
+                    } else {
+                        print("loadDispatchScheduleDetailRequest failure: false")
+                        failure?("false")
+                    }
+                    
+                } else {
+                    print("loadDispatchScheduleDetailRequest failure: improper structure")
+                    failure?("알 수 없는 Response 구조")
+                }
+                
+            case .failure(let error):
+                print("loadDispatchScheduleDetailRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
 }
 
 struct DispatchMonthly: Codable {
@@ -1357,5 +1471,90 @@ struct DispatchNoteDetailSubItem: Codable {
         case bus
         case departure
         case arrival
+    }
+}
+
+// MARK: - 팀원 배차 Model
+struct TeamSchedule: Codable {
+    let result: String
+    let data: [TeamScheduleItem]
+}
+
+struct TeamScheduleItem: Codable {
+    let member: String
+    let memberId: Int
+    let currentCount: Int
+    let totalCount: Int
+    let bus: String
+    let route: String
+    let departureTime: String
+    let wakeCheck: String
+    let boardingCheck: String
+    let drivingCheck: String
+    
+    func isProblem() -> Bool {
+        if self.wakeCheck == "false" || self.boardingCheck == "false" || self.drivingCheck == "false" {
+            return true
+        }
+        
+        return false
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case member
+        case memberId = "member_id"
+        case currentCount = "current_count"
+        case totalCount = "total_count"
+        case bus
+        case route
+        case departureTime = "departure_time"
+        case wakeCheck = "check1"
+        case boardingCheck = "check2"
+        case drivingCheck = "check3"
+    }
+}
+
+// MARK: - 팀원 배차 상세 정보 Model
+struct TeamScheduleDetail: Codable {
+    let result: String
+    let data: TeamScheduleDetailItem
+}
+
+struct TeamScheduleDetailItem: Codable {
+    let phone: String
+    let alcoholTest: String
+    let regularly: [TeamScheduleDispatchItem]
+    let order: [TeamScheduleDispatchItem]
+    
+    func combineData() -> [TeamScheduleDispatchItem] {
+        return self.regularly + self.order
+        
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case phone
+        case alcoholTest = "alcohol_test"
+        case regularly
+        case order
+    }
+}
+
+struct TeamScheduleDispatchItem: Codable {
+    let id: Int
+    let bus: String // 버스 번호
+    let route: String // 노선명
+    let departureTime: String // 출발 시간
+    let arrivalName: String // 도착지
+    let breathalyzing: String // 음주 측정
+    let note: String // 비고
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case bus
+        case route
+        case departureTime = "departure_time"
+        case arrivalName = "" // FIXME: 도착지 Key 추가
+        case breathalyzing = "alcohol_test"
+        case note
     }
 }

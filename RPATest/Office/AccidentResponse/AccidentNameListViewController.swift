@@ -50,6 +50,8 @@ final class AccidentNameListViewController: UIViewController {
         return imageView
     }()
     
+    let picker = UIImagePickerController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,6 +63,7 @@ final class AccidentNameListViewController: UIViewController {
         self.setSubviews()
         self.setLayouts()
         self.setUpNavigationItem()
+        self.setPicker()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -176,6 +179,12 @@ extension AccidentNameListViewController: EssentialViewMethods {
         ], for: .normal)
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
+    
+    func setPicker() {
+        self.picker.sourceType = .camera
+        self.picker.delegate = self
+        
+    }
 }
 
 // MARK: - Extension for methods added
@@ -198,6 +207,20 @@ extension AccidentNameListViewController {
     
     @objc func imageTapped(_ gesture: UITapGestureRecognizer) {
         print("imageTapped")
+        self.present(self.picker, animated: false)
         
     }
+}
+
+extension AccidentNameListViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        self.listImageView.image = image
+        
+        self.dismiss(animated: true) {
+            self.plusImageView.isHidden = true
+            
+        }
+    }
+    
 }

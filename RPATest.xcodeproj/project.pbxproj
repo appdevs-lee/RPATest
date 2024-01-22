@@ -1020,6 +1020,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RPATest/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RPA;
+				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근할 수 있도록 권한을 요청합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범에 접근할 수 있도록 권한을 요청합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1059,6 +1060,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RPATest/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RPA;
+				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근할 수 있도록 권한을 요청합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범에 접근할 수 있도록 권한을 요청합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

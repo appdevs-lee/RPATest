@@ -32,12 +32,15 @@ final class DispatchScheduleViewController: UIViewController {
         return tableView
     }()
     
-    var scheduleList: [DispatchScheduleItem] = [
-        DispatchScheduleItem(id: 1, name: "이성곤", vehicleNumber: "1701", phoneNumber: "010-1234-0234", time: "06:55", pathName: "써니밸리", arrivalName: "K1", breathalyzing: "0.0", note: "없음.", check: true, status: (wake: false, boarding: false, driving: false)),
-        DispatchScheduleItem(id: 10, name: "김성일", vehicleNumber: "3127", phoneNumber: "010-1234-1234", time: "06:45", pathName: "수원여고_H1_(리디아35분, 여산 40분, 성화45분)", arrivalName: "기존노선투가추입", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: true, driving: false)),
-        DispatchScheduleItem(id: 20, name: "최오명", vehicleNumber: "8444", phoneNumber: "010-1234-1234", time: "06:20", pathName: "수지로얄스포츠", arrivalName: "K1-DSR", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: true, driving: true)),
-        DispatchScheduleItem(id: 30, name: "송승우", vehicleNumber: "7254", phoneNumber: "010-1234-1234", time: "07:10", pathName: "구반포", arrivalName: "H1-DSR", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: false, driving: false)),
-    ]
+//    var scheduleList: [DispatchScheduleItem] = [
+//        DispatchScheduleItem(id: 1, name: "이성곤", vehicleNumber: "1701", phoneNumber: "010-1234-0234", time: "06:55", pathName: "써니밸리", arrivalName: "K1", breathalyzing: "0.0", note: "없음.", check: true, status: (wake: false, boarding: false, driving: false)),
+//        DispatchScheduleItem(id: 10, name: "김성일", vehicleNumber: "3127", phoneNumber: "010-1234-1234", time: "06:45", pathName: "수원여고_H1_(리디아35분, 여산 40분, 성화45분)", arrivalName: "기존노선투가추입", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: true, driving: false)),
+//        DispatchScheduleItem(id: 20, name: "최오명", vehicleNumber: "8444", phoneNumber: "010-1234-1234", time: "06:20", pathName: "수지로얄스포츠", arrivalName: "K1-DSR", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: true, driving: true)),
+//        DispatchScheduleItem(id: 30, name: "송승우", vehicleNumber: "7254", phoneNumber: "010-1234-1234", time: "07:10", pathName: "구반포", arrivalName: "H1-DSR", breathalyzing: "0.0", note: "", check: false, status: (wake: true, boarding: false, driving: false)),
+//    ]
+    
+    var scheduleList: [TeamScheduleItem] = []
+    let dispatchModel = DispatchModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +53,7 @@ final class DispatchScheduleViewController: UIViewController {
         self.setSubviews()
         self.setLayouts()
         self.setUpNavigationItem()
+        self.setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -146,6 +150,22 @@ extension DispatchScheduleViewController: EssentialViewMethods {
         self.navigationItem.title = "킹버스"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
     }
+    
+    private func setData() {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.loadDispatchScheduleListRequest { scheduleList in
+            self.scheduleList = scheduleList
+            
+            self.tableView.reloadData()
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        } failure: { errorMessage in
+            print("setData loadDispatchScheduleListRequest API error: \(errorMessage)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for methods added
@@ -160,6 +180,20 @@ extension DispatchScheduleViewController {
     func stopBlinkingAnimation(view: UIView) {
         view.layer.removeAllAnimations()
         view.backgroundColor = .white
+    }
+    
+    func loadDispatchScheduleListRequest(success: (([TeamScheduleItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        self.dispatchModel.loadDispatchScheduleListRequest { scheduleList in
+            success?(scheduleList)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+            
+        }
+
     }
 }
 
@@ -202,7 +236,9 @@ extension DispatchScheduleViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let schedule = self.scheduleList[indexPath.row]
-        let vc = DispatchScheduleDetailViewController(nowSchedule: schedule)
+        let status: (wake: String, boarding: String, driving: String) = (schedule.wakeCheck, schedule.boardingCheck, schedule.drivingCheck)
+        
+        let vc = DispatchScheduleDetailViewController(name: schedule.member, id: schedule.memberId, check: schedule.isProblem(), status: status)
         
         self.navigationController?.pushViewController(vc, animated: true)
         
