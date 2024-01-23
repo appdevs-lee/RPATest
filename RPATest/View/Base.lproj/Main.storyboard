@@ -58,6 +58,15 @@
                                 <color key="textColor" red="0.72156862749999995" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Av1-xG-NPK">
+                                <rect key="frame" x="308.66666666666669" y="59" width="68.333333333333314" height="34.333333333333343"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="로그인"/>
+                                <connections>
+                                    <action selector="tapLoginButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g36-J7-Yhd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -66,6 +75,8 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="BJC-sV-vuo" secondAttribute="trailing" constant="16" id="6qW-Ve-eD1"/>
                             <constraint firstItem="BJC-sV-vuo" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="829-yE-N3a"/>
                             <constraint firstItem="BJC-sV-vuo" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Cud-um-sEL"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Av1-xG-NPK" secondAttribute="trailing" constant="16" id="DZ6-Lo-1MN"/>
+                            <constraint firstItem="Av1-xG-NPK" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="dKO-ME-pEk"/>
                             <constraint firstItem="AtW-Zc-e38" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="fc3-EA-vem"/>
                             <constraint firstItem="BJC-sV-vuo" firstAttribute="top" secondItem="AtW-Zc-e38" secondAttribute="bottom" constant="80" id="klv-AJ-is5"/>
                             <constraint firstItem="1PP-sS-HVR" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="lOj-tW-epE"/>
@@ -295,6 +306,15 @@
                                     <action selector="tapNextButton:" destination="xeP-Wd-Mq5" eventType="touchUpInside" id="hDy-53-Cs9"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hLO-IS-4L8">
+                                <rect key="frame" x="323" y="59" width="54" height="35"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="완료"/>
+                                <connections>
+                                    <action selector="tapNextButton:" destination="xeP-Wd-Mq5" eventType="touchUpInside" id="ee0-R6-Cio"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="22c-1q-K5T"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -302,17 +322,20 @@
                             <constraint firstItem="eg9-rE-oqq" firstAttribute="top" secondItem="22c-1q-K5T" secondAttribute="top" constant="160" id="05u-zM-eb9"/>
                             <constraint firstItem="22c-1q-K5T" firstAttribute="trailing" secondItem="nha-g1-HTO" secondAttribute="trailing" constant="16" id="22A-lp-VJh"/>
                             <constraint firstItem="nha-g1-HTO" firstAttribute="leading" secondItem="22c-1q-K5T" secondAttribute="leading" constant="16" id="2gj-Te-75h"/>
+                            <constraint firstItem="hLO-IS-4L8" firstAttribute="top" secondItem="22c-1q-K5T" secondAttribute="top" id="7KC-gz-ZJ5"/>
                             <constraint firstItem="22c-1q-K5T" firstAttribute="trailing" secondItem="jdC-pE-Vt5" secondAttribute="trailing" constant="16" id="MwZ-db-HDz"/>
                             <constraint firstItem="jdC-pE-Vt5" firstAttribute="leading" secondItem="22c-1q-K5T" secondAttribute="leading" constant="16" id="R88-wF-9tf"/>
                             <constraint firstItem="eg9-rE-oqq" firstAttribute="centerX" secondItem="22c-1q-K5T" secondAttribute="centerX" id="Xyr-rE-dYk"/>
                             <constraint firstItem="nha-g1-HTO" firstAttribute="top" secondItem="eg9-rE-oqq" secondAttribute="bottom" constant="72" id="ZZb-fc-7RL"/>
                             <constraint firstItem="jdC-pE-Vt5" firstAttribute="centerX" secondItem="22c-1q-K5T" secondAttribute="centerX" id="hR0-dW-dRZ"/>
                             <constraint firstItem="jdC-pE-Vt5" firstAttribute="top" secondItem="nha-g1-HTO" secondAttribute="bottom" constant="80" id="n3L-XB-2ND"/>
+                            <constraint firstItem="22c-1q-K5T" firstAttribute="trailing" secondItem="hLO-IS-4L8" secondAttribute="trailing" constant="16" id="xJb-Vp-AC6"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="TON-C9-fEi"/>
                     <connections>
                         <outlet property="companyEnterTextField" destination="nha-g1-HTO" id="VPG-2E-hgB"/>
+                        <outlet property="enterButton" destination="hLO-IS-4L8" id="EQM-aE-feR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Guf-WG-Go9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

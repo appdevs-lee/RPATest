@@ -293,6 +293,10 @@ final class DispatchNoteDetailViewController: UIViewController {
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         
+        if self.presentType == .present {
+            textField.text = "\(self.count)"
+        }
+        
         return textField
     }()
     
@@ -342,11 +346,12 @@ final class DispatchNoteDetailViewController: UIViewController {
         return button
     }()
     
-    init(presentType: PresentType = .push, type: DispatchKindType, id: (regularly: String, order: String), date: (departure: String, arrival: String)) {
+    init(presentType: PresentType = .push, type: DispatchKindType, id: (regularly: String, order: String), date: (departure: String, arrival: String), count: Int = 0) {
         self.type = type
         self.id = id
         self.date = date
         self.presentType = presentType
+        self.count = count
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -357,6 +362,7 @@ final class DispatchNoteDetailViewController: UIViewController {
     
     var type: DispatchKindType
     var presentType: PresentType
+    var count: Int
     var id: (regularly: String, order: String)
     var date: (departure: String, arrival: String)
     var selectDispatchTypeForTime: SelectDispatchTypeForTime?
@@ -807,8 +813,18 @@ extension DispatchNoteDetailViewController {
     }
     
     @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
-        self.dismiss(animated: true) {
-            NotificationCenter.default.post(name: Notification.Name("NoteWriteCompleted"), object: nil)
+        SupportingMethods.shared.turnCoverView(.on)
+        self.sendDispatchNoteDetailRequest {
+            self.dismiss(animated: true) {
+                SupportingMethods.shared.turnCoverView(.off)
+                SupportingMethods.shared.showAlertNoti(title: "임시 저장되었습니다. 꼭 운행일보를 다시 작성해주세요.")
+                NotificationCenter.default.post(name: Notification.Name("NoteWriteCompleted"), object: nil, userInfo: ["id": Int(self.id.regularly)!])
+            }
+            
+        } failure: { errorMessage in
+            print("rightBarButtonItem sendDispatchNoteDetailRequest API Error: \(errorMessage)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
         }
         
     }
@@ -856,11 +872,12 @@ extension DispatchNoteDetailViewController {
             
             if self.presentType == .present {
                 self.dismiss(animated: true) {
-                    NotificationCenter.default.post(name: Notification.Name("NoteWriteCompleted"), object: nil)
+                    NotificationCenter.default.post(name: Notification.Name("NoteWriteCompleted"), object: nil, userInfo: ["id": Int(self.id.regularly)!])
                 }
                 
             } else {
                 self.navigationController?.popViewController(animated: true)
+                NotificationCenter.default.post(name: Notification.Name("NoteWriteCompleted"), object: nil, userInfo: ["id": Int(self.id.regularly)!])
                 
             }
             

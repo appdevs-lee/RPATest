@@ -1148,6 +1148,9 @@ struct DispatchRegularlyItem: Codable {
     let arrivalDate: String
     let busId: String
     
+    var type: DriveCheckType = .wake
+    var doneCheck: Bool = false
+    
     enum CodingKeys: String, CodingKey {
         case id
         case price

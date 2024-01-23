@@ -230,13 +230,23 @@ final class RenewalDispatchViewController: UIViewController {
         button.addTarget(self, action: #selector(tappedAccidentResponseButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
+        if ReferenceValues.currentCompany == "dev" {
+            button.isHidden = false
+            
+        } else {
+            button.isHidden = true
+            
+        }
+        
         return button
     }()
     
     let dispatchModel = DispatchModel()
     var regularlyList: [DispatchRegularlyItem] = []
     var orderList: [DispatchOrderItem] = []
-    var driveType: DriveCheckType = .wake
+    
+    var regularlyItem: DispatchRegularlyItem?
+    var orderItem: DispatchOrderItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -489,10 +499,17 @@ extension RenewalDispatchViewController: EssentialViewMethods {
                 
             }
             
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                SupportingMethods.shared.turnCoverView(.off)
-                
+            for index in 0..<item.regularly.count {
+                self.loadDispatchNoteDetailRequest(regularlyId: "\(self.regularlyList[index].id)", orderId: "") { item in
+                    self.regularlyList[index].doneCheck = item.submitCheck
+                    SupportingMethods.shared.turnCoverView(.off)
+                    
+                    self.tableView.reloadData()
+                } failure: { errorMessage in
+                    print("setData loadDispatchNoteDetailRequest API Error: \(errorMessage)")
+                    SupportingMethods.shared.turnCoverView(.off)
+                    
+                }
             }
             
         } failure: { errorMessage in
@@ -574,6 +591,20 @@ extension RenewalDispatchViewController {
             }
         }
         
+    }
+    
+    // MARK: - 운행일보 작성 여부 Check 및 운행 종료 Check
+    func loadDispatchNoteDetailRequest(regularlyId: String = "", orderId: String = "", success: ((DispatchNoteDetailItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        self.dispatchModel.loadDispatchNoteDetailRequest(regularlyId: regularlyId, orderId: orderId) { item in
+            success?(item)
+            
+        } failure: { errorMessage in
+            SupportingMethods.shared.checkExpiration(errorMessage: errorMessage) {
+                failure?(errorMessage)
+                
+            }
+        }
+
     }
 }
 
@@ -676,15 +707,19 @@ extension RenewalDispatchViewController {
     }
     
     @objc func drivingDone(_ noti: Notification) {
-        self.driveType = .done
+        self.setData()
         
-        self.tableView.reloadData()
+        self.regularlyItem = nil
+        
     }
     
     @objc func tappedAccidentResponseButton(_ sender: UIButton) {
-        let vc = AccidentResponseViewController()
+        if ReferenceValues.currentCompany == "dev" {
+            let vc = AccidentResponseViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
         
-        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -709,7 +744,7 @@ extension RenewalDispatchViewController: UITableViewDelegate, UITableViewDataSou
             let cell = tableView.dequeueReusableCell(withIdentifier: "RenewalDispatchRegularlyTableViewCell", for: indexPath) as! RenewalDispatchRegularlyTableViewCell
             let item = self.regularlyList[indexPath.row]
             
-            cell.setCell(item: item, checkType: self.driveType)
+            cell.setCell(item: item, submitCheck: item.doneCheck)
             cell.delegate = self
             cell.backgroundColor = .useRGB(red: 242, green: 242, blue: 247)
             
@@ -730,12 +765,13 @@ extension RenewalDispatchViewController: UITableViewDelegate, UITableViewDataSou
 
 // MARK: - Extension for UIGestureRecognizerDelegate
 extension RenewalDispatchViewController: RenewalDispatchDelegate {
-    func tappedStatusButton(type: DriveCheckType, item: DispatchRegularlyItem?) {
+    func tappedStatusButton(item: DispatchRegularlyItem?) {
         guard let item = item else { return }
+        self.regularlyItem = item
         
-        if type == .wake || type == .boarding || type == .departureArrive {
+        if item.type == .wake || item.type == .boarding || item.type == .departureArrive {
             SupportingMethods.shared.turnCoverView(.on)
-            self.checkPatchDispatchRequest(checkType: type.rawValue, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(item.id)", orderId: "") { item in
+            self.checkPatchDispatchRequest(checkType: item.type.rawValue, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(item.id)", orderId: "") { item in
                 
                 self.setData()
             } failure: { errorMessage in
@@ -744,8 +780,7 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
                 
             }
         } else {
-            self.driveType = type
-            if type == .driving || type == .drivingStart {
+            if item.type == .driving || item.type == .drivingStart {
                 let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: item)
                 
                 self.navigationController?.pushViewController(vc, animated: true)

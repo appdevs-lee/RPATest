@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum DriveCheckType: String {
+enum DriveCheckType: String, Codable {
     case wake = "기상"
     case boarding = "운행"
     case departureArrive = "출발지"
@@ -18,7 +18,7 @@ enum DriveCheckType: String {
 
 protocol RenewalDispatchDelegate: NSObjectProtocol {
     func tapDetailMapButton(mapLink: String)
-    func tappedStatusButton(type: DriveCheckType, item: DispatchRegularlyItem?)
+    func tappedStatusButton(item: DispatchRegularlyItem?)
     
 }
 
@@ -321,10 +321,9 @@ extension RenewalDispatchRegularlyTableViewCell {
 
 // MARK: - Extension for methods added
 extension RenewalDispatchRegularlyTableViewCell {
-    func setCell(item: DispatchRegularlyItem, checkType: DriveCheckType) {
+    func setCell(item: DispatchRegularlyItem, submitCheck: Bool) {
         self.item = item
         self.mapLink = item.maplink
-        self.checkType = checkType
         
         self.departureTimeLabel.text = item.departureDate.sliceString()
         self.departureLabel.text = item.departure
@@ -342,43 +341,56 @@ extension RenewalDispatchRegularlyTableViewCell {
             
         }
         
-        if item.checkRegularlyConnect.driveTime == "" {
-            self.checkType = .wake
+        guard var item = self.item else { return }
+        if item.checkRegularlyConnect.wakeTime == "" {
+            // 기상 안 누름.
+            item.type = .wake
+            
+        } else if item.checkRegularlyConnect.driveTime == "" {
+            // 탑승 및 출발 안 누름.
+            item.type = .boarding
+            
         } else if item.checkRegularlyConnect.departureTime == "" {
-            self.checkType = .boarding
+            // 첫 출발지 도착 안 누름.
+            item.type = .departureArrive
+            
         } else {
-            if checkType == .wake {
-                self.checkType = .departureArrive
+            if submitCheck {
+                // 운행 종료
+                item.type = .done
+                
+            } else {
+                // 운행 시작
+                item.type = .drivingStart
+                
             }
             
         }
         
-        if item.checkRegularlyConnect.wakeTime == "" {
+        switch item.type {
+        case .wake:
             self.statusButton.setTitle("기상", for: .normal)
-            self.checkType = .wake
             
-        } else if item.checkRegularlyConnect.wakeTime != "" && self.checkType == .wake {
+        case .boarding:
             self.statusButton.setTitle("탑승 및 출발", for: .normal)
-            self.checkType = .boarding
             
-        } else if item.checkRegularlyConnect.driveTime != "" && self.checkType == .boarding {
+        case .departureArrive:
             self.statusButton.setTitle("첫 출발지 도착", for: .normal)
-            self.checkType = .departureArrive
             
-        } else if self.checkType == .departureArrive {
+        case .drivingStart:
             self.statusButton.setTitle("운행 시작", for: .normal)
-            self.checkType = .drivingStart
             
-        } else if self.checkType == .drivingStart {
+        case .driving:
             self.statusButton.setTitle("운행중", for: .normal)
-            self.checkType = .driving
             
-        } else if self.checkType == .done {
+        case .done:
             self.statusButton.setTitle("운행 종료", for: .normal)
             self.statusButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
             self.statusButton.isEnabled = false
-            self.checkType = .done
         }
+        
+        self.item = item
+        
     }
 }
 
@@ -390,7 +402,7 @@ extension RenewalDispatchRegularlyTableViewCell {
     }
     
     @objc func tappedStatusButton(_ sender: UIButton) {
-        self.delegate?.tappedStatusButton(type: self.checkType, item: self.item)
+        self.delegate?.tappedStatusButton(item: self.item)
         
     }
     

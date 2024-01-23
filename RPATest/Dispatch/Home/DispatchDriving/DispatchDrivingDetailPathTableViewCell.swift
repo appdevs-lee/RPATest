@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Station {
+class Station: Codable {
     let pathName: String
     var count = 0
     
@@ -44,7 +44,6 @@ final class DispatchDrivingDetailPathTableViewCell: UITableViewCell {
         
         return tableView
     }()
-    
     
     var stationList: [Station] = []
     var count: Int = 0
@@ -131,13 +130,32 @@ extension DispatchDrivingDetailPathTableViewCell {
 // MARK: - Extension for methods added
 extension DispatchDrivingDetailPathTableViewCell {
     func setCell(station: String) {
-        let stationList = station.split(separator: "-")
-        
-        for station in stationList {
-            self.stationList.append(Station(pathName: String(station), count: 0))
+        if let stations = UserDefaults.standard.object(forKey: "SaveDrivingInfo") as? Data {
+            let decoder: JSONDecoder = JSONDecoder()
+            if let stationList = try? decoder.decode([Station].self, from: stations) {
+                self.stationList = stationList
+            }
+            
+            for station in self.stationList {
+                self.count += station.count
+                
+            }
+            
+            self.tableView.reloadData()
+            
+            NotificationCenter.default.post(name: Notification.Name("PeopleCount"), object: nil, userInfo: ["count": self.count])
+            
+        } else {
+            let stationList = station.split(separator: "-")
+            
+            for station in stationList {
+                self.stationList.append(Station(pathName: String(station), count: 0))
+            }
+            
+            self.tableView.reloadData()
+            
         }
         
-        self.tableView.reloadData()
     }
 }
 
@@ -149,6 +167,17 @@ extension DispatchDrivingDetailPathTableViewCell {
             self.count -= 1
             
             self.tableView.reloadData()
+            
+            
+            NotificationCenter.default.post(name: Notification.Name("PeopleCount"), object: nil, userInfo: ["count": self.count])
+            
+            let encoder: JSONEncoder = JSONEncoder()
+            if let drivingInfo = try? encoder.encode(self.stationList) {
+                UserDefaults.standard.set(drivingInfo, forKey: "SaveDrivingInfo")
+                
+            }
+            
+//            UserDefaults.standard.set(self.stationList, forKey: "SaveDrivingInfo")
         }
     }
 
@@ -157,6 +186,15 @@ extension DispatchDrivingDetailPathTableViewCell {
         self.count += 1
         
         self.tableView.reloadData()
+        
+        NotificationCenter.default.post(name: Notification.Name("PeopleCount"), object: nil, userInfo: ["count": self.count])
+        
+        let encoder: JSONEncoder = JSONEncoder()
+        if let drivingInfo = try? encoder.encode(self.stationList) {
+            UserDefaults.standard.set(drivingInfo, forKey: "SaveDrivingInfo")
+            
+        }
+        
     }
 
 }

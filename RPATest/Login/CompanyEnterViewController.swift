@@ -10,6 +10,7 @@ import UIKit
 class CompanyEnterViewController: UIViewController {
 
     @IBOutlet weak var companyEnterTextField: UITextField!
+    @IBOutlet weak var enterButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +18,8 @@ class CompanyEnterViewController: UIViewController {
     }
 
     @IBAction func tapNextButton(_ sender: UIButton) {
+        ReferenceValues.currentCompany = self.companyEnterTextField.text ?? ""
+        
         if self.companyEnterTextField.text == "dev" {
             self.dismiss(animated: false) {
                 UserDefaults.standard.set("Y", forKey: "CompanyCheck")

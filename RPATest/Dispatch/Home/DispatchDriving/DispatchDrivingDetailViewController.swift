@@ -79,10 +79,6 @@ final class DispatchDrivingDetailViewController: UIViewController {
         self.setViewAfterTransition()
     }
     
-    //    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    //        return .portrait
-    //    }
-    
     deinit {
         print("----------------------------------- DispatchDrivingDetailViewController is disposed -----------------------------------")
     }
@@ -108,6 +104,7 @@ extension DispatchDrivingDetailViewController: EssentialViewMethods {
     
     func setNotificationCenters() {
         NotificationCenter.default.addObserver(self, selector: #selector(drivingDone(_:)), name: Notification.Name("NoteWriteCompleted"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(setPeopleCount(_:)), name: Notification.Name("PeopleCount"), object: nil)
         
     }
     
@@ -164,8 +161,11 @@ extension DispatchDrivingDetailViewController {
 // MARK: - Extension for selector methods
 extension DispatchDrivingDetailViewController {
     @objc func tappedDoneButton(_ sender: UIButton) {
+        ReferenceValues.peopleCount = 0
+        UserDefaults.standard.set(nil, forKey: "SaveDrivingInfo")
+        
         // 운행일보 작성 present
-        let vc = DispatchNoteDetailViewController(presentType: .present, type: self.type, id: (regularly: "\(self.regularlyItem?.id ?? 0)", order: ""), date: (departure: self.regularlyItem?.departureDate ?? "", arrival: self.regularlyItem?.arrivalDate ?? ""))
+        let vc = DispatchNoteDetailViewController(presentType: .present, type: self.type, id: (regularly: "\(self.regularlyItem?.id ?? 0)", order: ""), date: (departure: self.regularlyItem?.departureDate ?? "", arrival: self.regularlyItem?.arrivalDate ?? ""), count: self.peopleCount)
         
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true)
@@ -179,6 +179,12 @@ extension DispatchDrivingDetailViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
         
+    }
+    
+    @objc func setPeopleCount(_ noti: Notification) {
+        guard let count = noti.userInfo?["count"] as? Int else { return }
+        
+        self.peopleCount = count
     }
 }
 

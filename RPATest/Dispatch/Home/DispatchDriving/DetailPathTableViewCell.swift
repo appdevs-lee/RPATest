@@ -51,6 +51,7 @@ final class DetailPathTableViewCell: UITableViewCell {
     lazy var countLabel: UILabel = {
         let label = UILabel()
         label.text = "탑승인원: 0명"
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .useRGB(red: 66, green: 66, blue: 66)
         label.font = .useFont(ofSize: 14, weight: .Medium)
         label.translatesAutoresizingMaskIntoConstraints = false

@@ -22,6 +22,56 @@ struct ReferenceValues {
             UserDefaults.standard.set(newValue, forKey: "isDoingAccidentResponse")
         }
     }
+    
+    static var currentCompany: String {
+        get {
+            return UserDefaults.standard.string(forKey: "CompanyName") ?? ""
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "CompanyName")
+        }
+    }
+    
+    static var peopleCount: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "PeopleCount")
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "PeopleCount")
+        }
+    }
+    
+    static var drivingDone: [Int] {
+        get {
+            return UserDefaults.standard.array(forKey: "DrivingDone") as? [Int] ?? []
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "DrivingDone")
+        }
+    }
+    
+    static var driveType: DriveCheckType {
+        get {
+            let decoder: JSONDecoder = JSONDecoder()
+            let data = UserDefaults.standard.object(forKey: "DriveType") as! Data
+            let driveType = try? decoder.decode(DriveCheckType.self, from: data)
+            
+            return driveType ?? .wake
+            
+        }
+        
+        set {
+            let encoder: JSONEncoder = JSONEncoder()
+            if let driveType = try? encoder.encode(newValue) {
+                UserDefaults.standard.set(driveType, forKey: "DriveType")
+                
+            }
+            
+        }
+    }
 }
 
 // MARK: - Extension of referenceValues

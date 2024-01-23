@@ -216,10 +216,17 @@ extension OfficeViewController: UICollectionViewDelegateFlowLayout, UICollection
             
         case .vehicle:
             // Vehicle
-//            let vc = InspectionViewController()
-            let vc = CarManageViewController()
-            
-            self.navigationController?.pushViewController(vc, animated: true)
+            // FIXME: Release Update시, dev 안에 있는 코드로 바꿔줘야 함.
+            if ReferenceValues.currentCompany == "dev" {
+                let vc = CarManageViewController()
+                
+                self.navigationController?.pushViewController(vc, animated: true)
+                
+            } else {
+                let vc = InspectionViewController()
+                
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
             
         case .consulting:
             // Consulting
@@ -241,9 +248,15 @@ extension OfficeViewController: UICollectionViewDelegateFlowLayout, UICollection
             self.present(vc, animated: false)
             
         case .accident:
-            let vc = AccidentResponseViewController()
+            // 사고대처
+            // FIXME: Release Update시, dev 안에 있는 코드로 바꿔줘야 함.
+            if ReferenceValues.currentCompany == "dev" {
+                let vc = AccidentResponseViewController()
+                
+                self.navigationController?.pushViewController(vc, animated: true)
+                
+            }
             
-            self.navigationController?.pushViewController(vc, animated: true)
         default:
             break
         }
