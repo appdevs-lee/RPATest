@@ -336,6 +336,12 @@ extension DispatchScheduleTableViewCell {
         self.drivingButton.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         self.drivingButton.setTitleColor(.white, for: .normal)
         
+        self.wakeButton.setTitle("기상", for: .normal)
+        
+        self.boardingButton.setTitle("탑승", for: .normal)
+        
+        self.drivingButton.setTitle("운행", for: .normal)
+        
         switch status {
         case ("", "", ""):
             self.wakeButton.setTitle("기상", for: .normal)
