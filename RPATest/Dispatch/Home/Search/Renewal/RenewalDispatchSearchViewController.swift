@@ -231,6 +231,16 @@ final class RenewalDispatchSearchViewController: UIViewController {
         return button
     }()
     
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.modalPresentationStyle = .overFullScreen
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var classificationList: [String] = ["노선명", "정류장", "내위치", "지역명", "지 도"]
     var selectedIndex: Int = 0
     

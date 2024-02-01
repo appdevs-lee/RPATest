@@ -298,6 +298,10 @@ extension RenewalProfileViewController: EssentialViewMethods {
     func setViewFoundation() {
         self.view.backgroundColor = .white
         
+        // Pop Slide
+        if self.navigationController?.viewControllers.first === self  {
+            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        }
     }
     
     func initializeObjects() {
@@ -653,8 +657,9 @@ extension RenewalProfileViewController: UICollectionViewDelegateFlowLayout, UICo
             self.navigationController?.pushViewController(vc, animated: true)
             
         case .myInfo:
-            break
-
+            let vc = ProfileMyInfoViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
             
         default:
             break
@@ -667,5 +672,18 @@ extension RenewalProfileViewController: UICollectionViewDelegateFlowLayout, UICo
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
+    }
+}
+
+// MARK: - Extension for UIGestureRecognizerDelegate
+extension RenewalProfileViewController: UIGestureRecognizerDelegate {
+    // For swipe gesture
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    // For swipe gesture, prevent working on the root view of navigation controller
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.navigationController!.viewControllers.count > 1 ? true : false
     }
 }

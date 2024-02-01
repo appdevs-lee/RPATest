@@ -769,7 +769,7 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
         guard let item = item else { return }
         self.regularlyItem = item
         
-        if item.type == .wake || item.type == .boarding || item.type == .departureArrive {
+        if item.type == .wake || item.type == .departureArrive {
             SupportingMethods.shared.turnCoverView(.on)
             self.checkPatchDispatchRequest(checkType: item.type.rawValue, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(item.id)", orderId: "") { item in
                 
@@ -779,6 +779,24 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
                 print("tappedDriveCheckButton checkPatchDispatchRequest API Error: \(errorMessage)")
                 
             }
+            
+        } else if item.type == .boarding {
+            if ReferenceValues.currentCompany == "dev" {
+                let vc = DepartureFigureBottomSheetViewController()
+                
+                self.present(vc, animated: false)
+            }
+            
+            SupportingMethods.shared.turnCoverView(.on)
+            self.checkPatchDispatchRequest(checkType: item.type.rawValue, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: "\(item.id)", orderId: "") { item in
+                
+                self.setData()
+            } failure: { errorMessage in
+                SupportingMethods.shared.turnCoverView(.off)
+                print("tappedDriveCheckButton checkPatchDispatchRequest API Error: \(errorMessage)")
+                
+            }
+            
         } else {
             if item.type == .driving || item.type == .drivingStart {
                 let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: item)
