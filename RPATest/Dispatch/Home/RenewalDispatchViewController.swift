@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class RenewalDispatchViewController: UIViewController {
     
@@ -241,6 +242,8 @@ final class RenewalDispatchViewController: UIViewController {
         return button
     }()
     
+    let locationManager = CLLocationManager()
+    
     let dispatchModel = DispatchModel()
     var regularlyList: [DispatchRegularlyItem] = []
     var orderList: [DispatchOrderItem] = []
@@ -292,7 +295,8 @@ extension RenewalDispatchViewController: EssentialViewMethods {
     }
     
     func setDelegates() {
-        
+        self.locationManager.delegate = self
+        self.locationManager.allowsBackgroundLocationUpdates = true
     }
     
     func setGestures() {
@@ -303,6 +307,7 @@ extension RenewalDispatchViewController: EssentialViewMethods {
         NotificationCenter.default.addObserver(self, selector: #selector(dispatchCheck(_:)), name: Notification.Name("LoginDispatchCheck"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(drivingDone(_:)), name: Notification.Name("NoteWriteCompleted"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForegroundNotification(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     func setSubviews() {
@@ -721,6 +726,34 @@ extension RenewalDispatchViewController {
         }
         
     }
+    
+    @objc func willEnterForegroundNotification(_ notification: Notification) {
+        switch self.locationManager.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            print("authorizedAlways or authorizedWhenInUse")
+//            self.mapView.currentLocationTrackingMode = .onWithoutHeadingWithoutMapMoving
+            let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: self.regularlyItem)
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
+        default:
+            print("Failure for gps")
+//            self.mapView.currentLocationTrackingMode = .off
+            let vc = AlertPopViewController(.normalOneButton(messageTitle: "위치 권한 설정", messageContent: "경로 탐색을 위해 위치 권한을 허용해주세요.", buttonTitle: "확인", action: {
+                if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+            }))
+            
+            self.present(vc, animated: true)
+            
+            
+        }
+    }
 }
 
 // MARK: - Extension for UITableViewDelegate, UITableViewDataSource
@@ -781,15 +814,27 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
             }
         } else {
             if item.type == .driving || item.type == .drivingStart {
-                let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: item)
-                
-                self.navigationController?.pushViewController(vc, animated: true)
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                if self.locationManager.authorizationStatus == .authorizedAlways || self.locationManager.authorizationStatus == .authorizedWhenInUse {
+                    let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: item)
+                    
+                    self.navigationController?.pushViewController(vc, animated: true)
+                    
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                    
+                } else {
+                    let vc = AlertPopViewController(.normalOneButton(messageTitle: "위치 권한 설정", messageContent: "경로 탐색을 위해 위치 권한을 허용해주세요.", buttonTitle: "확인", action: {
+                        if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url)
+                        }
+                    }))
+                    
+                    self.present(vc, animated: true)
+                    
                 }
+
             }
-            
             
         }
 
@@ -813,5 +858,32 @@ extension RenewalDispatchViewController: UIGestureRecognizerDelegate {
     // For swipe gesture, prevent working on the root view of navigation controller
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return self.navigationController!.viewControllers.count > 1 ? true : false
+    }
+}
+
+// MARK: - Extension for CLLocationManagerDelegate
+extension RenewalDispatchViewController: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            print(".notDetermined")
+            self.locationManager.requestWhenInUseAuthorization()
+            
+        case .denied:
+            print(".denied")
+            
+            
+        case .authorizedWhenInUse, .authorizedAlways:
+            print(".autohrizedWhenInUse")
+            self.locationManager.startUpdatingLocation()
+            
+        case .restricted:
+            print(".restricted")
+            
+            
+        @unknown default:
+            print("default")
+            
+        }
     }
 }
