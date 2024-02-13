@@ -90,6 +90,7 @@
 		0596A4472B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A4462B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift */; };
 		0596A4492B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A4482B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift */; };
 		0596A44B2B2AEFD200D2C3AA /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A44A2B2AEFD200D2C3AA /* TaskViewController.swift */; };
+		0598670F2B7B5C9C005E51A9 /* KingbusAlarmSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0598670E2B7B5C9C005E51A9 /* KingbusAlarmSound.caf */; };
 		05AD00332B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */; };
 		05AD00352B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */; };
 		05AD44082B57653A007FB0CF /* AccidentResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD44072B57653A007FB0CF /* AccidentResponseViewController.swift */; };
@@ -224,6 +225,7 @@
 		0596A4462B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchRegularlyTableViewCell.swift; sourceTree = "<group>"; };
 		0596A4482B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchOrderTableViewCell.swift; sourceTree = "<group>"; };
 		0596A44A2B2AEFD200D2C3AA /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
+		0598670E2B7B5C9C005E51A9 /* KingbusAlarmSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = KingbusAlarmSound.caf; sourceTree = "<group>"; };
 		05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleDetailViewController.swift; sourceTree = "<group>"; };
 		05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleDetailTableViewCell.swift; sourceTree = "<group>"; };
 		05AD44072B57653A007FB0CF /* AccidentResponseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentResponseViewController.swift; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 				5F1BB0A72A03D1220081DBBE /* Assets.xcassets */,
 				5F1BB0AC2A03D1220081DBBE /* Info.plist */,
 				5FE36A4B2AB57B6A006399BE /* GoogleService-Info.plist */,
+				0598670E2B7B5C9C005E51A9 /* KingbusAlarmSound.caf */,
 				5FD49D112AA31B5D00208273 /* Template */,
 				5F1A161D2A74EDBC00132D29 /* Methods */,
 				5FE29CC02A7E154E000748FC /* Common */,
@@ -715,6 +718,7 @@
 				5F1BB0A82A03D1220081DBBE /* Assets.xcassets in Resources */,
 				5F1BB0A62A03D1210081DBBE /* Main.storyboard in Resources */,
 				5F1A161B2A74EA6300132D29 /* PretendardVariable.ttf in Resources */,
+				0598670F2B7B5C9C005E51A9 /* KingbusAlarmSound.caf in Resources */,
 				5FE36A4C2AB57B6A006399BE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1045,6 +1049,9 @@
 				INFOPLIST_FILE = RPATest/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RPA;
 				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근할 수 있도록 권한을 요청합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 권한이 필요합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범에 접근할 수 있도록 권한을 요청합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1085,6 +1092,9 @@
 				INFOPLIST_FILE = RPATest/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RPA;
 				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근할 수 있도록 권한을 요청합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 권한이 필요합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범에 접근할 수 있도록 권한을 요청합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

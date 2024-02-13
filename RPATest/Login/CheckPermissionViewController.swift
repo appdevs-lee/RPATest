@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class CheckPermissionViewController: UIViewController {
     
     let commonModel = CommonModel()
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,13 +44,24 @@ final class CheckPermissionViewController: UIViewController {
     @IBAction func tapCheckButton(_ sender: UIButton) {
         self.commonModel.registerForPushNotifications {
             self.commonModel.checkAlbumPermission { result in
-                print(result)
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true) {
-                        UserDefaults.standard.set("Check", forKey: "CheckPermission")
-                        NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
+                self.locationManager.delegate = self
+                
+                print("\(self.locationManager.authorizationStatus)")
+                if self.locationManager.authorizationStatus != .notDetermined {
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true) {
+                            UserDefaults.standard.set("Check", forKey: "CheckPermission")
+                            NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
+                            
+                        }
+                        
                     }
+
+                } else {
+                    self.locationManager.requestWhenInUseAuthorization()
+                    
                 }
+
             }
         }
     }
@@ -135,5 +148,47 @@ extension CheckPermissionViewController {
 extension CheckPermissionViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
         
+    }
+}
+
+// MARK: - Extension for CLLocationManagerDelegate
+extension CheckPermissionViewController: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            print(".notDetermined")
+            self.locationManager.requestWhenInUseAuthorization()
+        case .denied:
+            print(".denied")
+            self.dismiss(animated: true) {
+                UserDefaults.standard.set("Check", forKey: "CheckPermission")
+                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
+                
+            }
+            
+        case .authorizedWhenInUse, .authorizedAlways:
+            print(".autohrizedWhenInUse")
+            self.dismiss(animated: true) {
+                UserDefaults.standard.set("Check", forKey: "CheckPermission")
+                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
+                
+            }
+            
+        case .restricted:
+            print(".restricted")
+            self.dismiss(animated: true) {
+                UserDefaults.standard.set("Check", forKey: "CheckPermission")
+                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
+                
+            }
+            
+        @unknown default:
+            self.dismiss(animated: true) {
+                UserDefaults.standard.set("Check", forKey: "CheckPermission")
+                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
+                
+            }
+            
+        }
     }
 }
