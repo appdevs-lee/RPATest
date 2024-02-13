@@ -95,7 +95,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         print("앱 백그라운드 상태 푸시 알림 확인")
         
         let content = response.notification.request.content
-        
         print(content)
         print("")
         print("===============================")

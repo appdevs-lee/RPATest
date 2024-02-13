@@ -295,8 +295,7 @@ extension RenewalDispatchViewController: EssentialViewMethods {
     }
     
     func setDelegates() {
-        self.locationManager.delegate = self
-        self.locationManager.allowsBackgroundLocationUpdates = true
+        
     }
     
     func setGestures() {
@@ -824,6 +823,9 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
                     }
                     
                 } else {
+                    self.locationManager.delegate = self
+                    self.locationManager.allowsBackgroundLocationUpdates = true
+                    
                     let vc = AlertPopViewController(.normalOneButton(messageTitle: "위치 권한 설정", messageContent: "경로 탐색을 위해 위치 권한을 허용해주세요.", buttonTitle: "확인", action: {
                         if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
                             UIApplication.shared.open(url)
