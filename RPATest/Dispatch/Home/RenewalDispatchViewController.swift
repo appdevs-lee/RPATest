@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreLocation
+import CoreMotion
 
 final class RenewalDispatchViewController: UIViewController {
     
@@ -23,7 +24,8 @@ final class RenewalDispatchViewController: UIViewController {
     
     lazy var alarmButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: ""), for: .normal)
+        button.setImage(UIImage(systemName: "map"), for: .normal)
+        button.imageView?.tintColor = .useRGB(red: 176, green: 0, blue: 32)
         button.addTarget(self, action: #selector(tappedAlarmButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -244,6 +246,9 @@ final class RenewalDispatchViewController: UIViewController {
     
     let locationManager = CLLocationManager()
     
+    let mapModel = MapModel()
+    let motionManager = CMMotionActivityManager()
+    
     let dispatchModel = DispatchModel()
     var regularlyList: [DispatchRegularlyItem] = []
     var orderList: [DispatchOrderItem] = []
@@ -261,13 +266,13 @@ final class RenewalDispatchViewController: UIViewController {
         self.setNotificationCenters()
         self.setSubviews()
         self.setLayouts()
-        self.setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.setViewAfterTransition()
+        self.setData()
     }
     
     //    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -347,8 +352,8 @@ extension RenewalDispatchViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.alarmButton.trailingAnchor.constraint(equalTo: self.searchButton.leadingAnchor, constant: -8),
             self.alarmButton.centerYAnchor.constraint(equalTo: self.searchButton.centerYAnchor),
-            self.alarmButton.widthAnchor.constraint(equalToConstant: 16),
-            self.alarmButton.heightAnchor.constraint(equalToConstant: 16)
+            self.alarmButton.widthAnchor.constraint(equalToConstant: 25),
+            self.alarmButton.heightAnchor.constraint(equalToConstant: 25)
         ])
         
         // searchButton
@@ -501,18 +506,23 @@ extension RenewalDispatchViewController: EssentialViewMethods {
             if item.regularly.isEmpty && item.order.isEmpty {
                 self.noDataStackView.isHidden = false
                 
-            }
-            
-            for index in 0..<item.regularly.count {
-                self.loadDispatchNoteDetailRequest(regularlyId: "\(self.regularlyList[index].id)", orderId: "") { item in
-                    self.regularlyList[index].doneCheck = item.submitCheck
-                    SupportingMethods.shared.turnCoverView(.off)
-                    
-                    self.tableView.reloadData()
-                } failure: { errorMessage in
-                    print("setData loadDispatchNoteDetailRequest API Error: \(errorMessage)")
-                    SupportingMethods.shared.turnCoverView(.off)
-                    
+                self.tableView.reloadData()
+                SupportingMethods.shared.turnCoverView(.off)
+                
+            } else {
+                self.noDataStackView.isHidden = true
+                
+                for index in 0..<item.regularly.count {
+                    self.loadDispatchNoteDetailRequest(regularlyId: "\(self.regularlyList[index].id)", orderId: "") { item in
+                        self.regularlyList[index].doneCheck = item.submitCheck
+                        SupportingMethods.shared.turnCoverView(.off)
+                        
+                        self.tableView.reloadData()
+                    } failure: { errorMessage in
+                        print("setData loadDispatchNoteDetailRequest API Error: \(errorMessage)")
+                        SupportingMethods.shared.turnCoverView(.off)
+                        
+                    }
                 }
             }
             
@@ -522,6 +532,30 @@ extension RenewalDispatchViewController: EssentialViewMethods {
             
         }
 
+    }
+    
+    func setMotion() {
+        self.locationManager.delegate = self
+        self.motionManager.startActivityUpdates(to: .main) { activity in
+            guard let activity = activity else { return }
+            
+            self.locationManager.startUpdatingLocation()
+//            if activity.automotive {
+//                print("정지상태 해제")
+//                if activity.stationary {
+//                    self.locationManager.stopUpdatingLocation()
+//                    
+//                } else {
+//                    self.locationManager.startUpdatingLocation()
+//                    
+//                }
+//                
+//            } else {
+//                print("정지상태")
+//                self.locationManager.stopUpdatingLocation()
+//                
+//            }
+        }
     }
 }
 
@@ -635,7 +669,9 @@ extension RenewalDispatchViewController {
     }
     
     @objc func tappedAlarmButton(_ sender: UIButton) {
+        let vc = DispatchDrivingPathViewController()
         
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func tappedDispatchCheckButton(_ sender: UIButton) {
@@ -711,9 +747,21 @@ extension RenewalDispatchViewController {
     }
     
     @objc func drivingDone(_ noti: Notification) {
+        self.locationManager.stopUpdatingLocation()
         self.setData()
         
         self.regularlyItem = nil
+        
+        let vc = AlertPopViewController(.normalTwoButton(messageTitle: "운행한 경로를 보시겠습니까?", messageContent: "전체 경로를 보여줍니다.", leftButtonTitle: "취소", leftAction: {
+            // 데이터 지워야 함.
+        }, rightButtonTitle: "확인", rightAction: {
+            // 데이터 지워야 함.
+            let vc = DispatchDrivingPathViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        }))
+        
+        self.present(vc, animated: true)
         
     }
     
@@ -727,10 +775,13 @@ extension RenewalDispatchViewController {
     }
     
     @objc func willEnterForegroundNotification(_ notification: Notification) {
+        guard let _ = self.regularlyItem else { return }
+        
         switch self.locationManager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             print("authorizedAlways or authorizedWhenInUse")
 //            self.mapView.currentLocationTrackingMode = .onWithoutHeadingWithoutMapMoving
+            self.setMotion()
             let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: self.regularlyItem)
             
             self.navigationController?.pushViewController(vc, animated: true)
@@ -814,6 +865,7 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
         } else {
             if item.type == .driving || item.type == .drivingStart {
                 if self.locationManager.authorizationStatus == .authorizedAlways || self.locationManager.authorizationStatus == .authorizedWhenInUse {
+                    self.setMotion()
                     let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: item)
                     
                     self.navigationController?.pushViewController(vc, animated: true)
@@ -823,7 +875,6 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
                     }
                     
                 } else {
-                    self.locationManager.delegate = self
                     self.locationManager.allowsBackgroundLocationUpdates = true
                     
                     let vc = AlertPopViewController(.normalOneButton(messageTitle: "위치 권한 설정", messageContent: "경로 탐색을 위해 위치 권한을 허용해주세요.", buttonTitle: "확인", action: {
@@ -877,7 +928,7 @@ extension RenewalDispatchViewController: CLLocationManagerDelegate {
             
         case .authorizedWhenInUse, .authorizedAlways:
             print(".autohrizedWhenInUse")
-            self.locationManager.startUpdatingLocation()
+            self.setMotion()
             
         case .restricted:
             print(".restricted")
@@ -887,5 +938,27 @@ extension RenewalDispatchViewController: CLLocationManagerDelegate {
             print("default")
             
         }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        guard let item = self.regularlyItem else { return }
+        
+        let latitude = location.coordinate.latitude
+        let longitude = location.coordinate.longitude
+        
+        let date = SupportingMethods.shared.convertDate(intoString: Date(), "yyyy-MM-dd HH:mm:ss")
+        let loc = Location()
+        
+        loc.latitude = latitude
+        loc.longitude = longitude
+        loc.date = date
+        loc.dispatch_id = "\(item.id)"
+        
+        self.mapModel.save(data: loc)
+        for location in self.mapModel.read() {
+            print("latitude: \(location.latitude)\nlongitude: \(location.longitude)")
+        }
+        
     }
 }

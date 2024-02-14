@@ -90,6 +90,8 @@
 		0596A4472B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A4462B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift */; };
 		0596A4492B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A4482B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift */; };
 		0596A44B2B2AEFD200D2C3AA /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596A44A2B2AEFD200D2C3AA /* TaskViewController.swift */; };
+		0596CD862B7C43700066C1CE /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596CD852B7C43700066C1CE /* Location.swift */; };
+		0596CD882B7C52370066C1CE /* DispatchDrivingPathViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596CD872B7C52370066C1CE /* DispatchDrivingPathViewController.swift */; };
 		0598670F2B7B5C9C005E51A9 /* KingbusAlarmSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0598670E2B7B5C9C005E51A9 /* KingbusAlarmSound.caf */; };
 		05AD00332B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */; };
 		05AD00352B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */; };
@@ -225,6 +227,8 @@
 		0596A4462B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchRegularlyTableViewCell.swift; sourceTree = "<group>"; };
 		0596A4482B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalDispatchOrderTableViewCell.swift; sourceTree = "<group>"; };
 		0596A44A2B2AEFD200D2C3AA /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
+		0596CD852B7C43700066C1CE /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		0596CD872B7C52370066C1CE /* DispatchDrivingPathViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchDrivingPathViewController.swift; sourceTree = "<group>"; };
 		0598670E2B7B5C9C005E51A9 /* KingbusAlarmSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = KingbusAlarmSound.caf; sourceTree = "<group>"; };
 		05AD00322B4F76EF00216F0A /* DispatchScheduleDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleDetailViewController.swift; sourceTree = "<group>"; };
 		05AD00342B4F807300216F0A /* DispatchScheduleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -359,6 +363,7 @@
 			isa = PBXGroup;
 			children = (
 				05821A942B0DCDEA007049C9 /* RenewalDispatchViewController.swift */,
+				0596CD872B7C52370066C1CE /* DispatchDrivingPathViewController.swift */,
 				0596A4462B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift */,
 				0596A4482B2AD38500D2C3AA /* RenewalDispatchOrderTableViewCell.swift */,
 				059332702B4E14E00074C13A /* DispatchDriving */,
@@ -628,6 +633,7 @@
 			isa = PBXGroup;
 			children = (
 				5FD8CC9C2A6BADC900D9C6D7 /* CommonModel.swift */,
+				0596CD852B7C43700066C1CE /* Location.swift */,
 				5FE29CC12A7E1588000748FC /* TabBarController.swift */,
 				0561E7202AC29D3C00787B77 /* NavigationViewController.swift */,
 				0561E7242AC2BB3400787B77 /* ServerInspectionViewController.swift */,
@@ -862,6 +868,7 @@
 				056A75A52B05D18800C25711 /* OrganizationSearchTableViewCell.swift in Sources */,
 				0596A44B2B2AEFD200D2C3AA /* TaskViewController.swift in Sources */,
 				05AD442C2B57A398007FB0CF /* AccidentPhotoViewController.swift in Sources */,
+				0596CD862B7C43700066C1CE /* Location.swift in Sources */,
 				056B494C2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift in Sources */,
 				056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */,
 				057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */,
@@ -886,6 +893,7 @@
 				056B49502B21B53F00F7A3A4 /* MorningRollCallTableViewCell.swift in Sources */,
 				0573B50A2B22D28B005F1F4F /* SelectTimeViewController.swift in Sources */,
 				05AD442E2B57A463007FB0CF /* AccidentPhotoTableViewCell.swift in Sources */,
+				0596CD882B7C52370066C1CE /* DispatchDrivingPathViewController.swift in Sources */,
 				056A34502ABBC53C00829750 /* OfficeModel.swift in Sources */,
 				5FD49D102AA31A7700208273 /* DispatchViewController.swift in Sources */,
 				056A34732ABC31B400829750 /* InspectionVehicleListTableViewCell.swift in Sources */,
@@ -1052,6 +1060,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "경로 탐색을 위해 필요합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범에 접근할 수 있도록 권한을 요청합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1095,6 +1104,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "경로 탐색을 위해 필요합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범에 접근할 수 있도록 권한을 요청합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

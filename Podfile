@@ -10,6 +10,7 @@ target 'RPATest' do
   pod 'FSCalendar'
   pod 'Firebase/Analytics'
   pod 'Firebase/Messaging'
+  pod 'RealmSwift', '~>10'
 end
 
 post_install do |installer|

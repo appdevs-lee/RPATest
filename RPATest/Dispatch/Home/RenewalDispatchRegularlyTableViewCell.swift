@@ -333,6 +333,9 @@ extension RenewalDispatchRegularlyTableViewCell {
         
         self.vehicleNumberLabel.text = item.busId
         
+        self.statusButton.isEnabled = true
+        self.statusButton.backgroundColor = .white
+        
         if item.maplink == "" {
             self.kakaoImageView.isHidden = true
             
