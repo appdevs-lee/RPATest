@@ -539,22 +539,21 @@ extension RenewalDispatchViewController: EssentialViewMethods {
         self.motionManager.startActivityUpdates(to: .main) { activity in
             guard let activity = activity else { return }
             
-            self.locationManager.startUpdatingLocation()
-//            if activity.automotive {
-//                print("정지상태 해제")
-//                if activity.stationary {
-//                    self.locationManager.stopUpdatingLocation()
-//                    
-//                } else {
-//                    self.locationManager.startUpdatingLocation()
-//                    
-//                }
-//                
-//            } else {
-//                print("정지상태")
-//                self.locationManager.stopUpdatingLocation()
-//                
-//            }
+            if activity.automotive {
+                print("정지상태 해제")
+                if activity.stationary {
+                    self.locationManager.stopUpdatingLocation()
+                    
+                } else {
+                    self.locationManager.startUpdatingLocation()
+                    
+                }
+                
+            } else {
+                print("정지상태")
+                self.locationManager.stopUpdatingLocation()
+                
+            }
         }
     }
 }
