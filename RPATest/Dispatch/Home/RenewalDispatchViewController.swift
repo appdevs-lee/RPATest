@@ -536,24 +536,32 @@ extension RenewalDispatchViewController: EssentialViewMethods {
     
     func setMotion() {
         self.locationManager.delegate = self
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.allowsBackgroundLocationUpdates = true
+        self.locationManager.pausesLocationUpdatesAutomatically = false
+        
         self.motionManager.startActivityUpdates(to: .main) { activity in
             guard let activity = activity else { return }
             
-            if activity.automotive {
-                print("정지상태 해제")
-                if activity.stationary {
-                    self.locationManager.stopUpdatingLocation()
-                    
-                } else {
-                    self.locationManager.startUpdatingLocation()
-                    
-                }
-                
-            } else {
-                print("정지상태")
+            if activity.stationary {
+                print("Stop")
                 self.locationManager.stopUpdatingLocation()
                 
+            } else {
+                print("Start")
+                self.locationManager.startUpdatingLocation()
+                
             }
+            
+//            if activity.automotive {
+//                print("정지상태 해제")
+//                
+//                
+//            } else {
+//                print("정지상태")
+//                self.locationManager.stopUpdatingLocation()
+//                
+//            }
         }
     }
 }
