@@ -6,8 +6,25 @@
 //
 
 import UIKit
+import MapKit
 
 final class DispatchDrivingDetailViewController: UIViewController {
+    
+    lazy var mapView: MKMapView = {
+        let mapView = MKMapView()
+        mapView.showsUserLocation = true
+        if #available(iOS 16.0, *) {
+            mapView.preferredConfiguration = MKStandardMapConfiguration()
+        } else {
+            mapView.mapType = .standard
+        }
+        mapView.setUserTrackingMode(.follow, animated: true)
+        mapView.setRegion(MKCoordinateRegion(center: mapView.userLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500), animated: true)
+        mapView.delegate = self
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return mapView
+    }()
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -110,10 +127,11 @@ extension DispatchDrivingDetailViewController: EssentialViewMethods {
     
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
-            self.tableView
+            self.tableView,
+            self.mapView
         ], to: self.view)
     }
-    
+
     func setLayouts() {
         let safeArea = self.view.safeAreaLayoutGuide
         
@@ -121,8 +139,16 @@ extension DispatchDrivingDetailViewController: EssentialViewMethods {
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.mapView.bottomAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        ])
+        
+        // mapView
+        NSLayoutConstraint.activate([
+            self.mapView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.mapView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.mapView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.mapView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
     
@@ -259,5 +285,20 @@ extension DispatchDrivingDetailViewController: UITableViewDelegate, UITableViewD
             
         }
         
+    }
+}
+
+// MARK: - Extension for MKMapViewDelegate
+extension DispatchDrivingDetailViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let polyLine = overlay as? MKPolyline else { return MKOverlayRenderer() }
+        
+        let renderer = MKPolylineRenderer(polyline: polyLine)
+        
+        renderer.strokeColor = .red
+        renderer.lineWidth = 5.0
+        renderer.alpha = 1.0
+        
+        return renderer
     }
 }
