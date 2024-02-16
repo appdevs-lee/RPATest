@@ -15,6 +15,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        UNUserNotificationCenter.current().delegate = self
+//        let setting = UNMutableNotificationContent()
+//
+//        setting.title = "알림 테스트"
+//        setting.body = "알림 테스트입니다."
+//        setting.sound = UNNotificationSound(named: UNNotificationSoundName("KingbusAlarmSound.caf"))
+//
+//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+//        let request = UNNotificationRequest(identifier: "testNotification", content: setting, trigger: trigger)
+//
+//        UNUserNotificationCenter.current().add(request)
+        
         FirebaseApp.configure()
         
         Messaging.messaging().delegate = self
@@ -78,11 +90,23 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler([.list, .banner, .badge, .sound])
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         print("[AppDelegate >> didReceive]")
         print("앱 백그라운드 상태 푸시 알림 확인")
         
-        completionHandler()
+        let content = response.notification.request.content
+        print(content)
+        print("")
+        print("===============================")
+        print("[AppDelegate >> willPresent]")
+        print("설명 :: 앱 포그라운드 상태 푸시 알림 확인")
+        print("userInfo :: \(content.userInfo)") // 푸시 정보 가져옴
+        print("title :: \(content.title)") // 푸시 정보 가져옴
+        print("body :: \(content.body)") // 푸시 정보 가져옴
+        print("sound :: \(content.sound)") // 푸시 정보 가져옴
+        print("===============================")
+        print("")
+        
     }
 }
 

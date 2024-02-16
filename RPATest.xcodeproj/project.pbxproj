@@ -52,6 +52,7 @@
 		0575AC102B4CB794005F79AA /* DispatchDrivingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0575AC0F2B4CB794005F79AA /* DispatchDrivingDetailViewController.swift */; };
 		057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */; };
 		057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */; };
+		057D23A42B7EEB0E0045B3CB /* KingbusAlarmSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 057D23A32B7EEB0B0045B3CB /* KingbusAlarmSound.caf */; };
 		057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */; };
 		057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */; };
 		057DDD622B58A1A200EE110A /* AccidentCallListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057DDD612B58A1A200EE110A /* AccidentCallListViewController.swift */; };
@@ -186,6 +187,7 @@
 		0575AC0F2B4CB794005F79AA /* DispatchDrivingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchDrivingDetailViewController.swift; sourceTree = "<group>"; };
 		057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSalaryStatementViewController.swift; sourceTree = "<group>"; };
 		057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalProfileViewController.swift; sourceTree = "<group>"; };
+		057D23A32B7EEB0B0045B3CB /* KingbusAlarmSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = KingbusAlarmSound.caf; sourceTree = "<group>"; };
 		057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckViewController.swift; sourceTree = "<group>"; };
 		057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckTableViewCell.swift; sourceTree = "<group>"; };
 		057DDD612B58A1A200EE110A /* AccidentCallListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentCallListViewController.swift; sourceTree = "<group>"; };
@@ -526,6 +528,7 @@
 				5FE36A4D2AB58902006399BE /* RPATest.entitlements */,
 				5F1BB09E2A03D1210081DBBE /* AppDelegate.swift */,
 				5F1BB0A02A03D1210081DBBE /* SceneDelegate.swift */,
+				057D23A32B7EEB0B0045B3CB /* KingbusAlarmSound.caf */,
 				5F1BB0A72A03D1220081DBBE /* Assets.xcassets */,
 				5F1BB0AC2A03D1220081DBBE /* Info.plist */,
 				5FE36A4B2AB57B6A006399BE /* GoogleService-Info.plist */,
@@ -715,6 +718,7 @@
 				5F1BB0A82A03D1220081DBBE /* Assets.xcassets in Resources */,
 				5F1BB0A62A03D1210081DBBE /* Main.storyboard in Resources */,
 				5F1A161B2A74EA6300132D29 /* PretendardVariable.ttf in Resources */,
+				057D23A42B7EEB0E0045B3CB /* KingbusAlarmSound.caf in Resources */,
 				5FE36A4C2AB57B6A006399BE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
