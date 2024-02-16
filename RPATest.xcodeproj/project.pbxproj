@@ -52,6 +52,7 @@
 		0575AC102B4CB794005F79AA /* DispatchDrivingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0575AC0F2B4CB794005F79AA /* DispatchDrivingDetailViewController.swift */; };
 		057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */; };
 		057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */; };
+		057D23A42B7EEB0E0045B3CB /* KingbusAlarmSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 057D23A32B7EEB0B0045B3CB /* KingbusAlarmSound.caf */; };
 		057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */; };
 		057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */; };
 		057DDD622B58A1A200EE110A /* AccidentCallListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057DDD612B58A1A200EE110A /* AccidentCallListViewController.swift */; };
@@ -101,6 +102,8 @@
 		05AD44322B57AD29007FB0CF /* AccidentReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05AD44312B57AD29007FB0CF /* AccidentReasonViewController.swift */; };
 		05C7E76A2B2716E100EEDD2C /* GarageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C7E7692B2716E100EEDD2C /* GarageListViewController.swift */; };
 		05C7E76C2B2716E700EEDD2C /* GarageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C7E76B2B2716E700EEDD2C /* GarageTableViewCell.swift */; };
+		05E94CD12B5FAF4E0095C76E /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E94CCF2B5FAF4D0095C76E /* CameraViewController.swift */; };
+		05E94CD22B5FAF4E0095C76E /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E94CD02B5FAF4E0095C76E /* Camera.swift */; };
 		16E2C467A0658AD11CAC6652 /* Pods_RPATest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */; };
 		2D0F01742B57EEFA002F3160 /* AccidentResponseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F01732B57EEFA002F3160 /* AccidentResponseTableViewCell.swift */; };
 		2D0F01762B57F4FD002F3160 /* AccidentSafeCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F01752B57F4FD002F3160 /* AccidentSafeCheckViewController.swift */; };
@@ -189,6 +192,7 @@
 		0575AC0F2B4CB794005F79AA /* DispatchDrivingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchDrivingDetailViewController.swift; sourceTree = "<group>"; };
 		057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSalaryStatementViewController.swift; sourceTree = "<group>"; };
 		057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalProfileViewController.swift; sourceTree = "<group>"; };
+		057D23A32B7EEB0B0045B3CB /* KingbusAlarmSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = KingbusAlarmSound.caf; sourceTree = "<group>"; };
 		057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckViewController.swift; sourceTree = "<group>"; };
 		057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCheckTableViewCell.swift; sourceTree = "<group>"; };
 		057DDD612B58A1A200EE110A /* AccidentCallListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentCallListViewController.swift; sourceTree = "<group>"; };
@@ -238,6 +242,8 @@
 		05AD44312B57AD29007FB0CF /* AccidentReasonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentReasonViewController.swift; sourceTree = "<group>"; };
 		05C7E7692B2716E100EEDD2C /* GarageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageListViewController.swift; sourceTree = "<group>"; };
 		05C7E76B2B2716E700EEDD2C /* GarageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarageTableViewCell.swift; sourceTree = "<group>"; };
+		05E94CCF2B5FAF4D0095C76E /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		05E94CD02B5FAF4E0095C76E /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		06EE240AA4CC2BD5297F34A3 /* Pods-RPATest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.debug.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.debug.xcconfig"; sourceTree = "<group>"; };
 		2D0F01732B57EEFA002F3160 /* AccidentResponseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentResponseTableViewCell.swift; sourceTree = "<group>"; };
 		2D0F01752B57F4FD002F3160 /* AccidentSafeCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentSafeCheckViewController.swift; sourceTree = "<group>"; };
@@ -450,6 +456,8 @@
 				057DDD612B58A1A200EE110A /* AccidentCallListViewController.swift */,
 				057DDD632B58A24C00EE110A /* AccidentCallListTableViewCell.swift */,
 				05AD442B2B57A398007FB0CF /* AccidentPhotoViewController.swift */,
+				05E94CD02B5FAF4E0095C76E /* Camera.swift */,
+				05E94CCF2B5FAF4D0095C76E /* CameraViewController.swift */,
 				05AD442D2B57A463007FB0CF /* AccidentPhotoTableViewCell.swift */,
 				05AD44312B57AD29007FB0CF /* AccidentReasonViewController.swift */,
 				057DDD672B58C0F900EE110A /* AccidentBeforeDrivingViewController.swift */,
@@ -533,6 +541,7 @@
 				5FE36A4D2AB58902006399BE /* RPATest.entitlements */,
 				5F1BB09E2A03D1210081DBBE /* AppDelegate.swift */,
 				5F1BB0A02A03D1210081DBBE /* SceneDelegate.swift */,
+				057D23A32B7EEB0B0045B3CB /* KingbusAlarmSound.caf */,
 				5F1BB0A72A03D1220081DBBE /* Assets.xcassets */,
 				5F1BB0AC2A03D1220081DBBE /* Info.plist */,
 				5FE36A4B2AB57B6A006399BE /* GoogleService-Info.plist */,
@@ -724,7 +733,7 @@
 				5F1BB0A82A03D1220081DBBE /* Assets.xcassets in Resources */,
 				5F1BB0A62A03D1210081DBBE /* Main.storyboard in Resources */,
 				5F1A161B2A74EA6300132D29 /* PretendardVariable.ttf in Resources */,
-				0598670F2B7B5C9C005E51A9 /* KingbusAlarmSound.caf in Resources */,
+				057D23A42B7EEB0E0045B3CB /* KingbusAlarmSound.caf in Resources */,
 				5FE36A4C2AB57B6A006399BE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -824,6 +833,7 @@
 				056A34712ABC317F00829750 /* InspectionVehicleListViewController.swift in Sources */,
 				0561E7212AC29D3D00787B77 /* NavigationViewController.swift in Sources */,
 				056A34672ABC0FED00829750 /* InspectionTableViewCell.swift in Sources */,
+				05E94CD22B5FAF4E0095C76E /* Camera.swift in Sources */,
 				0575AC102B4CB794005F79AA /* DispatchDrivingDetailViewController.swift in Sources */,
 				056A346D2ABC1D4400829750 /* AddingContentCell.swift in Sources */,
 				5FD49D1B2AA31BFF00208273 /* TemplateCollectionViewCell.swift in Sources */,
@@ -855,6 +865,7 @@
 				057000D72AB2E5EA007F650E /* DispatchCheckDenyViewController.swift in Sources */,
 				057000D52AB2D095007F650E /* DispatchCheckPopViewController.swift in Sources */,
 				05709D6E2B1FFA2900748F52 /* DispatchNoteListViewController.swift in Sources */,
+				05E94CD12B5FAF4E0095C76E /* CameraViewController.swift in Sources */,
 				05821A9D2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift in Sources */,
 				2DF808AA2B30499700DEE24C /* DispatchNoteDetailViewController.swift in Sources */,
 				056B49482B218F8600F7A3A4 /* DispatchNoteRegularlyTableViewCell.swift in Sources */,
@@ -1051,7 +1062,7 @@
 				CODE_SIGN_ENTITLEMENTS = RPATest/RPATest.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 3C347T67DV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RPATest/Info.plist;
@@ -1095,7 +1106,7 @@
 				CODE_SIGN_ENTITLEMENTS = RPATest/RPATest.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 3C347T67DV;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RPATest/Info.plist;
