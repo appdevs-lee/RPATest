@@ -657,9 +657,14 @@ extension RenewalProfileViewController: UICollectionViewDelegateFlowLayout, UICo
             self.navigationController?.pushViewController(vc, animated: true)
             
         case .myInfo:
-            let vc = ProfileMyInfoViewController()
-            
-            self.navigationController?.pushViewController(vc, animated: true)
+            if ReferenceValues.currentCompany == "dev" {
+                let vc = ProfileMyInfoViewController()
+                
+                self.navigationController?.pushViewController(vc, animated: true)
+                
+            } else {
+                
+            }
             
         default:
             break
