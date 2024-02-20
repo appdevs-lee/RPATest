@@ -124,7 +124,7 @@ extension AccidentPhotoViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(openAlbum), name: Notification.Name("CaptureDone"), object: nil)
     }
     
     func setSubviews() {
@@ -238,6 +238,10 @@ extension AccidentPhotoViewController {
         self.index = sender.tag
         
         let vc = AlertPopViewController(.normalTwoButton(messageTitle: "사진 등록 방법 선택", messageContent: "사진을 어떻게 등록하시겠습니까?", leftButtonTitle: "촬영", leftAction: {
+            // 촬영
+            let vc = CameraViewController()
+            
+            self.present(vc, animated: true)
             
         }, rightButtonTitle: "앨범", rightAction: {
             switch PHPhotoLibrary.authorizationStatus(for: .readWrite) {
@@ -303,6 +307,64 @@ extension AccidentPhotoViewController {
         let vc = AccidentReasonViewController()
         
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func openAlbum() {
+        switch PHPhotoLibrary.authorizationStatus(for: .readWrite) {
+        case .authorized:
+            self.openPhoto()
+            
+        case .limited:
+            let vc = AlertPopViewController(.normalTwoButton(messageTitle: "권한 설정 안내", messageContent: "사진 접근 권한이\n선택한 사진에만 허용되어 있습니다.\n설정에서 “모든 사진”으로 변경할 수 있습니다.", leftButtonTitle: "선택 유지", leftAction: {
+                self.openPhoto()
+                
+            }, rightButtonTitle: "설정", rightAction: {
+                if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+            }))
+            
+            self.present(vc, animated: true)
+            
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+                switch status {
+                case .authorized:
+                    self.openPhoto()
+                    
+                case .limited:
+                    let vc = AlertPopViewController(.normalTwoButton(messageTitle: "권한 설정 안내", messageContent: "사진 접근 권한이\n선택한 사진에만 허용되어 있습니다.\n설정에서 “모든 사진”으로 변경할 수 있습니다.", leftButtonTitle: "선택 유지", leftAction: {
+                        self.openPhoto()
+                        
+                    }, rightButtonTitle: "설정", rightAction: {
+                        if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url)
+                        }
+                    }))
+                    
+                    self.present(vc, animated: true)
+                    
+                default:
+                    let vc = AlertPopViewController(.normalTwoButton(messageTitle: "권한 설정 필요", messageContent: "사진/동영상 업로드를 위해\n설정에서 ‘사진 접근 권한’을 허용해야 합니다.", leftButtonTitle: "취소", leftAction: nil, rightButtonTitle: "설정", rightAction: {
+                        if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url)
+                        }
+                    }))
+                    
+                    self.present(vc, animated: true)
+                }
+            }
+            
+        default:
+            let vc = AlertPopViewController(.normalTwoButton(messageTitle: "권한 설정 필요", messageContent: "사진/동영상 업로드를 위해\n설정에서 ‘사진 접근 권한’을 허용해야 합니다.", leftButtonTitle: "취소", leftAction: nil, rightButtonTitle: "설정", rightAction: {
+                if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+            }))
+            
+            self.present(vc, animated: true)
+        }
+        
     }
     
 }
