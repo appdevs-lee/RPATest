@@ -24,10 +24,10 @@ final class RenewalDispatchViewController: UIViewController {
     
     lazy var alarmButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "map"), for: .normal)
         button.imageView?.tintColor = .useRGB(red: 176, green: 0, blue: 32)
         button.addTarget(self, action: #selector(tappedAlarmButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
+        ReferenceValues.currentCompany == "dev" ? button.setImage(UIImage(systemName: "map"), for: .normal) : button.setImage(UIImage(named: ""), for: .normal)
         
         return button
     }()
@@ -543,25 +543,17 @@ extension RenewalDispatchViewController: EssentialViewMethods {
         self.motionManager.startActivityUpdates(to: .main) { activity in
             guard let activity = activity else { return }
             
-            if activity.stationary {
-                print("Stop")
-                self.locationManager.stopUpdatingLocation()
-                
-            } else {
-                print("Start")
-                self.locationManager.startUpdatingLocation()
-                
-            }
-            
-//            if activity.automotive {
-//                print("정지상태 해제")
-//                
+            self.locationManager.startUpdatingLocation()
+//            if activity.stationary {
+//                print("Stop")
+////                self.locationManager.stopUpdatingLocation()
 //                
 //            } else {
-//                print("정지상태")
-//                self.locationManager.stopUpdatingLocation()
+//                print("Start")
+//                self.locationManager.startUpdatingLocation()
 //                
 //            }
+            
         }
     }
 }
@@ -676,9 +668,12 @@ extension RenewalDispatchViewController {
     }
     
     @objc func tappedAlarmButton(_ sender: UIButton) {
-        let vc = DispatchDrivingPathViewController()
+        if ReferenceValues.currentCompany == "dev" {
+            let vc = DispatchDrivingPathViewController()
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
         
-        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func tappedDispatchCheckButton(_ sender: UIButton) {
@@ -760,9 +755,9 @@ extension RenewalDispatchViewController {
         self.regularlyItem = nil
         
         let vc = AlertPopViewController(.normalTwoButton(messageTitle: "운행한 경로를 보시겠습니까?", messageContent: "전체 경로를 보여줍니다.", leftButtonTitle: "취소", leftAction: {
-            // 데이터 지워야 함.
+            // API 통신 후, 데이터 지워야 함.
         }, rightButtonTitle: "확인", rightAction: {
-            // 데이터 지워야 함.
+            // API 통신 후, 데이터 지워야 함.
             let vc = DispatchDrivingPathViewController()
             
             self.navigationController?.pushViewController(vc, animated: true)
@@ -787,20 +782,19 @@ extension RenewalDispatchViewController {
         switch self.locationManager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             print("authorizedAlways or authorizedWhenInUse")
-//            self.mapView.currentLocationTrackingMode = .onWithoutHeadingWithoutMapMoving
-            self.setMotion()
-            let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: self.regularlyItem)
-            
-            self.navigationController?.pushViewController(vc, animated: true)
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+            // 다시 돌아왔을 때, 운행 시작을 다시 눌러야 하므로 주석 처리함.
+//            self.setMotion()
+//            let vc = DispatchDrivingDetailViewController(type: .regularly, regularlyItem: self.regularlyItem)
+//            
+//            self.navigationController?.pushViewController(vc, animated: true)
+//            
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//            }
             
         default:
             print("Failure for gps")
-//            self.mapView.currentLocationTrackingMode = .off
-            let vc = AlertPopViewController(.normalOneButton(messageTitle: "위치 권한 설정", messageContent: "경로 탐색을 위해 위치 권한을 허용해주세요.", buttonTitle: "확인", action: {
+            let vc = AlertPopViewController(.normalOneButton(messageTitle: "위치 권한 설정", messageContent: "경로 탐색을 위해 위치 권한 허용 후\n다시 운행 시작을 눌러주세요.", buttonTitle: "확인", action: {
                 if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
                     UIApplication.shared.open(url)
                 }
@@ -884,7 +878,7 @@ extension RenewalDispatchViewController: RenewalDispatchDelegate {
                 } else {
                     self.locationManager.allowsBackgroundLocationUpdates = true
                     
-                    let vc = AlertPopViewController(.normalOneButton(messageTitle: "위치 권한 설정", messageContent: "경로 탐색을 위해 위치 권한을 허용해주세요.", buttonTitle: "확인", action: {
+                    let vc = AlertPopViewController(.normalOneButton(messageTitle: "위치 권한 설정", messageContent: "경로 탐색을 위해 위치 권한 허용 후\n다시 운행 시작을 눌러주세요.", buttonTitle: "확인", action: {
                         if let url = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(url) {
                             UIApplication.shared.open(url)
                         }
@@ -962,10 +956,30 @@ extension RenewalDispatchViewController: CLLocationManagerDelegate {
         loc.date = date
         loc.dispatch_id = "\(item.id)"
         
-        self.mapModel.save(data: loc)
-        for location in self.mapModel.read() {
-            print("latitude: \(location.latitude)\nlongitude: \(location.longitude)")
+//        for location in self.mapModel.read() {
+//            if location.date == date {
+//                self.mapModel.delete(data: location)
+//                
+//            }
+//            
+//        }
+        
+        if self.mapModel.read().isEmpty {
+            loc.index = 0
+            
+        } else {
+            loc.index = self.mapModel.read().last!.index + 1
+            
         }
+        
+        self.mapModel.save(data: loc)
+        print("-------------------------------------------------------------------")
+        print("count: \(self.mapModel.read().count)")
+        print("date: \(loc.date)")
+        print("index: \(loc.index)")
+        print("latitude: \(loc.latitude)\nlongitude: \(loc.longitude)")
+        print("-------------------------------------------------------------------\n")
+        NotificationCenter.default.post(name: Notification.Name("DrivingDetailPathUpdate"), object: nil)
         
     }
 }

@@ -52,7 +52,6 @@
 		0575AC102B4CB794005F79AA /* DispatchDrivingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0575AC0F2B4CB794005F79AA /* DispatchDrivingDetailViewController.swift */; };
 		057736BD2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BC2B0EFE32005C01EA /* ProfileSalaryStatementViewController.swift */; };
 		057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057736BE2B0F0AB7005C01EA /* RenewalProfileViewController.swift */; };
-		057D23A42B7EEB0E0045B3CB /* KingbusAlarmSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 057D23A32B7EEB0B0045B3CB /* KingbusAlarmSound.caf */; };
 		057D941F2AB1862900779CFF /* DispatchCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D941E2AB1862900779CFF /* DispatchCheckViewController.swift */; };
 		057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D94202AB18DA300779CFF /* DispatchCheckTableViewCell.swift */; };
 		057DDD622B58A1A200EE110A /* AccidentCallListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057DDD612B58A1A200EE110A /* AccidentCallListViewController.swift */; };
@@ -74,6 +73,7 @@
 		0582C5AA2AB842BF0045CBCB /* DispatchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */; };
 		0584559E2B187B35000D3448 /* GasStationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0584559D2B187B35000D3448 /* GasStationListViewController.swift */; };
 		058455A02B187B3C000D3448 /* GasStationListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0584559F2B187B3C000D3448 /* GasStationListTableViewCell.swift */; };
+		058C33C12B85BF9700604667 /* StationAlarmSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 058C33C02B85BF9700604667 /* StationAlarmSound.caf */; };
 		059093D02AFCAEE700E0F1DD /* DispatchScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059093CF2AFCAEE700E0F1DD /* DispatchScheduleViewController.swift */; };
 		059093D22AFCAFA000E0F1DD /* DispatchScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059093D12AFCAFA000E0F1DD /* DispatchScheduleTableViewCell.swift */; };
 		059332722B4E14FE0074C13A /* DispatchDrivingTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059332712B4E14FE0074C13A /* DispatchDrivingTitleTableViewCell.swift */; };
@@ -214,6 +214,7 @@
 		0582C5A92AB842BF0045CBCB /* DispatchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCategoryViewController.swift; sourceTree = "<group>"; };
 		0584559D2B187B35000D3448 /* GasStationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GasStationListViewController.swift; sourceTree = "<group>"; };
 		0584559F2B187B3C000D3448 /* GasStationListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GasStationListTableViewCell.swift; sourceTree = "<group>"; };
+		058C33C02B85BF9700604667 /* StationAlarmSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = StationAlarmSound.caf; sourceTree = "<group>"; };
 		059093CF2AFCAEE700E0F1DD /* DispatchScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleViewController.swift; sourceTree = "<group>"; };
 		059093D12AFCAFA000E0F1DD /* DispatchScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchScheduleTableViewCell.swift; sourceTree = "<group>"; };
 		059332712B4E14FE0074C13A /* DispatchDrivingTitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchDrivingTitleTableViewCell.swift; sourceTree = "<group>"; };
@@ -546,6 +547,7 @@
 				5F1BB0AC2A03D1220081DBBE /* Info.plist */,
 				5FE36A4B2AB57B6A006399BE /* GoogleService-Info.plist */,
 				2D9DCAB52B7E4B96003F1EFA /* KingbusAlarmSound.caf */,
+				058C33C02B85BF9700604667 /* StationAlarmSound.caf */,
 				5FD49D112AA31B5D00208273 /* Template */,
 				5F1A161D2A74EDBC00132D29 /* Methods */,
 				5FE29CC02A7E154E000748FC /* Common */,
@@ -727,6 +729,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				058C33C12B85BF9700604667 /* StationAlarmSound.caf in Resources */,
 				5F1BB0AB2A03D1220081DBBE /* LaunchScreen.storyboard in Resources */,
 				5F1A16192A74E23400132D29 /* Pretendard-Medium.otf in Resources */,
 				5F1A16182A74E23400132D29 /* Pretendard-Bold.otf in Resources */,

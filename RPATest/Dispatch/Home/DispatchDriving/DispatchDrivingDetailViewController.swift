@@ -19,7 +19,7 @@ final class DispatchDrivingDetailViewController: UIViewController {
             mapView.mapType = .standard
         }
         mapView.setUserTrackingMode(.follow, animated: true)
-        mapView.setRegion(MKCoordinateRegion(center: mapView.userLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500), animated: true)
+        mapView.setRegion(MKCoordinateRegion(center: mapView.userLocation.coordinate, latitudinalMeters: 100, longitudinalMeters: 100), animated: true)
         mapView.delegate = self
         mapView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -48,7 +48,7 @@ final class DispatchDrivingDetailViewController: UIViewController {
             
         }
         tableView.register(DispatchDrivingDetailPathTableViewCell.self, forCellReuseIdentifier: "DispatchDrivingDetailPathTableViewCell")
-        tableView.register(DispatchDrivingDoneTableViewCell.self, forCellReuseIdentifier: "DispatchDrivingDoneTableViewCell")
+//        tableView.register(DispatchDrivingDoneTableViewCell.self, forCellReuseIdentifier: "DispatchDrivingDoneTableViewCell")
         
         return tableView
     }()
@@ -71,6 +71,21 @@ final class DispatchDrivingDetailViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    let mapModel = MapModel()
+    let stations: [StationMarker] = [
+        StationMarker(title: "경기 수원시 장안구 율전동 435", coordinate: CLLocationCoordinate2D(latitude: 37.2953298, longitude: 126.9702277), subtitle: "성균관대 h1"),
+        StationMarker(title: "경기 수원시 권선구 구운동 547", coordinate: CLLocationCoordinate2D(latitude: 37.2794689, longitude: 126.9760851), subtitle: "성균관대 h1"),
+        StationMarker(title: "경기 수원시 권선구 서둔동 23-21", coordinate: CLLocationCoordinate2D(latitude: 37.265278, longitude: 126.9938482), subtitle: "성균관대 h1"),
+        StationMarker(title: "김남완 초밥집", coordinate: CLLocationCoordinate2D(latitude: 37.49843, longitude: 127.0350), subtitle: "목요일 정기 회의 식사 장소"),
+        
+        /*
+         경기 수원시 장안구 율전동 435 : 위도(Latitude) : 37.2953298 / 경도(Longitude) : 126.9702277
+         경기 수원시 권선구 구운동 547 : 위도(Latitude) : 37.2794689 / 경도(Longitude) : 126.9760851
+         경기 수원시 권선구 서둔동 23-21 : 위도(Latitude) : 37.265278 / 경도(Longitude) : 126.9938482
+         
+         */
+    ]
     
     var type: DispatchKindType
     var regularlyItem: DispatchRegularlyItem?
@@ -122,7 +137,7 @@ extension DispatchDrivingDetailViewController: EssentialViewMethods {
     func setNotificationCenters() {
         NotificationCenter.default.addObserver(self, selector: #selector(drivingDone(_:)), name: Notification.Name("NoteWriteCompleted"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(setPeopleCount(_:)), name: Notification.Name("PeopleCount"), object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(update(_:)), name: Notification.Name("DrivingDetailPathUpdate"), object: nil)
     }
     
     func setSubviews() {
@@ -148,7 +163,7 @@ extension DispatchDrivingDetailViewController: EssentialViewMethods {
             self.mapView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.mapView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             self.mapView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            self.mapView.heightAnchor.constraint(equalToConstant: 200)
+            self.mapView.heightAnchor.constraint(equalToConstant: 300)
         ])
     }
     
@@ -176,17 +191,84 @@ extension DispatchDrivingDetailViewController: EssentialViewMethods {
         self.navigationItem.title = "운행중"
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
+        let rightBarButtonItem = UIBarButtonItem(title: "운행 종료", style: .plain, target: self, action: #selector(rightBarButtonItem(_:)))
+        rightBarButtonItem.setTitleTextAttributes([
+            .font:UIFont.useFont(ofSize: 16, weight: .Bold),
+            .foregroundColor:UIColor.useRGB(red: 189, green: 189, blue: 189)
+        ], for: .disabled)
+        rightBarButtonItem.setTitleTextAttributes([
+            .foregroundColor:UIColor.useRGB(red: 176, green: 0, blue: 32),
+            .font:UIFont.useFont(ofSize: 16, weight: .Bold)
+        ], for: .normal)
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
 }
 
 // MARK: - Extension for methods added
 extension DispatchDrivingDetailViewController {
+    func drawLineOnMap() {
+//        let locations = self.mapModel.read()
+//        let lastIndex = locations.last?.index ?? 0
+//        
+//        var points: [CLLocationCoordinate2D] = []
+//        
+//        if lastIndex != 0 {
+//            let point1: CLLocationCoordinate2D = CLLocationCoordinate2DMake(locations[lastIndex - 1].latitude, locations[lastIndex - 1].longitude)
+//            let point2: CLLocationCoordinate2D = CLLocationCoordinate2DMake(locations[lastIndex].latitude, locations[lastIndex].longitude)
+//            
+//            points.append(point1)
+//            points.append(point2)
+//            
+//            let lineDraw = MKPolyline(coordinates: points, count:points.count)
+//            self.mapView.addOverlay(lineDraw)
+//        }
+        
+//        print("ㅇ★★★★★★★★★★★★★★★★★★★★★경로 그리는 중★★★★★★★★★★★★★★★★★★★★★★★★★ㅇ")
+//        print("POINT 1")
+//        print("date: \(locations[lastIndex - 1].date)")
+//        print("index: \(locations[lastIndex - 1].index)")
+//        print("latitude: \(locations[lastIndex - 1].latitude)")
+//        print("longitude: \(locations[lastIndex - 1].longitude)")
+//        
+//        print("POINT 2")
+//        print("date: \(locations[lastIndex].date)")
+//        print("index: \(locations[lastIndex].index)")
+//        print("latitude: \(locations[lastIndex].latitude)")
+//        print("longitude: \(locations[lastIndex].longitude)")
+//        
+//        print("POINTS")
+//        print("ㅇ★★★★★★★★★★★★★★★★★★★★★경로 그리는 중★★★★★★★★★★★★★★★★★★★★★★★★★\n")
+        
+        var points: [CLLocationCoordinate2D] = []
+        let locations = self.mapModel.read()
+        
+        for location in locations {
+            let point: CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.latitude, location.longitude)
+            
+            points.append(point)
+        }
+        
+        let lineDraw = MKPolyline(coordinates: points, count:points.count)
+        self.mapView.addOverlay(lineDraw)
+
+    }
     
 }
 
 // MARK: - Extension for selector methods
 extension DispatchDrivingDetailViewController {
     @objc func tappedDoneButton(_ sender: UIButton) {
+        ReferenceValues.peopleCount = 0
+        UserDefaults.standard.set(nil, forKey: "SaveDrivingInfo")
+        
+        // 운행일보 작성 present
+        let vc = DispatchNoteDetailViewController(presentType: .present, type: self.type, id: (regularly: "\(self.regularlyItem?.id ?? 0)", order: ""), date: (departure: self.regularlyItem?.departureDate ?? "", arrival: self.regularlyItem?.arrivalDate ?? ""), count: self.peopleCount)
+        
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true)
+    }
+    
+    @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
         ReferenceValues.peopleCount = 0
         UserDefaults.standard.set(nil, forKey: "SaveDrivingInfo")
         
@@ -212,12 +294,21 @@ extension DispatchDrivingDetailViewController {
         
         self.peopleCount = count
     }
+    
+    @objc func update(_ noti: Notification) {
+        self.drawLineOnMap()
+        
+        for station in self.stations {
+            self.mapView.addAnnotation(station)
+            
+        }
+    }
 }
 
 // MARK: - Extension for UITableViewDelegate, UITableViewDataSource
 extension DispatchDrivingDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -275,7 +366,8 @@ extension DispatchDrivingDetailViewController: UITableViewDelegate, UITableViewD
             
             return cell
             
-        } else {
+        } 
+        else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DispatchDrivingDoneTableViewCell", for: indexPath) as! DispatchDrivingDoneTableViewCell
             
             cell.setCell()

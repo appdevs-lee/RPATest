@@ -11,6 +11,7 @@ import MapKit
 
 class Location: Object {
     @objc dynamic var id = "" // primary key
+    @objc dynamic var index = 0
     @objc dynamic var dispatch_id = ""
     @objc dynamic var date: String = ""
     @objc dynamic var latitude: Double = 0.0
