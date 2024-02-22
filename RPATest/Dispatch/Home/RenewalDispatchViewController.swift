@@ -546,7 +546,7 @@ extension RenewalDispatchViewController: EssentialViewMethods {
             self.locationManager.startUpdatingLocation()
 //            if activity.stationary {
 //                print("Stop")
-////                self.locationManager.stopUpdatingLocation()
+//                self.locationManager.stopUpdatingLocation()
 //                
 //            } else {
 //                print("Start")

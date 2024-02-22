@@ -17,22 +17,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         UNUserNotificationCenter.current().delegate = self
-        let setting = UNMutableNotificationContent()
+        if ReferenceValues.currentCompany == "dev" {
+            let setting = UNMutableNotificationContent()
 
-        setting.title = "알림 테스트"
-        setting.body = "알림 테스트입니다."
-        setting.sound = UNNotificationSound(named: UNNotificationSoundName("StationAlarmSound.caf"))
-        
-//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-        let center = CLLocationCoordinate2D(latitude: 37.49843, longitude: 127.0350)
-        let region = CLCircularRegion(center: center, radius: 100.0, identifier: "id")
-        region.notifyOnEntry = true
-        region.notifyOnExit = true
-        
-        let trigger = UNLocationNotificationTrigger(region: region, repeats: true)
-        let request = UNNotificationRequest(identifier: "testNotification", content: setting, trigger: trigger)
+            setting.title = "정류장 도착"
+            setting.body = "해당 정류장에 꼭 정차해주시기 바랍니다."
+            setting.sound = UNNotificationSound(named: UNNotificationSoundName("StationAlarmSound.caf"))
+            
+    //        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+            let center = CLLocationCoordinate2D(latitude: 37.49843, longitude: 127.0350)
+            let region = CLCircularRegion(center: center, radius: 100.0, identifier: "id")
+            region.notifyOnEntry = true
+            region.notifyOnExit = true
+            
+            let trigger = UNLocationNotificationTrigger(region: region, repeats: true)
+            let request = UNNotificationRequest(identifier: "testNotification", content: setting, trigger: trigger)
 
-        UNUserNotificationCenter.current().add(request)
+            UNUserNotificationCenter.current().add(request)
+        }
         
         FirebaseApp.configure()
         
