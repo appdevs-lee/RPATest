@@ -74,10 +74,10 @@ final class DispatchDrivingDetailViewController: UIViewController {
     
     let mapModel = MapModel()
     let stations: [StationMarker] = [
-        StationMarker(title: "경기 수원시 장안구 율전동 435", coordinate: CLLocationCoordinate2D(latitude: 37.2953298, longitude: 126.9702277), subtitle: "성균관대 h1"),
-        StationMarker(title: "경기 수원시 권선구 구운동 547", coordinate: CLLocationCoordinate2D(latitude: 37.2794689, longitude: 126.9760851), subtitle: "성균관대 h1"),
-        StationMarker(title: "경기 수원시 권선구 서둔동 23-21", coordinate: CLLocationCoordinate2D(latitude: 37.265278, longitude: 126.9938482), subtitle: "성균관대 h1"),
-        StationMarker(title: "김남완 초밥집", coordinate: CLLocationCoordinate2D(latitude: 37.49843, longitude: 127.0350), subtitle: "목요일 정기 회의 식사 장소"),
+//        StationMarker(title: "경기 수원시 장안구 율전동 435", coordinate: CLLocationCoordinate2D(latitude: 37.2953298, longitude: 126.9702277), subtitle: "성균관대 h1"),
+//        StationMarker(title: "경기 수원시 권선구 구운동 547", coordinate: CLLocationCoordinate2D(latitude: 37.2794689, longitude: 126.9760851), subtitle: "성균관대 h1"),
+//        StationMarker(title: "경기 수원시 권선구 서둔동 23-21", coordinate: CLLocationCoordinate2D(latitude: 37.265278, longitude: 126.9938482), subtitle: "성균관대 h1"),
+//        StationMarker(title: "김남완 초밥집", coordinate: CLLocationCoordinate2D(latitude: 37.49843, longitude: 127.0350), subtitle: "목요일 정기 회의 식사 장소"),
         
         /*
          경기 수원시 장안구 율전동 435 : 위도(Latitude) : 37.2953298 / 경도(Longitude) : 126.9702277
