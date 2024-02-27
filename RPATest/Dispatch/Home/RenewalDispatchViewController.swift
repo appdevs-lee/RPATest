@@ -756,6 +756,8 @@ extension RenewalDispatchViewController {
         
         let vc = AlertPopViewController(.normalTwoButton(messageTitle: "운행한 경로를 보시겠습니까?", messageContent: "전체 경로를 보여줍니다.", leftButtonTitle: "취소", leftAction: {
             // API 통신 후, 데이터 지워야 함.
+            self.mapModel.deleteAll()
+            
         }, rightButtonTitle: "확인", rightAction: {
             // API 통신 후, 데이터 지워야 함.
             let vc = DispatchDrivingPathViewController()
@@ -911,6 +913,9 @@ extension RenewalDispatchViewController: UIGestureRecognizerDelegate {
     
     // For swipe gesture, prevent working on the root view of navigation controller
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if self.navigationController?.visibleViewController is DispatchDrivingPathViewController {
+            return false
+        }
         return self.navigationController!.viewControllers.count > 1 ? true : false
     }
 }

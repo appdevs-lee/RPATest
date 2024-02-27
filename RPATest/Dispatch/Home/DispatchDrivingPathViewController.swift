@@ -163,7 +163,7 @@ extension DispatchDrivingPathViewController {
 extension DispatchDrivingPathViewController {
     @objc func leftBarButtonItem(_ barButtonItem: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
-        
+        self.mapModel.deleteAll()
     }
 }
 
