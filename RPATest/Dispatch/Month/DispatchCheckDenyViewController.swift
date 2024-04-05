@@ -9,6 +9,17 @@ import UIKit
 
 final class DispatchCheckDenyViewController: UIViewController {
     
+    lazy var guidLabel: UILabel = {
+        let label = UILabel()
+        label.text = "특별한 사유 없이 배차를 거부할 경우\n징계사유(인사위원회 개최)가 될 수 있습니다."
+        label.numberOfLines = 0
+        label.font = .useFont(ofSize: 20, weight: .Bold)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     lazy var denyReasonTextView: UITextView = {
         let textView = UITextView()
         textView.layer.borderColor = UIColor.useRGB(red: 224, green: 224, blue: 224).cgColor
@@ -102,6 +113,7 @@ extension DispatchCheckDenyViewController: EssentialViewMethods {
     
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
+            self.guidLabel,
             self.denyReasonTextView,
         ], to: self.view)
     }
@@ -109,10 +121,16 @@ extension DispatchCheckDenyViewController: EssentialViewMethods {
     func setLayouts() {
         let safeArea = self.view.safeAreaLayoutGuide
         
+        // guidLabel
+        NSLayoutConstraint.activate([
+            self.guidLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            self.guidLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10)
+        ])
+        
         // denyReasonTextView
         NSLayoutConstraint.activate([
             self.denyReasonTextView.heightAnchor.constraint(equalToConstant: 315),
-            self.denyReasonTextView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 14),
+            self.denyReasonTextView.topAnchor.constraint(equalTo: self.guidLabel.bottomAnchor, constant: 14),
             self.denyReasonTextView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
             self.denyReasonTextView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16)
         ])
@@ -137,7 +155,7 @@ extension DispatchCheckDenyViewController: EssentialViewMethods {
         self.navigationItem.standardAppearance = appearance
         self.navigationItem.compactAppearance = appearance
         
-        self.navigationItem.title = "거부 사유"
+        self.navigationItem.title = "운행 불가 사유 작성"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
         let rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(rightBarButtonItem(_:)))
         rightBarButtonItem.setTitleTextAttributes([
