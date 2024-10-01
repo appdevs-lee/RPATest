@@ -30,7 +30,7 @@ final class DispatchModel {
     
     
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/daily/\(date)"
+        let url = Server.server.URL + "/dispatch/daily/\(date)"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -93,7 +93,7 @@ final class DispatchModel {
     }
     
     func loadMonthlyDispatchRequest(month: String, success: ((DispatchMonthlyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/monthly/\(month)"
+        let url = Server.server.URL + "/dispatch/monthly/\(month)"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -154,7 +154,7 @@ final class DispatchModel {
     }
     
     func checkDispatchRequest(check: String, refusal: String = "", regularlyId: String, orderId: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/connect/check"
+        let url = Server.server.URL + "/dispatch/connect/check"
         print(url)
         
         let headers: HTTPHeaders = [
@@ -205,7 +205,7 @@ final class DispatchModel {
     }
     
     func checkPatchDispatchRequest(checkType: String, time: String, regularlyId: String, orderId: String, success: ((CheckDriveItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/check"
+        let url = Server.server.URL + "/dispatch/check"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -275,7 +275,7 @@ final class DispatchModel {
     }
     
     func loadDispatchGroupListRequest(success: (([DispatchSearchItemGroupList]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/regularly/group"
+        let url = Server.server.URL + "/dispatch/regularly/group"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -331,7 +331,7 @@ final class DispatchModel {
     }
     
     func loadDispatchPathRequest(page: Int, search: String, id: Int, success: ((DispatchPathItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/regularly"
+        let url = Server.server.URL + "/dispatch/regularly"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -393,7 +393,7 @@ final class DispatchModel {
     }
     
     func pathKnowRequest(id: Int, success: ((DispatchPathKnowItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/regularly/know"
+        let url = Server.server.URL + "/dispatch/regularly/know"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -453,7 +453,7 @@ final class DispatchModel {
     }
     
     func pathKnowDeleteRequest(id: Int, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/regularly/know"
+        let url = Server.server.URL + "/dispatch/regularly/know"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -507,7 +507,7 @@ final class DispatchModel {
     
     // MARK: - 차량 목록 가져오기
     func loadVehicleListRequest(success: (([VehicleListItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/vehicle"
+        let url = Server.server.URL + "/vehicle"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -550,7 +550,7 @@ final class DispatchModel {
     
     func sendMorningRollCallDataRequest(date: String, time: String, health: String, clean: String, pathKnow: String, alcohol: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         // 2023-12-04
-        let url = Server.shared.currentURL! + "/dispatch/checklist/morning/\(date)"
+        let url = Server.server.URL + "/dispatch/checklist/morning/\(date)"
         
         let headers: HTTPHeaders = [
             "accept": "application/json",
@@ -607,7 +607,7 @@ final class DispatchModel {
     }
     
     func loadMorningRollCallDataRequest(date: String, success: ((MorningRollCallItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = Server.shared.currentURL! + "/dispatch/checklist/morning/\(date)"
+        let url = Server.server.URL + "/dispatch/checklist/morning/\(date)"
         
         let headers: HTTPHeaders = [
             "accept": "application/json",
@@ -662,7 +662,7 @@ final class DispatchModel {
     }
     
     func sendEveningRollCallDataRequest(locationId: Int, batteryCondition: String, driveDistance: String, fuel: String, urea: String, suitGauge: String, specialNotes: String, date: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = Server.shared.currentURL! + "/dispatch/checklist/evening/\(date)"
+        let url = Server.server.URL + "/dispatch/checklist/evening/\(date)"
         
         let headers: HTTPHeaders = [
             "accept": "application/json",
@@ -721,7 +721,7 @@ final class DispatchModel {
     }
     
     func loadEveningRollCallDataRequest(date: String, success: ((EveningRollCallItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = Server.shared.currentURL! + "/dispatch/checklist/evening/\(date)"
+        let url = Server.server.URL + "/dispatch/checklist/evening/\(date)"
         
         let headers: HTTPHeaders = [
             "accept": "application/json",
@@ -776,7 +776,7 @@ final class DispatchModel {
     }
     
     func loadGarageRequest(page: Int, search: String, success: ((GarageItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = Server.shared.currentURL! + "/garage"
+        let url = Server.server.URL + "/garage"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -836,7 +836,7 @@ final class DispatchModel {
     }
     
     func loadDispatchNoteDetailRequest(regularlyId: String = "", orderId: String = "", success: ((DispatchNoteDetailItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/drivinghistory"
+        let url = Server.server.URL + "/dispatch/drivinghistory"
         
         let headers: HTTPHeaders = [
             "Authorization": UserInfo.shared.access!,
@@ -896,7 +896,7 @@ final class DispatchModel {
     }
     
     func sendDispatchNoteDetailRequest(type: DispatchKindType, regularlyId: String, orderId: String, departureTime: String, arrivalTime: String, departureFigure: String, arrivalFigure: String, passengerNumber: String, specialNotes: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/drivinghistory"
+        let url = Server.server.URL + "/dispatch/drivinghistory"
         
         let headers: HTTPHeaders = [
             "Authorization": UserInfo.shared.access!,
@@ -966,7 +966,7 @@ final class DispatchModel {
     
     // MARK: - 팀원 배차 리스트 가져오기
     func loadDispatchScheduleListRequest(success: (([TeamScheduleItem]) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/team/list"
+        let url = Server.server.URL + "/dispatch/team/list"
         
         let headers: HTTPHeaders = [
             "accept": "application/json",
@@ -1022,7 +1022,7 @@ final class DispatchModel {
     
     // MARK: - 팀원 배차 상세 정보 가져오기
     func loadDispatchScheduleDetailRequest(id: Int, success: ((TeamScheduleDetailItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/dispatch/team/\(id)"
+        let url = Server.server.URL + "/dispatch/team/\(id)"
         
         let headers: HTTPHeaders = [
             "accept": "application/json",

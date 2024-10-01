@@ -14,7 +14,7 @@ final class LoginModel {
     private(set) var sendFCMTokenRequest: DataRequest?
     
     func loginRequest(id: String, pwd: String, success: ((LoginDetail) -> ())?, loginFailure: ((_ reason: Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/login"
+        let url = Server.server.URL + "/login"
         
         let headers: HTTPHeaders = [
             "Content-Type": "application/json"
@@ -79,7 +79,7 @@ final class LoginModel {
     }
     
     func tokenRefreshRequest(success: ((Token) -> ())?, refreshFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/token/refresh"
+        let url = Server.server.URL + "/token/refresh"
         print(url)
         
         let headers: HTTPHeaders = [
@@ -144,7 +144,7 @@ final class LoginModel {
     }
     
     func sendFCMTokenRequest(fcmToken: String, success: ((FCMTokenItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/notification"
+        let url = Server.server.URL + "/notification"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
