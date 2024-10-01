@@ -28,7 +28,6 @@ final class DispatchModel {
     private(set) var loadDispatchScheduleListRequest: DataRequest?
     private(set) var loadDispatchScheduleDetailRequest: DataRequest?
     
-    
     func loadDailyDispatchRequest(date: String, success: ((DispatchDailyItem) -> ())?, dispatchFailure: ((Int) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = Server.server.URL + "/dispatch/daily/\(date)"
         

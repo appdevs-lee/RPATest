@@ -14,7 +14,7 @@ final class ProfileModel {
     
     // MARK: - 급여명세서 불러오는 API
     func loadSalaryStatementRequest(date: Date, success: ((String) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/salary/detail"
+        let url = Server.server.URL + "/salary/detail"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -55,7 +55,7 @@ final class ProfileModel {
     
     // MARK: - 급여명세서 사인 API
     func signSalaryStatementRequest(date: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/salary/detail"
+        let url = Server.server.URL + "/salary/detail"
         
         let headers: HTTPHeaders = [
             "accept": "application/json",

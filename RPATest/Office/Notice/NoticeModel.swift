@@ -13,7 +13,7 @@ final class NoticeModel {
     private(set) var loadNoticeDetailRequest: DataRequest?
     
     func loadNoticeListRequest(page: Int, success: ((Notice) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/notice"
+        let url = Server.server.URL + "/notice"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -59,7 +59,7 @@ final class NoticeModel {
     }
     
     func loadNoticeDetailRequest(id: Int, success: ((NoticeDetail) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/notice/\(id)"
+        let url = Server.server.URL + "/notice/\(id)"
         
         let headers: HTTPHeaders = [
             "access": "application/json",

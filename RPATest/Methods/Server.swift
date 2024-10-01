@@ -7,18 +7,52 @@
 
 import Foundation
 
-enum ServerURL: String {
-    case DEV = "http://34.121.50.23:8000"
-    case NH = "http://34.125.128.74:5000/"
-    case PROD = "http://api.kingbuserp.link"
-}
-
-class Server {
-    static let shared = Server()
+struct Server {
+    static let server: Server = .DEV
     
-    var currentURL: String?
+    // MARK: DEV v1.0.3 - 2024/09/16
     
-    private init() {
-        self.currentURL = UserDefaults.standard.string(forKey: "currentURL")
+    enum Server: String {
+        case DEV
+        case QA
+        case RELEASE
+        
+        var URL: String {
+            switch self {
+            case .DEV:
+                return "http://34.121.50.23:8000"
+                
+            case .QA:
+                return ""
+                
+            case .RELEASE:
+                return "http://api.kingbuserp.link"
+            }
+        }
+        
+        var imageServerFactor: String {
+            switch self {
+            case .DEV:
+                return "Dev"
+                
+            case .QA:
+                return "qa"
+                
+            case .RELEASE:
+                return "Sunghwatour"
+            }
+        }
+        
+        var firebaseServerURL: String {
+            switch self {
+            case .DEV:
+                return "/Server/Dev"
+            case .QA:
+                return ""
+            case .RELEASE:
+                return "/Server/Sunghwatour"
+            }
+        }
+        
     }
 }

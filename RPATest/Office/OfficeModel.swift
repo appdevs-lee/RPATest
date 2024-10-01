@@ -13,7 +13,7 @@ final class OfficeModel {
     private(set) var loadGasStationRequest: DataRequest?
     
     func sendRefuelingDataRequest(date: String, vehicle: Int, driver: Int, km: Double, refuelingAmount: Double, ureaSolution: Double, gasStation: Int, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/vehicle/refueling"
+        let url = Server.server.URL + "/vehicle/refueling"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -76,7 +76,7 @@ final class OfficeModel {
     
     // MARK: - 주유장소 가져오기
     func loadGasStationRequest(page: Int, search: String, success: ((GasStationItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/gasstation"
+        let url = Server.server.URL + "/gasstation"
         
         let headers: HTTPHeaders = [
             "accept": "application/json",

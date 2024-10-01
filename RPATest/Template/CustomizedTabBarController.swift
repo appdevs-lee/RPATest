@@ -37,22 +37,18 @@ class CustomizedTabBarController: UITabBarController {
         self.setDesign()
         
         // Set ViewControllers in Tabbar
-//        let mainVC = MainViewController()
-//        let letterVC = LetterViewController()
-//        let aquaVC = AquaViewController()
-//        let settingVC = SettingViewController()
-//        let setting2VC = SettingViewController()
+        let mainVC = RenewalMainViewController(role: Role(rawValue: ReferenceValues.role) ?? .generalDriver)
+        let officeVC = OfficeViewController()
+        let organizationVC = OrganizationViewController()
+        let profileVC = RenewalProfileViewController()
         
         self.viewControllers = [
-//            self.createTabBarItem(tabBarTitle: SupportingMethods.shared.getText("tabbar.home"), tabBarImage: "Home", selectedImage: "SelectedHome", viewController: mainVC),
-//            self.createTabBarItem(tabBarTitle: SupportingMethods.shared.getText("tabbar.home"), tabBarImage: "Home", selectedImage: "SelectedHome", viewController: letterVC),
-//            self.createTabBarItem(tabBarTitle: SupportingMethods.shared.getText("tabbar.home"), tabBarImage: "Home", selectedImage: "SelectedHome", viewController: aquaVC),
-//            self.createTabBarItem(tabBarTitle: SupportingMethods.shared.getText("tabbar.home"), tabBarImage: "Home", selectedImage: "SelectedHome", viewController: settingVC),
-//            self.createTabBarItem(tabBarTitle: SupportingMethods.shared.getText("tabbar.home"), tabBarImage: "Home", selectedImage: "SelectedHome", viewController: setting2VC),
+            self.createTabBarItem(tabBarTitle: "배차", tabBarImage: "dispatch", selectedImage: "selectedDispatch", viewController: mainVC),
+            self.createTabBarItem(tabBarTitle: "사무", tabBarImage: "office", selectedImage: "selectedOffice", viewController: officeVC),
+            self.createTabBarItem(tabBarTitle: "조직도", tabBarImage: "organization", selectedImage: "selectedOrganization", viewController: organizationVC),
+            self.createTabBarItem(tabBarTitle: "프로필", tabBarImage: "profile", selectedImage: "selectedProfile", viewController: profileVC),
         ]
         
-        // FIXME: 고치기
-        NotificationCenter.default.addObserver(self, selector: #selector(changeTextLanguage(_:)), name: Notification.Name("SetLocalization"), object: nil)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -76,7 +72,7 @@ class CustomizedTabBarController: UITabBarController {
 extension CustomizedTabBarController {
     func setDesign() {
         self.tabBar.backgroundColor = .white
-        self.tabBar.tintColor = .useRGB(red: 151, green: 157, blue: 242)
+        self.tabBar.tintColor = .useRGB(red: 176, green: 0, blue: 32)
         
         let appearance = UITabBarItem.appearance()
         let attributes = [NSAttributedString.Key.font: UIFont.useFont(ofSize: 12, weight: .Medium)]

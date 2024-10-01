@@ -20,27 +20,28 @@ class CompanyEnterViewController: UIViewController {
     @IBAction func tapNextButton(_ sender: UIButton) {
         ReferenceValues.currentCompany = self.companyEnterTextField.text ?? ""
         
-        if self.companyEnterTextField.text == "dev" {
-            self.dismiss(animated: false) {
-                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
-                
-                Server.shared.currentURL = ServerURL.DEV.rawValue
-                UserDefaults.standard.set(ServerURL.DEV.rawValue, forKey: "currentURL")
-            }
-        } else if self.companyEnterTextField.text == "성화투어" {
-            self.dismiss(animated: false) {
-                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
-                
-                Server.shared.currentURL = ServerURL.PROD.rawValue
-                UserDefaults.standard.set(ServerURL.PROD.rawValue, forKey: "currentURL")
-            }
-        } else if self.companyEnterTextField.text == "뉴한솔" {
-            self.dismiss(animated: false) {
-                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
-                
-                Server.shared.currentURL = ServerURL.NH.rawValue
-                UserDefaults.standard.set(ServerURL.NH.rawValue, forKey: "currentURL")
-            }
-        }
+//        if self.companyEnterTextField.text == "dev" {
+//            self.dismiss(animated: false) {
+//                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
+//                
+//                Server.server.URL
+//                Server.shared.currentURL = Server.server.URL
+//                UserDefaults.standard.set(Server.server.URL, forKey: "currentURL")
+//            }
+//        } else if self.companyEnterTextField.text == "성화투어" {
+//            self.dismiss(animated: false) {
+//                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
+//                
+//                Server.shared.currentURL = ServerURL.PROD.rawValue
+//                UserDefaults.standard.set(ServerURL.PROD.rawValue, forKey: "currentURL")
+//            }
+//        } else if self.companyEnterTextField.text == "뉴한솔" {
+//            self.dismiss(animated: false) {
+//                UserDefaults.standard.set("Y", forKey: "CompanyCheck")
+//                
+//                Server.shared.currentURL = ServerURL.NH.rawValue
+//                UserDefaults.standard.set(ServerURL.NH.rawValue, forKey: "currentURL")
+//            }
+//        }
     }
 }

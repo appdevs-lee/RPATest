@@ -108,6 +108,13 @@
 		2D0F01762B57F4FD002F3160 /* AccidentSafeCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F01752B57F4FD002F3160 /* AccidentSafeCheckViewController.swift */; };
 		2D0F01782B57F8F2002F3160 /* AccidentNameListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F01772B57F8F2002F3160 /* AccidentNameListViewController.swift */; };
 		2D4D26982B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */; };
+		2D7889DB2CABC02400367A66 /* RenewalMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */; };
+		2D7889DD2CABC3BB00367A66 /* RenewalLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */; };
+		2D7889E12CABCF6000367A66 /* CustomizedTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DF2CABCF6000367A66 /* CustomizedTabBarController.swift */; };
+		2D7889E22CABCF6000367A66 /* CustomizedNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889E02CABCF6000367A66 /* CustomizedNavigationController.swift */; };
+		2D7889E42CABEDC500367A66 /* NewDispatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889E32CABEDC500367A66 /* NewDispatchModel.swift */; };
+		2D7889E62CABFC0400367A66 /* NotYetDispatchCheckListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889E52CABFC0400367A66 /* NotYetDispatchCheckListViewController.swift */; };
+		2D7889E82CAC05EC00367A66 /* NotYetDispatchCheckListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889E72CAC05EC00367A66 /* NotYetDispatchCheckListTableViewCell.swift */; };
 		2D9DCAB62B7E4B96003F1EFA /* KingbusAlarmSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2D9DCAB52B7E4B96003F1EFA /* KingbusAlarmSound.caf */; };
 		2DCBDFEB2AEE33C1000685F5 /* OrganizationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCBDFEA2AEE33C1000685F5 /* OrganizationModel.swift */; };
 		2DE378552B1C6850000741DD /* DispatchMonthlyNoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE378542B1C6850000741DD /* DispatchMonthlyNoteViewController.swift */; };
@@ -249,6 +256,13 @@
 		2D0F01752B57F4FD002F3160 /* AccidentSafeCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentSafeCheckViewController.swift; sourceTree = "<group>"; };
 		2D0F01772B57F8F2002F3160 /* AccidentNameListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentNameListViewController.swift; sourceTree = "<group>"; };
 		2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteSelectTimeViewController.swift; sourceTree = "<group>"; };
+		2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalMainViewController.swift; sourceTree = "<group>"; };
+		2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalLoginViewController.swift; sourceTree = "<group>"; };
+		2D7889DF2CABCF6000367A66 /* CustomizedTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizedTabBarController.swift; sourceTree = "<group>"; };
+		2D7889E02CABCF6000367A66 /* CustomizedNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizedNavigationController.swift; sourceTree = "<group>"; };
+		2D7889E32CABEDC500367A66 /* NewDispatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDispatchModel.swift; sourceTree = "<group>"; };
+		2D7889E52CABFC0400367A66 /* NotYetDispatchCheckListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotYetDispatchCheckListViewController.swift; sourceTree = "<group>"; };
+		2D7889E72CAC05EC00367A66 /* NotYetDispatchCheckListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotYetDispatchCheckListTableViewCell.swift; sourceTree = "<group>"; };
 		2D9DCAB52B7E4B96003F1EFA /* KingbusAlarmSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = KingbusAlarmSound.caf; sourceTree = "<group>"; };
 		2DCBDFEA2AEE33C1000685F5 /* OrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationModel.swift; sourceTree = "<group>"; };
 		2DE378542B1C6850000741DD /* DispatchMonthlyNoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchMonthlyNoteViewController.swift; sourceTree = "<group>"; };
@@ -467,6 +481,43 @@
 			path = AccidentResponse;
 			sourceTree = "<group>";
 		};
+		2D7889D62CABBF5F00367A66 /* RefactoringView */ = {
+			isa = PBXGroup;
+			children = (
+				2D7889D72CABBF6F00367A66 /* Login */,
+				2D7889D92CABBFCE00367A66 /* Main */,
+			);
+			path = RefactoringView;
+			sourceTree = "<group>";
+		};
+		2D7889D72CABBF6F00367A66 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */,
+				2D7889E52CABFC0400367A66 /* NotYetDispatchCheckListViewController.swift */,
+				2D7889E72CAC05EC00367A66 /* NotYetDispatchCheckListTableViewCell.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		2D7889D92CABBFCE00367A66 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		2D7889DE2CABCBD300367A66 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5F1BB0B62A03D6B30081DBBE /* LoginModel.swift */,
+				5FCC116C2AA3444300550534 /* DispatchModel.swift */,
+				2D7889E32CABEDC500367A66 /* NewDispatchModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		2DE378532B1C6829000741DD /* Note */ = {
 			isa = PBXGroup;
 			children = (
@@ -552,7 +603,9 @@
 				5F1A161D2A74EDBC00132D29 /* Methods */,
 				5FE29CC02A7E154E000748FC /* Common */,
 				5F1A16152A74E10C00132D29 /* Fonts */,
+				2D7889DE2CABCBD300367A66 /* Models */,
 				5F1A161C2A74ED7F00132D29 /* View */,
+				2D7889D62CABBF5F00367A66 /* RefactoringView */,
 				5F1BB0B22A03D5160081DBBE /* Login */,
 				5FE29CBF2A7E151F000748FC /* Dispatch */,
 				5FCC11722AA46D9300550534 /* Office */,
@@ -565,7 +618,6 @@
 		5F1BB0B22A03D5160081DBBE /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				5F1BB0B62A03D6B30081DBBE /* LoginModel.swift */,
 				056A34512ABBCC4200829750 /* CheckPermissionViewController.swift */,
 				5FCD8D402A6B9C82000AFC3F /* CompanyEnterViewController.swift */,
 				5F1BB0B32A03D5300081DBBE /* LoginViewController.swift */,
@@ -616,6 +668,8 @@
 		5FD49D112AA31B5D00208273 /* Template */ = {
 			isa = PBXGroup;
 			children = (
+				2D7889E02CABCF6000367A66 /* CustomizedNavigationController.swift */,
+				2D7889DF2CABCF6000367A66 /* CustomizedTabBarController.swift */,
 				5FD49D142AA31BB900208273 /* TemplateViewController.swift */,
 				5FD49D162AA31BCA00208273 /* TemplateTableViewCell.swift */,
 				5FD49D182AA31BEE00208273 /* TemplateHeaderFooterView.swift */,
@@ -631,7 +685,6 @@
 		5FE29CBF2A7E151F000748FC /* Dispatch */ = {
 			isa = PBXGroup;
 			children = (
-				5FCC116C2AA3444300550534 /* DispatchModel.swift */,
 				0582C5A42AB8215E0045CBCB /* Home */,
 				0582C5A62AB821800045CBCB /* Search */,
 				0582C5A52AB8216C0045CBCB /* Month */,
@@ -797,11 +850,13 @@
 				5FCC11742AA46DD900550534 /* OfficeViewController.swift in Sources */,
 				0596A4432B2A8F2A00D2C3AA /* DispatchInspectionViewController.swift in Sources */,
 				0561E7252AC2BB3400787B77 /* ServerInspectionViewController.swift in Sources */,
+				2D7889E62CABFC0400367A66 /* NotYetDispatchCheckListViewController.swift in Sources */,
 				2DCBDFEB2AEE33C1000685F5 /* OrganizationModel.swift in Sources */,
 				057E24882B5E569000633D2F /* CarManageInspectionTableViewCell.swift in Sources */,
 				0594D32C2B5673B800283C6D /* RenewalDispatchSearchListViewController.swift in Sources */,
 				0593327E2B4E3A8A0074C13A /* DispatchDrivingDoneTableViewCell.swift in Sources */,
 				056BF5042AF3518900B4C389 /* BottomSheetViewController.swift in Sources */,
+				2D7889DB2CABC02400367A66 /* RenewalMainViewController.swift in Sources */,
 				5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */,
 				056A34522ABBCC4200829750 /* CheckPermissionViewController.swift in Sources */,
 				05821AA52B0DEC94007049C9 /* TemplateView.swift in Sources */,
@@ -809,6 +864,7 @@
 				0561E7232AC2A32100787B77 /* DispatchHomeCheckViewController.swift in Sources */,
 				0593327A2B4E2CC00074C13A /* DispatchDrivingDetailPathTableViewCell.swift in Sources */,
 				5FE29CBE2A7E142A000748FC /* AlertPopViewController.swift in Sources */,
+				2D7889E12CABCF6000367A66 /* CustomizedTabBarController.swift in Sources */,
 				5F1BB0B42A03D5300081DBBE /* LoginViewController.swift in Sources */,
 				057D94212AB18DA300779CFF /* DispatchCheckTableViewCell.swift in Sources */,
 				0593327C2B4E2D9B0074C13A /* DetailPathTableViewCell.swift in Sources */,
@@ -824,6 +880,7 @@
 				057DDD622B58A1A200EE110A /* AccidentCallListViewController.swift in Sources */,
 				0594D32A2B56615200283C6D /* SearchClassificationCollectionViewCell.swift in Sources */,
 				05C7E76C2B2716E700EEDD2C /* GarageTableViewCell.swift in Sources */,
+				2D7889E82CAC05EC00367A66 /* NotYetDispatchCheckListTableViewCell.swift in Sources */,
 				2D0F01782B57F8F2002F3160 /* AccidentNameListViewController.swift in Sources */,
 				5F680E9C2AA56CA40047ED65 /* ProfileCollectionViewCell.swift in Sources */,
 				056A34762ABC393700829750 /* ConsultingModel.swift in Sources */,
@@ -832,6 +889,7 @@
 				5FD49D152AA31BBA00208273 /* TemplateViewController.swift in Sources */,
 				056A34582ABBDE9C00829750 /* NoticeViewController.swift in Sources */,
 				056B494A2B218F9300F7A3A4 /* DispatchNoteOrderTableViewCell.swift in Sources */,
+				2D7889E42CABEDC500367A66 /* NewDispatchModel.swift in Sources */,
 				2D4D26982B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift in Sources */,
 				056A34712ABC317F00829750 /* InspectionVehicleListViewController.swift in Sources */,
 				0561E7212AC29D3D00787B77 /* NavigationViewController.swift in Sources */,
@@ -897,7 +955,9 @@
 				5F1BB0A12A03D1210081DBBE /* SceneDelegate.swift in Sources */,
 				5FCC11762AA46DE200550534 /* OrganizationViewController.swift in Sources */,
 				5FCC116D2AA3444300550534 /* DispatchModel.swift in Sources */,
+				2D7889E22CABCF6000367A66 /* CustomizedNavigationController.swift in Sources */,
 				059332782B4E1ACC0074C13A /* Extension.swift in Sources */,
+				2D7889DD2CABC3BB00367A66 /* RenewalLoginViewController.swift in Sources */,
 				5F1BB0B92A03D92E0081DBBE /* UserInfo.swift in Sources */,
 				056A345A2ABBE1D700829750 /* NoticeTableViewCell.swift in Sources */,
 				053C55D42AA9AB86006A6D93 /* OrganizationTableViewCell.swift in Sources */,

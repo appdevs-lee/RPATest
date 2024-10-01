@@ -46,19 +46,20 @@ final class CheckPermissionViewController: UIViewController {
             self.commonModel.checkAlbumPermission { result in
                 self.locationManager.delegate = self
                 
-                print("\(self.locationManager.authorizationStatus)")
-                if self.locationManager.authorizationStatus != .notDetermined {
+                switch self.locationManager.authorizationStatus {
+                case .notDetermined:
+                    self.locationManager.requestWhenInUseAuthorization()
+                    
+                default:
                     DispatchQueue.main.async {
                         self.dismiss(animated: true) {
+                            ReferenceValues.isCheckPermission = true
                             UserDefaults.standard.set("Check", forKey: "CheckPermission")
                             NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
                             
                         }
                         
                     }
-
-                } else {
-                    self.locationManager.requestWhenInUseAuthorization()
                     
                 }
 
@@ -74,7 +75,7 @@ final class CheckPermissionViewController: UIViewController {
 // MARK: Extension for essential methods
 extension CheckPermissionViewController: EssentialViewMethods {
     func setViewFoundation() {
-        
+        self.view.backgroundColor = .white
     }
     
     func initializeObjects() {
@@ -158,37 +159,16 @@ extension CheckPermissionViewController: CLLocationManagerDelegate {
         case .notDetermined:
             print(".notDetermined")
             self.locationManager.requestWhenInUseAuthorization()
-        case .denied:
-            print(".denied")
-            self.dismiss(animated: true) {
-                UserDefaults.standard.set("Check", forKey: "CheckPermission")
-                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
-                
-            }
             
-        case .authorizedWhenInUse, .authorizedAlways:
-            print(".autohrizedWhenInUse")
+        default:
             self.dismiss(animated: true) {
-                UserDefaults.standard.set("Check", forKey: "CheckPermission")
-                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
-                
-            }
-            
-        case .restricted:
-            print(".restricted")
-            self.dismiss(animated: true) {
-                UserDefaults.standard.set("Check", forKey: "CheckPermission")
-                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
-                
-            }
-            
-        @unknown default:
-            self.dismiss(animated: true) {
-                UserDefaults.standard.set("Check", forKey: "CheckPermission")
-                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
-                
+//                UserDefaults.standard.set("Check", forKey: "CheckPermission")
+//                NotificationCenter.default.post(name: Notification.Name("PermissionComplete"), object: nil)
+                ReferenceValues.isCheckPermission = true
             }
             
         }
+        
     }
+    
 }

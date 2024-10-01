@@ -48,6 +48,13 @@ final class LoginModel {
                     if decodedData.result == "true" { // result == true
                         if let decodedData = try? JSONDecoder().decode(Login.self, from: data) {
                             print("loginRequest succeeded")
+                            ReferenceValues.refreshToken = decodedData.data.refresh
+                            ReferenceValues.role = decodedData.data.authenticatedUser.role
+                            ReferenceValues.name = decodedData.data.authenticatedUser.name
+                            
+                            UserInfo.shared.access = "Bearer " + decodedData.data.access
+                            UserInfo.shared.name = decodedData.data.authenticatedUser.name
+                            UserInfo.shared.role = decodedData.data.authenticatedUser.role
                             success?(decodedData.data)
                                                 
                         } else {
@@ -87,7 +94,7 @@ final class LoginModel {
         ]
         
         let parameters: Parameters = [
-            "refresh": "\(getRefreshToken())"
+            "refresh": ReferenceValues.refreshToken
         ]
         
         self.tokenRefreshRequest = AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
@@ -113,6 +120,8 @@ final class LoginModel {
                     if decodedData.result == "true" { // result == true
                         if let decodedData = try? JSONDecoder().decode(Refresh.self, from: data) {
                             print("tokenRefreshRequest succeeded")
+                            UserInfo.shared.access = "Bearer " + decodedData.data.access
+                            ReferenceValues.refreshToken = decodedData.data.refresh
                             success?(decodedData.data)
                             
                         } else {
@@ -143,7 +152,7 @@ final class LoginModel {
         }
     }
     
-    func sendFCMTokenRequest(fcmToken: String, success: ((FCMTokenItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+    func sendFCMTokenRequest(success: ((FCMTokenItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
         let url = Server.server.URL + "/notification"
         
         let headers: HTTPHeaders = [
