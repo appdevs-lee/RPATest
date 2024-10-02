@@ -9,24 +9,6 @@ import UIKit
 
 final class NotYetDispatchCheckListViewController: UIViewController {
     
-    lazy var headerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
-    }()
-    
-    lazy var headerTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "미확인 배차"
-        label.textColor = .useRGB(red: 66, green: 66, blue: 66)
-        label.font = .useFont(ofSize: 18, weight: .Bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        return label
-    }()
-    
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
@@ -67,6 +49,7 @@ final class NotYetDispatchCheckListViewController: UIViewController {
         self.setSubviews()
         self.setLayouts()
         self.setData()
+        self.setUpNavigationItem()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -89,6 +72,10 @@ extension NotYetDispatchCheckListViewController: EssentialViewMethods {
     func setViewFoundation() {
         self.view.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
         
+        // Pop Slide
+        if self.navigationController?.viewControllers.first === self  {
+            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        }
     }
     
     func initializeObjects() {
@@ -104,42 +91,26 @@ extension NotYetDispatchCheckListViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
+        NotificationCenter.default.addObserver(self, selector: #selector(dispatchAccept(_:)), name: Notification.Name("DispatchAccept"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dispatchRefusal(_:)), name: Notification.Name("DispatchRefusal"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dispatchRefusalCompleted(_:)), name: Notification.Name("DispatchRefusalCompleted"), object: nil)
         
     }
     
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
-            self.headerView,
             self.tableView,
         ], to: self.view)
-        
-        SupportingMethods.shared.addSubviews([
-            self.headerTitleLabel,
-        ], to: self.headerView)
     }
     
     func setLayouts() {
         let safeArea = self.view.safeAreaLayoutGuide
         
-        // headerView
-        NSLayoutConstraint.activate([
-            self.headerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            self.headerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.headerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            self.headerView.heightAnchor.constraint(equalToConstant: 44),
-        ])
-        
-        // headerTitleLabel
-        NSLayoutConstraint.activate([
-            self.headerTitleLabel.centerXAnchor.constraint(equalTo: self.headerView.centerXAnchor),
-            self.headerTitleLabel.centerYAnchor.constraint(equalTo: self.headerView.centerYAnchor),
-        ])
-        
         // tableView
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor),
+            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
     }
@@ -157,11 +128,39 @@ extension NotYetDispatchCheckListViewController: EssentialViewMethods {
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                if self.noCheckList.isEmpty {
+                    self.dismiss(animated: true) {
+                        NotificationCenter.default.post(name: Notification.Name("NotYetDispatchCheckCompleted"), object: nil)
+                        
+                    }
+                    
+                }
                 
             }
             
         }
         
+    }
+    
+    func setUpNavigationItem() {
+        self.view.backgroundColor = .white
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = .clear // Navigation bar is transparent and root view appears on it.
+        appearance.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 66, green: 66, blue: 66),
+            .font:UIFont.useFont(ofSize: 18, weight: .Bold)
+        ]
+        
+        // MARK: NavigationItem appearance for each view controller
+        self.navigationItem.scrollEdgeAppearance = appearance
+        self.navigationItem.standardAppearance = appearance
+        self.navigationItem.compactAppearance = appearance
+        
+        self.navigationItem.title = "미확인 배차"
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "xmark")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(rightBarButtonItem(_:)))
     }
 }
 
@@ -198,10 +197,74 @@ extension NotYetDispatchCheckListViewController {
         }
 
     }
+    
+    func sendDispatchCheckDataRequest(check: Check, id: Int, dispatchType: DispatchKindType, success: (() -> ())?) {
+        self.dispatchModel.sendDispatchCheckDataRequest(check: check, regularlyId: dispatchType == .regularly ? "\(id)" : "", orderId: dispatchType == .order ? "\(id)" : "") {
+            success?()
+            
+        } failure: { message in
+            SupportingMethods.shared.turnCoverView(.off)
+            print("sendDispatchCheckDataRequest API Error: \(message)")
+            
+        }
+
+        
+    }
+    
 }
 
 // MARK: - Extension for selector methods
 extension NotYetDispatchCheckListViewController {
+    @objc func rightBarButtonItem(_ barButtonItem: UIBarButtonItem) {
+        self.dismiss(animated: true)
+        
+    }
+    
+    @objc func dispatchAccept(_ notification: Notification) {
+        guard let item = notification.userInfo?["item"] as? DailyDispatchDetailItem else { return }
+        print("item: \(item.id)")
+        var dispatchKindType: DispatchKindType?
+        
+        if let _ = item.checkRegularlyConnect {
+            dispatchKindType = .regularly
+            
+        } else if let _ = item.checkOrderConnect {
+            dispatchKindType = .order
+            
+        }
+        
+        guard let dispatchKindType = dispatchKindType else { return }
+        self.sendDispatchCheckDataRequest(check: .accept, id: item.id, dispatchType: dispatchKindType) {
+            self.setData()
+            
+        }
+        
+    }
+    
+    @objc func dispatchRefusal(_ notification: Notification) {
+        guard let item = notification.userInfo?["item"] as? DailyDispatchDetailItem else { return }
+        print("item: \(item.id)")
+        var dispatchKindType: DispatchKindType?
+        
+        if let _ = item.checkRegularlyConnect {
+            dispatchKindType = .regularly
+            
+        } else if let _ = item.checkOrderConnect {
+            dispatchKindType = .order
+            
+        }
+        
+        guard let dispatchKindType = dispatchKindType else { return }
+        let vc = DispatchRefusalViewController(dispatchKindType: dispatchKindType, id: item.id)
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+    }
+    
+    @objc func dispatchRefusalCompleted(_ notification: Notification) {
+        self.setData()
+        
+    }
     
 }
 
@@ -222,3 +285,18 @@ extension NotYetDispatchCheckListViewController: UITableViewDelegate, UITableVie
     }
 }
 
+// MARK: - Extension for UIGestureRecognizerDelegate
+extension NotYetDispatchCheckListViewController: UIGestureRecognizerDelegate {
+    // For swipe gesture
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    // For swipe gesture, prevent working on the root view of navigation controller
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if self.navigationController?.visibleViewController is DispatchDrivingPathViewController {
+            return false
+        }
+        return self.navigationController!.viewControllers.count > 1 ? true : false
+    }
+}

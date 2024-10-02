@@ -43,6 +43,18 @@ final class NotYetDispatchCheckListTableViewCell: UITableViewCell {
         return view
     }()
     
+    lazy var regularlyBackgroundImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = .useCustomImage("dispatchCheckBGImage")
+        imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        imageView.layer.cornerRadius = 10
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return imageView
+    }()
+    
     lazy var groupLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -154,6 +166,10 @@ final class NotYetDispatchCheckListTableViewCell: UITableViewCell {
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Bold)
         button.backgroundColor = .useRGB(red: 176, green: 0, blue: 32)
         button.layer.cornerRadius = 10
+        button.addAction(UIAction { _ in
+            guard let item = self.item else { return }
+            NotificationCenter.default.post(name: Notification.Name("DispatchAccept"), object: nil, userInfo: ["item": item])
+        }, for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -169,12 +185,16 @@ final class NotYetDispatchCheckListTableViewCell: UITableViewCell {
         button.layer.borderColor = UIColor.useRGB(red: 108, green: 108, blue: 108).cgColor
         button.layer.borderWidth = 1.0
         button.layer.cornerRadius = 10
+        button.addAction(UIAction { _ in
+            guard let item = self.item else { return }
+            NotificationCenter.default.post(name: Notification.Name("DispatchRefusal"), object: nil, userInfo: ["item": item])
+        }, for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    var mapLink: String = ""
+    var item: DailyDispatchDetailItem?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -238,6 +258,7 @@ extension NotYetDispatchCheckListTableViewCell {
         ], to: self.baseView)
         
         SupportingMethods.shared.addSubviews([
+            self.regularlyBackgroundImageView,
             self.groupLabel,
             self.routeLabel,
             self.kakaoMapButton,
@@ -271,6 +292,14 @@ extension NotYetDispatchCheckListTableViewCell {
             self.baseStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.baseStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
             self.baseStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+        ])
+        
+        // regularlyBackgroundImageView
+        NSLayoutConstraint.activate([
+            self.regularlyBackgroundImageView.leadingAnchor.constraint(equalTo: self.regularlyView.leadingAnchor),
+            self.regularlyBackgroundImageView.trailingAnchor.constraint(equalTo: self.regularlyView.trailingAnchor),
+            self.regularlyBackgroundImageView.topAnchor.constraint(equalTo: self.regularlyView.topAnchor),
+            self.regularlyBackgroundImageView.bottomAnchor.constraint(equalTo: self.regularlyView.bottomAnchor),
         ])
         
         // groupLabel
@@ -348,12 +377,13 @@ extension NotYetDispatchCheckListTableViewCell {
 // MARK: - Extension for methods added
 extension NotYetDispatchCheckListTableViewCell {
     func setCell(item: DailyDispatchDetailItem) {
+        self.item = item
+        
         if let _ = item.checkRegularlyConnect {
             // regularly
             self.regularlyView.isHidden = false
             self.groupLabel.text = "\(item.group!)"
             self.routeLabel.text = "\(item.route!)"
-            self.mapLink = item.maplink
             
         } else {
             // order
@@ -379,7 +409,9 @@ extension NotYetDispatchCheckListTableViewCell {
 // MARK: - Extension for selector added
 extension NotYetDispatchCheckListTableViewCell {
     @objc func kakaoMapButton(_ sender: UIButton) {
-        guard let url = URL(string: self.mapLink) else { return }
+        guard let mapLink = self.item?.maplink else { return }
+        guard let url = URL(string: mapLink) else { return }
+        
         UIApplication.shared.open(url)
         
     }

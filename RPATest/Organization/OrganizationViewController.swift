@@ -168,6 +168,7 @@ final class OrganizationViewController: UIViewController {
 // MARK: Extension for essential methods
 extension OrganizationViewController: EssentialViewMethods {
     func setViewFoundation() {
+        self.view.backgroundColor = .white
         
     }
     

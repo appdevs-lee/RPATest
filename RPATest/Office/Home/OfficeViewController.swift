@@ -106,6 +106,7 @@ final class OfficeViewController: UIViewController {
 // MARK: Extension for essential methods
 extension OfficeViewController: EssentialViewMethods {
     func setViewFoundation() {
+        self.view.backgroundColor = .white
         
     }
     

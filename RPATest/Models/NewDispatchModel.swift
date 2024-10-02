@@ -8,12 +8,13 @@
 import UIKit
 import Alamofire
 
+// MARK: Enum for DispatchModel
+enum Check: Int {
+    case accept = 1
+    case refusal = 0
+}
+
 final class NewDispatchModel {
-    // MARK: Enum for DispatchModel
-    enum Check: Int {
-        case accept = 1
-        case refusal = 0
-    }
     
     // 배차 확인 했는지 가져오는 API(명일)
     private(set) var loadWhetherOrNotDispatchCheckRequest: DataRequest?
@@ -108,7 +109,7 @@ final class NewDispatchModel {
         }
     }
     
-    func sendDispatchCheckDataRequest(check: Check, refusal: String = "", regularlyId: String, orderId: String, success: (() -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+    func sendDispatchCheckDataRequest(check: Check, refusal: String = "", regularlyId: String, orderId: String, success: (() -> ())?, failure: ((_ message: String) -> ())?) {
         let url = Server.server.URL + "/dispatch/connect/check"
         print(url)
         
@@ -118,17 +119,17 @@ final class NewDispatchModel {
         ]
         
         let parameters: Parameters = [
-            "check": check,
+            "check": check.rawValue,
             "refusal": refusal,
-            "regularly_id": regularlyId,
-            "order_id": orderId
+            "regularly_id": "\(regularlyId)",
+            "order_id": "\(orderId)",
         ]
         
-        self.sendDispatchCheckDataRequest = AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        self.sendDispatchCheckDataRequest = AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
         
         self.sendDispatchCheckDataRequest?.responseData { response in
             switch response.result {
-            case .success(let data):
+            case .success(_):
                 guard let statusCode = response.response?.statusCode else {
                     print("sendDispatchCheckDataRequest failure: statusCode nil")
                     failure?("statusCodeNil")
@@ -143,13 +144,7 @@ final class NewDispatchModel {
                     return
                 }
                 
-                if let _ = try? JSONDecoder().decode(Temporary.self, from: data) {
-                    success?()
-                    
-                } else { // improper structure
-                    print("sendDispatchCheckDataRequest failure: improper structure")
-                    failure?("알 수 없는 Response 구조")
-                }
+                success?()
                 
             case .failure(let error): // error
                 print("sendDispatchCheckDataRequest error: \(error.localizedDescription)")

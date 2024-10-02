@@ -205,6 +205,7 @@ extension RenewalLoginViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
+        NotificationCenter.default.addObserver(self, selector: #selector(proceedLoginProcess(_:)), name: Notification.Name("NotYetDispatchCheckCompleted"), object: nil)
         
     }
     
@@ -292,11 +293,12 @@ extension RenewalLoginViewController {
                     }
                     
                 } else {
-                    //FIXME: 운행 수락 화면 Present
-                    print("운행 수락 필수")
-                    let vc = NotYetDispatchCheckListViewController()
+                    let vc = CustomizedNavigationController(rootViewController: NotYetDispatchCheckListViewController())
                     
-                    self.present(vc, animated: true)
+                    self.present(vc, animated: true) {
+                        SupportingMethods.shared.turnCoverView(.off)
+                        
+                    }
                     
                 }
             }
@@ -423,6 +425,12 @@ extension RenewalLoginViewController {
         
     }
     
+    @objc func proceedLoginProcess(_ notification: Notification) {
+        SupportingMethods.shared.turnCoverView(.on)
+        self.proceedLoginProcess()
+        
+    }
+    
 }
 
 extension RenewalLoginViewController: UITextFieldDelegate {
@@ -484,4 +492,5 @@ extension RenewalLoginViewController: UITextFieldDelegate {
         }
         
     }
+    
 }
