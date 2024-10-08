@@ -147,7 +147,7 @@ extension RenewalMainViewController: EssentialViewMethods {
     }
     
     func setNotificationCenters() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(runningStart(_:)), name: Notification.Name("RunningStart"), object: nil)
     }
     
     func setSubviews() {
@@ -267,6 +267,14 @@ extension RenewalMainViewController {
         
         self.navigationController?.pushViewController(vc, animated: true)
         
+    }
+    
+    @objc func runningStart(_ notification: Notification) {
+        guard let item = notification.userInfo?["item"] as? DailyDispatchDetailItem else { return }
+        
+        let vc = RenewalDispatchRunningViewController(item: item)
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
 }

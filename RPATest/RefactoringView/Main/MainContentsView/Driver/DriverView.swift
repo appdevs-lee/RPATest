@@ -170,4 +170,11 @@ extension DriverView: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = self.itemList[indexPath.row]
+        
+        NotificationCenter.default.post(name: Notification.Name("RunningStart"), object: nil, userInfo: ["item": item])
+    }
+    
 }
