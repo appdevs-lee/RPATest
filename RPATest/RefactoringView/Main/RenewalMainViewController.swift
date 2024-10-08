@@ -21,6 +21,14 @@ final class RenewalMainViewController: UIViewController {
         view.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        if self.role == .driverLeader || self.role == .generalDriver {
+            self.driverView.isHidden = false
+            
+        } else {
+            self.driverView.isHidden = true
+            
+        }
+        
         return view
     }()
     
@@ -66,6 +74,13 @@ final class RenewalMainViewController: UIViewController {
         }
         
         return button
+    }()
+    
+    lazy var driverView: DriverView = {
+        let view = DriverView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
     }()
     
     var role: Role
@@ -114,6 +129,7 @@ extension RenewalMainViewController: EssentialViewMethods {
     func setViewFoundation() {
         print("role: \(self.role)")
         print("accessToken: \(UserInfo.shared.access ?? "")")
+        self.view.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
         
     }
     
@@ -135,36 +151,28 @@ extension RenewalMainViewController: EssentialViewMethods {
     
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
-            self.baseView,
             self.naviBarBaseView,
+            self.baseView,
         ], to: self.view)
-        
-        SupportingMethods.shared.addSubviews([
-            self.naviBarBaseView
-        ], to: self.baseView)
         
         SupportingMethods.shared.addSubviews([
             self.greetingLabel,
             self.dispatchCheckButton,
         ], to: self.naviBarBaseView)
+        
+        SupportingMethods.shared.addSubviews([
+            self.driverView,
+        ], to: self.baseView)
     }
     
     func setLayouts() {
         let safeArea = self.view.safeAreaLayoutGuide
         
-        // baseView
-        NSLayoutConstraint.activate([
-            self.baseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            self.baseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-        ])
-        
         // naviBarBaseView
         NSLayoutConstraint.activate([
-            self.naviBarBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
-            self.naviBarBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.naviBarBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.naviBarBaseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.naviBarBaseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.naviBarBaseView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             self.naviBarBaseView.heightAnchor.constraint(equalToConstant: 100)
         ])
         
@@ -182,6 +190,21 @@ extension RenewalMainViewController: EssentialViewMethods {
             self.dispatchCheckButton.widthAnchor.constraint(equalToConstant: 90),
         ])
         
+        // baseView
+        NSLayoutConstraint.activate([
+            self.baseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.naviBarBaseView.bottomAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+        ])
+        
+        // driverView
+        NSLayoutConstraint.activate([
+            self.driverView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.driverView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.driverView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.driverView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+        ])
     }
     
     func setViewAfterTransition() {

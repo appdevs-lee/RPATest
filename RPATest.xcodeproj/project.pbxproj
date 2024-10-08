@@ -109,6 +109,9 @@
 		2D0F01742B57EEFA002F3160 /* AccidentResponseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F01732B57EEFA002F3160 /* AccidentResponseTableViewCell.swift */; };
 		2D0F01762B57F4FD002F3160 /* AccidentSafeCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F01752B57F4FD002F3160 /* AccidentSafeCheckViewController.swift */; };
 		2D0F01782B57F8F2002F3160 /* AccidentNameListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F01772B57F8F2002F3160 /* AccidentNameListViewController.swift */; };
+		2D2266F72CB0FD4C006D5AA9 /* DriverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2266F62CB0FD4C006D5AA9 /* DriverView.swift */; };
+		2D2266F92CB0FDFE006D5AA9 /* DriverTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2266F82CB0FDFE006D5AA9 /* DriverTableViewCell.swift */; };
+		2D2266FC2CB1085A006D5AA9 /* DispatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2266FB2CB1085A006D5AA9 /* DispatchInfoView.swift */; };
 		2D4D26982B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */; };
 		2D7889DB2CABC02400367A66 /* RenewalMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */; };
 		2D7889DD2CABC3BB00367A66 /* RenewalLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */; };
@@ -259,6 +262,9 @@
 		2D0F01732B57EEFA002F3160 /* AccidentResponseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentResponseTableViewCell.swift; sourceTree = "<group>"; };
 		2D0F01752B57F4FD002F3160 /* AccidentSafeCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentSafeCheckViewController.swift; sourceTree = "<group>"; };
 		2D0F01772B57F8F2002F3160 /* AccidentNameListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentNameListViewController.swift; sourceTree = "<group>"; };
+		2D2266F62CB0FD4C006D5AA9 /* DriverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverView.swift; sourceTree = "<group>"; };
+		2D2266F82CB0FDFE006D5AA9 /* DriverTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverTableViewCell.swift; sourceTree = "<group>"; };
+		2D2266FB2CB1085A006D5AA9 /* DispatchInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchInfoView.swift; sourceTree = "<group>"; };
 		2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteSelectTimeViewController.swift; sourceTree = "<group>"; };
 		2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalMainViewController.swift; sourceTree = "<group>"; };
 		2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalLoginViewController.swift; sourceTree = "<group>"; };
@@ -506,6 +512,24 @@
 			path = Month;
 			sourceTree = "<group>";
 		};
+		2D2266F52CB0FD35006D5AA9 /* MainContentsView */ = {
+			isa = PBXGroup;
+			children = (
+				2D2266FA2CB0FE00006D5AA9 /* Driver */,
+			);
+			path = MainContentsView;
+			sourceTree = "<group>";
+		};
+		2D2266FA2CB0FE00006D5AA9 /* Driver */ = {
+			isa = PBXGroup;
+			children = (
+				2D2266F62CB0FD4C006D5AA9 /* DriverView.swift */,
+				2D2266FB2CB1085A006D5AA9 /* DispatchInfoView.swift */,
+				2D2266F82CB0FDFE006D5AA9 /* DriverTableViewCell.swift */,
+			);
+			path = Driver;
+			sourceTree = "<group>";
+		};
 		2D7889D62CABBF5F00367A66 /* RefactoringView */ = {
 			isa = PBXGroup;
 			children = (
@@ -529,6 +553,7 @@
 		2D7889D92CABBFCE00367A66 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				2D2266F52CB0FD35006D5AA9 /* MainContentsView */,
 				05BEEA7D2CACE73F00566B32 /* Month */,
 				2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */,
 			);
@@ -934,6 +959,7 @@
 				056A346B2ABC193B00829750 /* InspectionCreateViewController.swift in Sources */,
 				0596A4472B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift in Sources */,
 				059332762B4E17A30074C13A /* DispatchDrivingOrderTableViewCell.swift in Sources */,
+				2D2266F72CB0FD4C006D5AA9 /* DriverView.swift in Sources */,
 				5FD49D192AA31BEE00208273 /* TemplateHeaderFooterView.swift in Sources */,
 				057DDD6A2B58C22600EE110A /* AccidentLastFlowViewController.swift in Sources */,
 				055C2E702AB9577E00726CD7 /* DispatchSearchTableViewCell.swift in Sources */,
@@ -951,6 +977,7 @@
 				05E94CD12B5FAF4E0095C76E /* CameraViewController.swift in Sources */,
 				05821A9D2B0DE685007049C9 /* DispatchRegularlyTableViewCell.swift in Sources */,
 				2DF808AA2B30499700DEE24C /* DispatchNoteDetailViewController.swift in Sources */,
+				2D2266FC2CB1085A006D5AA9 /* DispatchInfoView.swift in Sources */,
 				056B49482B218F8600F7A3A4 /* DispatchNoteRegularlyTableViewCell.swift in Sources */,
 				056A346F2ABC1D7300829750 /* IndexPathButton.swift in Sources */,
 				05821A952B0DCDEA007049C9 /* RenewalDispatchViewController.swift in Sources */,
@@ -997,6 +1024,7 @@
 				056A34732ABC31B400829750 /* InspectionVehicleListTableViewCell.swift in Sources */,
 				5F1A16212A74EDF100132D29 /* SupportingMethods.swift in Sources */,
 				057000D32AB29D49007F650E /* DispatchCheckOrderTableViewCell.swift in Sources */,
+				2D2266F92CB0FDFE006D5AA9 /* DriverTableViewCell.swift in Sources */,
 				5FD49D172AA31BCA00208273 /* TemplateTableViewCell.swift in Sources */,
 				5FCD8D412A6B9C82000AFC3F /* CompanyEnterViewController.swift in Sources */,
 				056B494E2B21AE4F00F7A3A4 /* EveningRollCallViewController.swift in Sources */,

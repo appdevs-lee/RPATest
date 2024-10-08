@@ -18,7 +18,7 @@ final class NewDispatchModel {
     
     // 배차 확인 했는지 가져오는 API(명일)
     private(set) var loadWhetherOrNotDispatchCheckRequest: DataRequest?
-    // 일일 배차 가져오는 API(명일)
+    // 일일 배차 가져오는 API
     private(set) var loadDailyDispatchRequest: DataRequest?
     // 배차 확인 및 거부 API
     private(set) var sendDispatchCheckDataRequest: DataRequest?
