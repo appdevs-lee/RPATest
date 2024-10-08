@@ -37,7 +37,7 @@ final class CommonModel {
             subApiString = "/complaint/inspection"
         }
         
-        let url = (Server.shared.currentURL ?? "") + subApiString
+        let url = Server.server.URL + subApiString
         
         let headers: HTTPHeaders = [
             "accept": "application/json",
@@ -103,7 +103,7 @@ final class CommonModel {
     }
     
     func serverInspectionRequest(success: ((String) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/maintenance"
+        let url = Server.server.URL + "/maintenance"
         
         let headers: HTTPHeaders = [
             "access": "application/json"

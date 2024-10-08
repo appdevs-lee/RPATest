@@ -14,7 +14,7 @@ final class OrganizationModel {
     private(set) var clientSearchRequest: DataRequest?
     
     func memberSearchRequest(page: Int, search: String, role: String, success: ((MemberItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/member/list"
+        let url = Server.server.URL + "/member/list"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -76,7 +76,7 @@ final class OrganizationModel {
     }
     
     func memberInfoRequest(success: ((MemberInfoDetail) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/member"
+        let url = Server.server.URL + "/member"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
@@ -132,7 +132,7 @@ final class OrganizationModel {
     }
     
     func clientSearchRequest(page: Int, search: String, success: ((ClientItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/client"
+        let url = Server.server.URL + "/client"
         
         let headers: HTTPHeaders = [
             "access": "application/json",

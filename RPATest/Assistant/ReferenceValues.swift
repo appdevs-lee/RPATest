@@ -72,6 +72,67 @@ struct ReferenceValues {
             
         }
     }
+    
+    static var isCheckPermission: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "isCheckPermission")
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "isCheckPermission")
+        }
+    }
+    
+    static var isLoginCheck: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "isLoginCheck")
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "isLoginCheck")
+        }
+    }
+    
+    static var refreshToken: String {
+        get {
+            return UserDefaults.standard.string(forKey: "refreshToken") ?? ""
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "refreshToken")
+        }
+    }
+    
+    static var fcmToken: String {
+        get {
+            return UserDefaults.standard.string(forKey: "fcmToken") ?? ""
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "fcmToken")
+        }
+    }
+    
+    static var role: String {
+        get {
+            return UserDefaults.standard.string(forKey: "role") ?? ""
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "role")
+        }
+    }
+    
+    static var name: String {
+        get {
+            return UserDefaults.standard.string(forKey: "name") ?? ""
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "name")
+        }
+    }
+    
 }
 
 // MARK: - Extension of referenceValues

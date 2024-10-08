@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gXe-iY-FcY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gXe-iY-FcY">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -93,7 +93,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="962.59541984732823" y="3.5211267605633805"/>
+            <point key="canvasLocation" x="1891" y="4"/>
         </scene>
         <!--Office View Controller-->
         <scene sceneID="myb-L1-PV2">
@@ -137,7 +137,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="UMY-ia-JNA"/>
+                        <segue destination="bXA-zX-rcg" kind="relationship" relationship="rootViewController" id="Ynt-h0-KEU"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EcR-oI-U5R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -555,6 +555,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hij-Tv-Uqs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-51" y="-699"/>
+        </scene>
+        <!--Renewal Login View Controller-->
+        <scene sceneID="Ppq-sl-Wk2">
+            <objects>
+                <viewController id="bXA-zX-rcg" customClass="RenewalLoginViewController" customModule="RPATest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="VAc-NC-zBM">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="W6T-HX-dbx"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="eiN-V3-i7w"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VKZ-Mj-j9a" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="963" y="4"/>
         </scene>
     </scenes>
     <resources>

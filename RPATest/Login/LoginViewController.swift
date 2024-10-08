@@ -203,7 +203,7 @@ extension LoginViewController {
     }
     
     func sendFCMTokenRequest(fcmToken: String, success: (() -> ())?, failure: ((String) -> ())?) {
-        self.loginModel.sendFCMTokenRequest(fcmToken: fcmToken) { item in
+        self.loginModel.sendFCMTokenRequest() { item in
             print("FCM Token: \(item.token)")
             success?()
             

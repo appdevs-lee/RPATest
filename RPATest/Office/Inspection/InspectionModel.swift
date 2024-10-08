@@ -12,7 +12,7 @@ final class InspectionModel {
     private(set) var loadInspectionListRequest: DataRequest?
     
     func loadInspectionListRequest(page: Int, success: ((InspectionList) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/complaint/inspection"
+        let url = Server.server.URL + "/complaint/inspection"
         
         let headers: HTTPHeaders = [
             "access": "application/json",

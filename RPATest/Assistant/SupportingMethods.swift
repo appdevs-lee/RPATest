@@ -580,6 +580,43 @@ extension UIFont {
     }
 }
 
+// MARK: UITextField
+extension UITextField {
+    func setPlaceholder(placeholder: String) {
+        self.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [
+            NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 153, green: 153, blue: 153),
+            .font:UIFont.useFont(ofSize: 14, weight: .Medium)
+        ])
+    }
+    
+    func setBorder(imageName: String? = nil, color: UIColor? = nil) {
+        self.borderStyle = .none
+        self.layer.borderColor = color?.cgColor ?? UIColor.useRGB(red: 218, green: 218, blue: 218).cgColor
+        self.layer.borderWidth = 1.0
+        self.layer.cornerRadius = 12
+        guard let imageName = imageName else {
+            self.addLeftPadding()
+            return
+        }
+        self.addLeftImageView(imageName: imageName)
+    }
+    
+    func addLeftImageView(imageName: String) {
+        let imageView = UIImageView()
+        imageView.image = .useCustomImage(imageName)
+        
+        self.leftView = imageView
+        self.leftViewMode = ViewMode.always
+    }
+    
+    func addLeftPadding() {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: self.frame.height))
+        
+        self.leftView = view
+        self.leftViewMode = ViewMode.always
+    }
+}
+
 // MARK: UIColor to be possible to get color using 0 ~ 255 integer
 extension UIColor {
     class func useRGB(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 1) -> UIColor {
@@ -643,6 +680,10 @@ extension UIImage {
             let img:UIImage = UIImage(cgImage: cgimg)
 
             return img
+    }
+    
+    class func useCustomImage(_ name: String) -> UIImage {
+        return UIImage(named: name) ?? UIImage(systemName: "photo")!
     }
 }
 

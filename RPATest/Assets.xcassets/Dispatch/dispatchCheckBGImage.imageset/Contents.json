@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "dispatchCheckBGImage.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "dispatchCheckBGImage@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "dispatchCheckBGImage@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

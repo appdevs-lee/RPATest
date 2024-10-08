@@ -12,7 +12,7 @@ final class ConsultingModel {
     private(set) var loadConsultingListRequest: DataRequest?
     
     func loadConsultingListRequest(page: Int, success: ((ConsultingList) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
-        let url = (Server.shared.currentURL ?? "") + "/complaint/consulting"
+        let url = Server.server.URL + "/complaint/consulting"
         
         let headers: HTTPHeaders = [
             "access": "application/json",
