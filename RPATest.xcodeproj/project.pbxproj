@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		050556D72CB5230800E56064 /* RenwalDispatchRunningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050556D62CB5230800E56064 /* RenwalDispatchRunningViewController.swift */; };
 		053C55D42AA9AB86006A6D93 /* OrganizationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053C55D32AA9AB86006A6D93 /* OrganizationTableViewCell.swift */; };
 		0551E3C92CACC24600B67798 /* DispatchRefusalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0551E3C82CACC24600B67798 /* DispatchRefusalViewController.swift */; };
 		055C2E6E2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055C2E6D2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift */; };
@@ -159,6 +160,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		050556D62CB5230800E56064 /* RenwalDispatchRunningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenwalDispatchRunningViewController.swift; sourceTree = "<group>"; };
 		053C55D32AA9AB86006A6D93 /* OrganizationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationTableViewCell.swift; sourceTree = "<group>"; };
 		0551E3C82CACC24600B67798 /* DispatchRefusalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchRefusalViewController.swift; sourceTree = "<group>"; };
 		055C2E6D2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchCategoryTableViewCell.swift; sourceTree = "<group>"; };
@@ -556,6 +558,7 @@
 				2D2266F52CB0FD35006D5AA9 /* MainContentsView */,
 				05BEEA7D2CACE73F00566B32 /* Month */,
 				2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */,
+				050556D62CB5230800E56064 /* RenwalDispatchRunningViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -903,6 +906,7 @@
 				0594D32C2B5673B800283C6D /* RenewalDispatchSearchListViewController.swift in Sources */,
 				0593327E2B4E3A8A0074C13A /* DispatchDrivingDoneTableViewCell.swift in Sources */,
 				056BF5042AF3518900B4C389 /* BottomSheetViewController.swift in Sources */,
+				050556D72CB5230800E56064 /* RenwalDispatchRunningViewController.swift in Sources */,
 				2D7889DB2CABC02400367A66 /* RenewalMainViewController.swift in Sources */,
 				5F1BB0BD2A08AF590081DBBE /* Server.swift in Sources */,
 				056A34522ABBCC4200829750 /* CheckPermissionViewController.swift in Sources */,
