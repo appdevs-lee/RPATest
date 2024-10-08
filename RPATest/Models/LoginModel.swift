@@ -161,7 +161,7 @@ final class LoginModel {
         ]
         
         let parameters: Parameters = [
-            "token": UserInfo.shared.fcmToken!
+            "token": ReferenceValues.fcmToken
         ]
         
         self.sendFCMTokenRequest = AF.request(url, method: .patch, parameters: parameters, encoding: URLEncoding.default, headers: headers)

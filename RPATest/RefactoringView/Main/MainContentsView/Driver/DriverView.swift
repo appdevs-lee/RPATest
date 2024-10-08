@@ -26,10 +26,11 @@ class DriverView: UIView {
     
     lazy var noDataStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [self.noDataImageView, self.noDataLabel])
+        stackView.isHidden = true
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.distribution = .fill
-        stackView.alignment = .fill
+        stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -38,7 +39,7 @@ class DriverView: UIView {
     lazy var noDataImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = .useCustomImage("NoDataImage")
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -51,6 +52,7 @@ class DriverView: UIView {
         label.textColor = .useRGB(red: 168, green: 168, blue: 168)
         label.font = .useFont(ofSize: 16, weight: .Bold)
         label.numberOfLines = 0
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -82,7 +84,7 @@ extension DriverView {
     func setSubViews() {
         SupportingMethods.shared.addSubviews([
             self.tableView,
-            
+            self.noDataStackView,
         ], to: self)
     }
     
@@ -96,7 +98,17 @@ extension DriverView {
         ])
         
         // noDataStackView
+        NSLayoutConstraint.activate([
+            self.noDataStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.noDataStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.noDataStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+        ])
         
+        // noDataImageView
+        NSLayoutConstraint.activate([
+            self.noDataImageView.widthAnchor.constraint(equalToConstant: 80),
+            self.noDataImageView.heightAnchor.constraint(equalToConstant: 80),
+        ])
     }
 }
 
@@ -106,6 +118,14 @@ extension DriverView {
         SupportingMethods.shared.turnCoverView(.on)
         self.loadDailyDispatchRequest { item in
             self.itemList = item.regularly + item.order
+            
+            if self.itemList.isEmpty {
+                self.noDataStackView.isHidden = false
+                
+            } else {
+                self.noDataStackView.isHidden = true
+                
+            }
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()

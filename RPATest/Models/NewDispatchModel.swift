@@ -177,9 +177,15 @@ struct DispatchCheckDetailItem: Codable {
 }
 
 struct ConnectCheck: Codable {
+    let wakeTime: String
+    let driveTime: String
+    let departureTime: String
     let connectCheck: String
     
     enum CodingKeys: String, CodingKey {
+        case wakeTime = "wake_time"
+        case driveTime = "drive_time"
+        case departureTime = "departure_time"
         case connectCheck = "connect_check"
     }
 }
@@ -195,30 +201,54 @@ struct DailyDispatchItem: Codable {
 }
 
 struct DailyDispatchDetailItem: Codable {
-    let id: Int
-    let group: String?
-    let route: String?
-    let checkRegularlyConnect: ConnectCheck?
-    let checkOrderConnect: ConnectCheck?
-    let busId: String
-    let departure: String
-    let arrival: String
-    let departureDate: String
-    let arrivalDate: String
-    let maplink: String
+    // common
+    let id: Int // 배차 번호
+    let busId: String // 버스 번호
+    let departure: String // 출발지
+    let arrival: String // 도착지
+    let departureDate: String // 출발 시간
+    let arrivalDate: String // 도착 시간
+    let references: String // 참고 사항
+    
+    // regularly
+    let group: String? // 그룹
+    let route: String? // 노선 분류
+    let checkRegularlyConnect: ConnectCheck? // 운행 수락 여부 및 실시간 운행 정보
+    let maplink: String? // 카카오맵 링크
+    
+    // order
+    let checkOrderConnect: ConnectCheck? // 운행 수락 여부 및 실시간 운행 정보
+    let operationType: String? // 왕복 or 편도 or 셔틀
+    let busType: String? // 몇인승 어떤 버스인지
+    let busCount: String? // 버스 대수
+    let customer: String? // 신청 고객
+    let customerPhone: String? // 신청 고객 전화번호
+    
     
     enum CodingKeys: String, CodingKey {
+        // common
         case id
-        case group
-        case route
-        case checkRegularlyConnect = "check_regularly_connect"
-        case checkOrderConnect = "check_order_connect"
         case busId = "bus_id"
         case departure
         case arrival
         case departureDate = "departure_date"
         case arrivalDate = "arrival_date"
+        case references
+        
+        // regularly
+        case group
+        case route
+        case checkRegularlyConnect = "check_regularly_connect"
         case maplink
+        
+        // order
+        case checkOrderConnect = "check_order_connect"
+        case operationType = "operation_type"
+        case busType = "bus_type"
+        case busCount = "bus_cnt"
+        case customer
+        case customerPhone = "customer_phone"
+        
     }
     
 }

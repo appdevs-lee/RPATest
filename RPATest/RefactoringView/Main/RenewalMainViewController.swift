@@ -107,6 +107,7 @@ final class RenewalMainViewController: UIViewController {
         self.setSubviews()
         self.setLayouts()
         self.setUpNavigationItem()
+        self.setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -235,6 +236,20 @@ extension RenewalMainViewController: EssentialViewMethods {
         ], for: .normal)
         self.navigationItem.leftBarButtonItem = leftBarButtonItem
         
+    }
+    
+    func setData() {
+        switch self.role {
+        case .driverLeader, .generalDriver:
+            self.driverView.reloadData()
+            
+        case .manager:
+            break
+            
+        case .mechanic:
+            break
+            
+        }
     }
     
 }

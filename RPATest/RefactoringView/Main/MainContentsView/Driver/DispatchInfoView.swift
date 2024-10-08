@@ -61,6 +61,7 @@ class DispatchInfoView: UIView {
         let button = UIButton()
         button.setImage(.useCustomImage("KakaoMapLogo"), for: .normal)
         button.setImage(.useCustomImage("SelectedKakaoMapLogo"), for: .highlighted)
+        button.addTarget(self, action: #selector(kakaoMapButton(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -136,6 +137,8 @@ class DispatchInfoView: UIView {
         return label
     }()
     
+    var item: DailyDispatchDetailItem?
+    
     init() {
         super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 48))
         
@@ -207,6 +210,8 @@ extension DispatchInfoView {
         NSLayoutConstraint.activate([
             self.kakaoMapButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             self.kakaoMapButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            self.kakaoMapButton.heightAnchor.constraint(equalToConstant: 40),
+            self.kakaoMapButton.widthAnchor.constraint(equalToConstant: 40)
         ])
         
         // groupLabel
@@ -265,20 +270,50 @@ extension DispatchInfoView {
 // MARK: - Extension for methods added
 extension DispatchInfoView {
     func reloadData(item: DailyDispatchDetailItem) {
+        self.item = item
         if let _ = item.checkRegularlyConnect {
             // regularly
             self.groupLabel.isHidden = false
             self.connectView.isHidden = true
             self.routeLabel.isHidden = false
             
+            if item.maplink == "" {
+                self.kakaoMapButton.isHidden = true
+                
+            } else {
+                self.kakaoMapButton.isHidden = false
+                
+                self.kakaoMapButton.setImage(.useCustomImage("KakaoMapLogo"), for: .normal)
+                self.kakaoMapButton.setImage(.useCustomImage("SelectedKakaoMapLogo"), for: .highlighted)
+            }
+            
             self.groupLabel.text = "\(item.group!)"
             self.routeLabel.text = "\(item.route!)"
             
         } else {
             // order
-            self.groupLabel.text = "일반 배차"
+            if let operationType = item.operationType {
+                self.groupLabel.text = "일반 배차(\(operationType))"
+                
+            } else {
+                self.groupLabel.text = "일반 배차"
+                
+            }
+            
             self.connectView.isHidden = true
             self.routeLabel.isHidden = true
+            
+//            if item.customerPhone == "" {
+//                self.kakaoMapButton.isHidden = true
+//                
+//            } else {
+//                self.kakaoMapButton.isHidden = false
+//                
+//                self.kakaoMapButton.setImage(.useCustomImage("callImage"), for: .normal)
+//                self.kakaoMapButton.setImage(.useCustomImage("selectedCallImage"), for: .highlighted)
+//            }
+            
+            self.kakaoMapButton.isHidden = true
             
         }
         
@@ -301,5 +336,19 @@ extension DispatchInfoView {
 
 // MARK: - Extension for selector added
 extension DispatchInfoView {
-    
+    @objc func kakaoMapButton(_ sender: UIButton) {
+        if let mapLink = self.item?.maplink {
+            guard let url = URL(string: mapLink) else { return }
+            
+            UIApplication.shared.open(url)
+            
+        } else if let customerPhone = self.item?.customerPhone {
+//            guard let url = URL(string: "tel://\(customerPhone)") else { return }
+            
+//            UIApplication.shared.open(url)
+            
+        }
+        
+        
+    }
 }

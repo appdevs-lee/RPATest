@@ -44,6 +44,53 @@ final class DriverTableViewCell: UITableViewCell {
         return view
     }()
     
+    lazy var referenceTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "참조 사항"
+        label.textColor = .useRGB(red: 168, green: 168, blue: 168)
+        label.font = .useFont(ofSize: 12, weight: .Regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var referenceLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .useRGB(red: 111, green: 111, blue: 111)
+        label.font = .useFont(ofSize: 14, weight: .Medium)
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy var activeButton: UIButton = {
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .useRGB(red: 235, green: 235, blue: 235)
+        config.background.cornerRadius = 10
+        config.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 8)
+        
+        var attributedString = AttributedString("자세히")
+        attributedString.font = .useFont(ofSize: 14, weight: .Medium)
+        attributedString.foregroundColor = .useRGB(red: 111, green: 111, blue: 111)
+        config.attributedTitle = attributedString
+        
+        let button = UIButton(configuration: config)
+        button.configurationUpdateHandler = { button in
+            switch button.state {
+            case .normal: break
+            case .highlighted:
+                config.attributedTitle?.foregroundColor = .useRGB(red: 111, green: 111, blue: 111, alpha: 0.5)
+                
+            default: break
+            }
+        }
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -106,6 +153,12 @@ extension DriverTableViewCell {
             self.separateView,
             self.moreSubView,
         ], to: self.baseView)
+        
+        SupportingMethods.shared.addSubviews([
+            self.referenceTitleLabel,
+            self.referenceLabel,
+            self.activeButton,
+        ], to: self.moreSubView)
     }
     
     // Set layouts
@@ -141,7 +194,27 @@ extension DriverTableViewCell {
             self.moreSubView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.moreSubView.topAnchor.constraint(equalTo: self.separateView.bottomAnchor),
             self.moreSubView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
-            self.moreSubView.heightAnchor.constraint(equalToConstant: 80),
+        ])
+        
+        // referenceTitleLabel
+        NSLayoutConstraint.activate([
+            self.referenceTitleLabel.leadingAnchor.constraint(equalTo: self.moreSubView.leadingAnchor, constant: 16),
+            self.referenceTitleLabel.topAnchor.constraint(equalTo: self.moreSubView.topAnchor, constant: 10),
+        ])
+        
+        // referenceLabel
+        NSLayoutConstraint.activate([
+            self.referenceLabel.leadingAnchor.constraint(equalTo: self.moreSubView.leadingAnchor, constant: 16),
+            self.referenceLabel.topAnchor.constraint(equalTo: self.referenceTitleLabel.bottomAnchor, constant: 10),
+            self.referenceLabel.bottomAnchor.constraint(equalTo: self.moreSubView.bottomAnchor, constant: -10),
+        ])
+        
+        // activeButton
+        NSLayoutConstraint.activate([
+            self.activeButton.leadingAnchor.constraint(equalTo: self.referenceLabel.trailingAnchor, constant: 10),
+            self.activeButton.trailingAnchor.constraint(equalTo: self.moreSubView.trailingAnchor, constant: -16),
+            self.activeButton.centerYAnchor.constraint(equalTo: self.moreSubView.centerYAnchor),
+//            self.activeButton.heightAnchor.constraint(equalToConstant: 36),
         ])
     }
 }
@@ -150,6 +223,7 @@ extension DriverTableViewCell {
 extension DriverTableViewCell {
     func setCell(item: DailyDispatchDetailItem) {
         self.dispatchInfoView.reloadData(item: item)
+        self.referenceLabel.text = item.references
         
     }
     

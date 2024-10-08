@@ -103,6 +103,16 @@ struct ReferenceValues {
         }
     }
     
+    static var fcmToken: String {
+        get {
+            return UserDefaults.standard.string(forKey: "fcmToken") ?? ""
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "fcmToken")
+        }
+    }
+    
     static var role: String {
         get {
             return UserDefaults.standard.string(forKey: "role") ?? ""
