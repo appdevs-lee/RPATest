@@ -186,13 +186,13 @@ extension NotYetDispatchCheckListTableViewCell {
             self.moreSubView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.moreSubView.topAnchor.constraint(equalTo: self.separateView.bottomAnchor),
             self.moreSubView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
-            self.moreSubView.heightAnchor.constraint(equalToConstant: 80),
         ])
         
         // acceptButton
         NSLayoutConstraint.activate([
             self.acceptButton.leadingAnchor.constraint(equalTo: self.moreSubView.leadingAnchor, constant: 16),
             self.acceptButton.topAnchor.constraint(equalTo: self.moreSubView.topAnchor, constant: 10),
+            self.acceptButton.bottomAnchor.constraint(equalTo: self.moreSubView.bottomAnchor, constant: -10),
             self.acceptButton.heightAnchor.constraint(equalToConstant: 44),
         ])
         
@@ -203,7 +203,6 @@ extension NotYetDispatchCheckListTableViewCell {
             self.refusalButton.leadingAnchor.constraint(equalTo: self.acceptButton.trailingAnchor, constant: 10),
             self.refusalButton.heightAnchor.constraint(equalToConstant: 44),
             self.refusalButton.widthAnchor.constraint(equalTo: self.acceptButton.widthAnchor, multiplier: 1.0),
-            self.refusalButton.bottomAnchor.constraint(equalTo: self.moreSubView.bottomAnchor, constant: -10),
         ])
 
     }

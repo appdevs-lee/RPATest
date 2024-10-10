@@ -223,7 +223,7 @@ extension DriverTableViewCell {
 extension DriverTableViewCell {
     func setCell(item: DailyDispatchDetailItem) {
         self.dispatchInfoView.reloadData(item: item)
-        self.referenceLabel.text = item.references
+        self.referenceLabel.text = item.references == "" ? "없음" : item.references
         
     }
     

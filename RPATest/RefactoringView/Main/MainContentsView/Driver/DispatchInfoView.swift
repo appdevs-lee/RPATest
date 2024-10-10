@@ -274,7 +274,7 @@ extension DispatchInfoView {
         if let _ = item.checkRegularlyConnect {
             // regularly
             self.groupLabel.isHidden = false
-            self.connectView.isHidden = true
+            self.connectView.isHidden = false
             self.routeLabel.isHidden = false
             
             if item.maplink == "" {
