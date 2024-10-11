@@ -59,7 +59,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var pwdTextField: UITextField!
     
     let loginModel = LoginModel()
-    let commonModel = CommonModel()
+    let commonModel = OldCommonModel()
     let dispatchModel = DispatchModel()
     let organizationModel = OrganizationModel()
     

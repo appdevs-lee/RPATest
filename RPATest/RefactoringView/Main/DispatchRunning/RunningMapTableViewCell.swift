@@ -26,7 +26,18 @@ final class RunningMapTableViewCell: UITableViewCell {
         return mapView
     }()
     
+    lazy var kakaoMapButton: UIButton = {
+        let button = UIButton()
+        button.setImage(.useCustomImage("KakaoMapLogo"), for: .normal)
+        button.setImage(.useCustomImage("SelectedKakaoMapLogo"), for: .highlighted)
+        button.addTarget(self, action: #selector(kakaoMapButton(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     let mapModel = MapModel()
+    var item: DailyDispatchDetailItem?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -82,6 +93,7 @@ extension RunningMapTableViewCell {
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
             self.mapView,
+            self.kakaoMapButton,
         ], to: self)
     }
     
@@ -99,15 +111,40 @@ extension RunningMapTableViewCell {
             self.mapView.heightAnchor.constraint(equalToConstant: ReferenceValues.Size.Device.width),
             self.mapView.widthAnchor.constraint(equalToConstant: ReferenceValues.Size.Device.width),
         ])
+        
+        // kakaoMapButton
+        NSLayoutConstraint.activate([
+            self.kakaoMapButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.kakaoMapButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
+            self.kakaoMapButton.heightAnchor.constraint(equalToConstant: 40),
+            self.kakaoMapButton.widthAnchor.constraint(equalToConstant: 40),
+        ])
     }
 }
 
 // MARK: - Extension for methods added
 extension RunningMapTableViewCell {
-    func setCell() {
+    func setCell(item: DailyDispatchDetailItem) {
+        self.item = item
+        
+        guard let _ = item.maplink else {
+            self.kakaoMapButton.isHidden = true
+            return
+        }
+        self.kakaoMapButton.isHidden = false
         
     }
     
+}
+
+// MARK: - Extension for selector added
+extension RunningMapTableViewCell {
+    @objc func kakaoMapButton(_ sender: UIButton) {
+        guard let mapLink = self.item?.maplink else { return }
+        guard let url = URL(string: mapLink) else { return }
+        
+        UIApplication.shared.open(url)
+    }
 }
 
 // MARK: - Extension for MKMapViewDelegate

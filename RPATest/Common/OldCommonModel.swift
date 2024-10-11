@@ -24,7 +24,7 @@ enum CommentType: String {
     case consulting
 }
 
-final class CommonModel {
+final class OldCommonModel {
     private(set) var writeRequest: DataRequest?
     private(set) var serverInspectionRequest: DataRequest?
     

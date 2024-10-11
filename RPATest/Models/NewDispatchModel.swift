@@ -22,6 +22,8 @@ final class NewDispatchModel {
     private(set) var loadDailyDispatchRequest: DataRequest?
     // 배차 확인 및 거부 API
     private(set) var sendDispatchCheckDataRequest: DataRequest?
+    // 운행 API
+    private(set) var sendRunningDataRequest: DataRequest?
     
     func loadWhetherOrNotDispatchCheckRequest(date: String, success: ((DispatchCheckItem) -> ())?, failure: ((_ message: String) -> ())?) {
         let url = Server.server.URL + "/dispatch/daily/\(date)"
@@ -153,6 +155,53 @@ final class NewDispatchModel {
         }
         
     }
+    
+    func sendRunningDataRequest(checkType: String, time: String, regularlyId: String = "", orderId: String = "", success: (() -> ())?, failure: ((_ message: String) -> ())?) {
+        let url = Server.server.URL + "/dispatch/check"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "check_type": checkType,
+            "time": time,
+            "regularly_id": regularlyId,
+            "order_id": orderId,
+        ]
+        
+        self.sendRunningDataRequest = AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        
+        self.sendRunningDataRequest?.responseData { (response) in
+            switch response.result {
+            case .success(_):
+                guard let statusCode = response.response?.statusCode else {
+                    print("sendRunningDataRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("sendRunningDataRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                print("sendRunningDataRequest succeeded")
+                success?()
+                
+            case .failure(let error):
+                print("sendRunningDataRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+            
+        }
+        
+    }
+    
 }
 
 // MARK: 배차 확인 여부(당일 + 명일) API Model

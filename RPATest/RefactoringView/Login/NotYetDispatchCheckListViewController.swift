@@ -150,7 +150,7 @@ extension NotYetDispatchCheckListViewController: EssentialViewMethods {
         appearance.backgroundColor = .clear // Navigation bar is transparent and root view appears on it.
         appearance.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 66, green: 66, blue: 66),
-            .font:UIFont.useFont(ofSize: 18, weight: .Bold)
+            .font:UIFont.useFont(ofSize: 16, weight: .Medium)
         ]
         
         // MARK: NavigationItem appearance for each view controller

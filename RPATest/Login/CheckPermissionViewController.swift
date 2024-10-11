@@ -10,7 +10,7 @@ import CoreLocation
 
 final class CheckPermissionViewController: UIViewController {
     
-    let commonModel = CommonModel()
+    let commonModel = OldCommonModel()
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {

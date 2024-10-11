@@ -84,6 +84,7 @@ final class RenewalMainViewController: UIViewController {
     }()
     
     var role: Role
+    let vehicleModel = VehicleModel()
     
     init(role: Role) {
         self.role = role
@@ -131,6 +132,11 @@ extension RenewalMainViewController: EssentialViewMethods {
         print("role: \(self.role)")
         print("accessToken: \(UserInfo.shared.access ?? "")")
         self.view.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
+        
+        if self.navigationController?.viewControllers.first === self  {
+            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+            
+        }
         
     }
     
@@ -242,6 +248,15 @@ extension RenewalMainViewController: EssentialViewMethods {
         switch self.role {
         case .driverLeader, .generalDriver:
             self.driverView.reloadData()
+            self.loadMonrningCheckDataRequest { submitCheck in
+                if !submitCheck {
+                    let vc = RenewalMorningCheckViewController()
+                    
+                    self.navigationController?.pushViewController(vc, animated: true)
+                    
+                }
+                
+            }
             
         case .manager:
             break
@@ -256,7 +271,17 @@ extension RenewalMainViewController: EssentialViewMethods {
 
 // MARK: - Extension for methods added
 extension RenewalMainViewController {
-    
+    func loadMonrningCheckDataRequest(success: ((Bool) -> ())?) {
+        self.vehicleModel.loadMonrningCheckDataRequest { morningCheckData in
+            success?(morningCheckData.submitCheck)
+            
+        } failure: { message in
+            print("loadMonrningCheckDataRequest API Error: \(message)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        }
+
+    }
 }
 
 // MARK: - Extension for selector methods
@@ -277,4 +302,17 @@ extension RenewalMainViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
+}
+
+// MARK: - Extension for UIGestureRecognizerDelegate
+extension RenewalMainViewController: UIGestureRecognizerDelegate {
+    // For swipe gesture
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    // For swipe gesture, prevent working on the root view of navigation controller
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.navigationController!.viewControllers.count > 1 ? true : false
+    }
 }

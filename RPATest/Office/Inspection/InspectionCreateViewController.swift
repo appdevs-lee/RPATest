@@ -136,7 +136,7 @@ final class InspectionCreateViewController: UIViewController {
     var bottomGuideViewBottomAnchor: NSLayoutConstraint!
     
     let inspectionModel = InspectionModel()
-    let commonModel = CommonModel()
+    let commonModel = OldCommonModel()
     let dispatchModel = DispatchModel()
     
     var vehicleList: [VehicleListItem] = []
