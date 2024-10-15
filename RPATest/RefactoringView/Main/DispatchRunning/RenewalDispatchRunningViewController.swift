@@ -240,7 +240,17 @@ extension RenewalDispatchRunningViewController {
                                 // '출발지' post
                                 // 운행중(정류장마다 인원체크)
                                 guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
-        //                        cell.stationView.isHidden = false
+                                if let _ = self.item.detailedRoute {
+                                    cell.stationView.reloadData(item: self.item)
+                                    cell.stationView.isHidden = false
+                                    
+                                    self.tableView.reloadData()
+                                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                                    
+                                } else {
+                                    cell.stationView.isHidden = true
+                                    
+                                }
                                 
                                 self.tableView.reloadData()
                                 self.runningStartButton.setTitle("운행 종료", for: .normal)

@@ -10,7 +10,7 @@ import UIKit
 final class RunningInputTableViewCell: UITableViewCell {
     
     lazy var baseStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [self.baseView, self.diaryView])
+        let stackView = UIStackView(arrangedSubviews: [self.baseView, self.diaryView, self.stationView])
         stackView.axis = .vertical
         stackView.spacing = 0
         stackView.distribution = .fill
@@ -30,6 +30,15 @@ final class RunningInputTableViewCell: UITableViewCell {
     
     lazy var diaryView: RunningDiaryView = {
         let view = RunningDiaryView()
+        view.isHidden = true
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var stationView: RunningStationView = {
+        let view = RunningStationView()
         view.isHidden = true
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false

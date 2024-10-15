@@ -264,6 +264,7 @@ struct DailyDispatchDetailItem: Codable {
     let route: String? // 노선 분류
     let checkRegularlyConnect: ConnectCheck? // 운행 수락 여부 및 실시간 운행 정보
     let maplink: String? // 카카오맵 링크
+    let detailedRoute: String? // 정류장
     
     // order
     let checkOrderConnect: ConnectCheck? // 운행 수락 여부 및 실시간 운행 정보
@@ -289,6 +290,7 @@ struct DailyDispatchDetailItem: Codable {
         case route
         case checkRegularlyConnect = "check_regularly_connect"
         case maplink
+        case detailedRoute = "detailed_route"
         
         // order
         case checkOrderConnect = "check_order_connect"

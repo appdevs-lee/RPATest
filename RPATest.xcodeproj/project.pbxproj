@@ -115,6 +115,8 @@
 		05CC745E2CB8DC8F0065B05F /* RunningReferenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC745D2CB8DC8F0065B05F /* RunningReferenceTableViewCell.swift */; };
 		05CC74602CB8E5BC0065B05F /* RunningInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC745F2CB8E5BC0065B05F /* RunningInputTableViewCell.swift */; };
 		05CC74622CB8ED7A0065B05F /* RunningDiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC74612CB8ED7A0065B05F /* RunningDiaryView.swift */; };
+		05CC74872CBE374F0065B05F /* RunningStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC74862CBE374F0065B05F /* RunningStationView.swift */; };
+		05CC74892CBE37990065B05F /* RunningStationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC74882CBE37990065B05F /* RunningStationTableViewCell.swift */; };
 		05E94CD12B5FAF4E0095C76E /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E94CCF2B5FAF4D0095C76E /* CameraViewController.swift */; };
 		05E94CD22B5FAF4E0095C76E /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E94CD02B5FAF4E0095C76E /* Camera.swift */; };
 		16E2C467A0658AD11CAC6652 /* Pods_RPATest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3980D2E164051825B3CB6E /* Pods_RPATest.framework */; };
@@ -281,6 +283,8 @@
 		05CC745D2CB8DC8F0065B05F /* RunningReferenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningReferenceTableViewCell.swift; sourceTree = "<group>"; };
 		05CC745F2CB8E5BC0065B05F /* RunningInputTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningInputTableViewCell.swift; sourceTree = "<group>"; };
 		05CC74612CB8ED7A0065B05F /* RunningDiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningDiaryView.swift; sourceTree = "<group>"; };
+		05CC74862CBE374F0065B05F /* RunningStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningStationView.swift; sourceTree = "<group>"; };
+		05CC74882CBE37990065B05F /* RunningStationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningStationTableViewCell.swift; sourceTree = "<group>"; };
 		05E94CCF2B5FAF4D0095C76E /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		05E94CD02B5FAF4E0095C76E /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		06EE240AA4CC2BD5297F34A3 /* Pods-RPATest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RPATest.debug.xcconfig"; path = "Target Support Files/Pods-RPATest/Pods-RPATest.debug.xcconfig"; sourceTree = "<group>"; };
@@ -471,6 +475,8 @@
 				05CC745D2CB8DC8F0065B05F /* RunningReferenceTableViewCell.swift */,
 				05CC745F2CB8E5BC0065B05F /* RunningInputTableViewCell.swift */,
 				05CC74612CB8ED7A0065B05F /* RunningDiaryView.swift */,
+				05CC74862CBE374F0065B05F /* RunningStationView.swift */,
+				05CC74882CBE37990065B05F /* RunningStationTableViewCell.swift */,
 			);
 			path = DispatchRunning;
 			sourceTree = "<group>";
@@ -941,6 +947,7 @@
 				5F6B62F02AAF364A001FEED2 /* DispatchMonthlyViewController.swift in Sources */,
 				058BD90F2CB834000032F587 /* ChangeVehicleListTableViewCell.swift in Sources */,
 				2DE6AAD02B569C9F002FBCA6 /* RenewalDispatchSearchListTableViewCell.swift in Sources */,
+				05CC74872CBE374F0065B05F /* RunningStationView.swift in Sources */,
 				055C2E6E2AB93B0C00726CD7 /* DispatchCategoryTableViewCell.swift in Sources */,
 				5FCC11742AA46DD900550534 /* OfficeViewController.swift in Sources */,
 				058BD9092CB814B00032F587 /* MorningCheckTableViewCell.swift in Sources */,
@@ -1046,6 +1053,7 @@
 				056B494C2B21AE3E00F7A3A4 /* MorningRollCallViewController.swift in Sources */,
 				056A759D2B059E2600C25711 /* OrganizationViewPagerCollectionViewCell.swift in Sources */,
 				057736BF2B0F0AB7005C01EA /* RenewalProfileViewController.swift in Sources */,
+				05CC74892CBE37990065B05F /* RunningStationTableViewCell.swift in Sources */,
 				05BEEA7F2CACE77900566B32 /* RenewalDispatchMonthlyViewController.swift in Sources */,
 				0594D3272B56570D00283C6D /* RenewalDispatchSearchViewController.swift in Sources */,
 				056A34622ABC072F00829750 /* NoticeDetailTextTableViewCell.swift in Sources */,
