@@ -13,13 +13,25 @@ final class RenewalDispatchMonthlyViewController: UIViewController {
     lazy var calendar: FSCalendar = {
         let calendar = FSCalendar()
         calendar.backgroundColor = .white
-        calendar.scope = .month
+        calendar.scope = .week
         calendar.locale = Locale(identifier: "ko_KR")
         calendar.scrollEnabled = true
         calendar.scrollDirection = .horizontal
+        calendar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        calendar.layer.cornerRadius = 15
         calendar.appearance.titleFont = .useFont(ofSize: 14, weight: .Medium)
         calendar.appearance.weekdayFont = .useFont(ofSize: 14, weight: .Medium)
         calendar.appearance.headerTitleFont = .useFont(ofSize: 16, weight: .Bold)
+        
+        calendar.select(Date())
+        
+        // 날짜 선택 색상 설정
+        calendar.appearance.selectionColor = .useRGB(red: 176, green: 0, blue: 32)
+        
+        // 오늘 날짜 설정
+        calendar.appearance.titleTodayColor = .black
+        calendar.appearance.todayColor = .clear
+        calendar.appearance.todaySelectionColor = .none
         
         // 헤더의 날짜 포맷 설정
         calendar.appearance.headerDateFormat = "YYYY년 MM월"
@@ -27,15 +39,18 @@ final class RenewalDispatchMonthlyViewController: UIViewController {
         // 헤더의 폰트 색상 설정
         calendar.appearance.headerTitleColor = .useRGB(red: 66, green: 66, blue: 66)
         
+        // 요일 색상 설정
+        calendar.appearance.weekdayTextColor = .black
+        
         // 주말 색깔 설정
-        calendar.appearance.titleWeekendColor = .useRGB(red: 176, green: 0, blue: 32)
+        calendar.appearance.titleWeekendColor = .black
         
         // 헤더의 폰트 정렬 설정
         // .center & .left & .justified & .natural & .right
         calendar.appearance.headerTitleAlignment = .center
         
         // 헤더 높이 설정
-        calendar.headerHeight = 45
+        calendar.headerHeight = 60
 
         // 헤더 양 옆(전달 & 다음 달) 글씨 투명도
         calendar.appearance.headerMinimumDissolvedAlpha = 0.0
@@ -47,16 +62,76 @@ final class RenewalDispatchMonthlyViewController: UIViewController {
         return calendar
     }()
     
-    lazy var baseView: UIView = {
+    lazy var separateView: UIView = {
         let view = UIView()
-        view.backgroundColor = .red
+        view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
     }()
     
+    lazy var changeScopeView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        view.layer.cornerRadius = 15
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var changeScopeButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(changeScopeButton(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
+    lazy var changeScopeImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = .useCustomImage("calendar.down")
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return imageView
+    }()
+    
+    lazy var baseView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    lazy var collectionView: UICollectionView = {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.headerReferenceSize = .zero
+        flowLayout.footerReferenceSize = .zero
+        flowLayout.scrollDirection = .horizontal
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        collectionView.backgroundColor = .white
+        collectionView.register(DispatchDocumentKindCollectionViewCell.self, forCellWithReuseIdentifier: "DispatchDocumentKindCollectionViewCell")
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.bounces = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return collectionView
+    }()
+    
     var calendarHeightAnchorLayoutConstraint: NSLayoutConstraint!
     var eventsArray: [String] = []
+    var categoryList: [String] = ["지정된 배차"]
+    var selectedIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,8 +193,19 @@ extension RenewalDispatchMonthlyViewController: EssentialViewMethods {
     func setSubviews() {
         SupportingMethods.shared.addSubviews([
             self.calendar,
+            self.separateView,
+            self.changeScopeView,
             self.baseView,
         ], to: self.view)
+        
+        SupportingMethods.shared.addSubviews([
+            self.changeScopeImageView,
+            self.changeScopeButton,
+        ], to: self.changeScopeView)
+        
+        SupportingMethods.shared.addSubviews([
+            self.collectionView,
+        ], to: self.baseView)
     }
     
     func setLayouts() {
@@ -128,18 +214,58 @@ extension RenewalDispatchMonthlyViewController: EssentialViewMethods {
         // calendar
         self.calendarHeightAnchorLayoutConstraint = self.calendar.heightAnchor.constraint(equalToConstant: 400)
         NSLayoutConstraint.activate([
-            self.calendar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            self.calendar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.calendar.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.calendar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            self.calendar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            self.calendar.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 16),
             self.calendarHeightAnchorLayoutConstraint,
+        ])
+        
+        // separateView
+        NSLayoutConstraint.activate([
+            self.separateView.topAnchor.constraint(equalTo: self.calendar.bottomAnchor),
+            self.separateView.leadingAnchor.constraint(equalTo: self.calendar.leadingAnchor, constant: 16),
+            self.separateView.trailingAnchor.constraint(equalTo: self.calendar.trailingAnchor, constant: -16),
+            self.separateView.heightAnchor.constraint(equalToConstant: 1),
+        ])
+        
+        // changeScopeView
+        NSLayoutConstraint.activate([
+            self.changeScopeView.leadingAnchor.constraint(equalTo: self.calendar.leadingAnchor),
+            self.changeScopeView.trailingAnchor.constraint(equalTo: self.calendar.trailingAnchor),
+            self.changeScopeView.topAnchor.constraint(equalTo: self.separateView.bottomAnchor),
+        ])
+        
+        // changeScopeImageView
+        NSLayoutConstraint.activate([
+            self.changeScopeImageView.topAnchor.constraint(equalTo: self.changeScopeView.topAnchor, constant: 10),
+            self.changeScopeImageView.bottomAnchor.constraint(equalTo: self.changeScopeView.bottomAnchor, constant: -10),
+            self.changeScopeImageView.centerXAnchor.constraint(equalTo: self.changeScopeView.centerXAnchor),
+            self.changeScopeImageView.heightAnchor.constraint(equalToConstant: 16),
+            self.changeScopeImageView.widthAnchor.constraint(equalToConstant: 16),
+        ])
+        
+        // changeScopeButton
+        NSLayoutConstraint.activate([
+            self.changeScopeButton.leadingAnchor.constraint(equalTo: self.changeScopeView.leadingAnchor),
+            self.changeScopeButton.trailingAnchor.constraint(equalTo: self.changeScopeView.trailingAnchor),
+            self.changeScopeButton.topAnchor.constraint(equalTo: self.changeScopeView.topAnchor),
+            self.changeScopeButton.bottomAnchor.constraint(equalTo: self.changeScopeView.bottomAnchor),
         ])
         
         // baseView
         NSLayoutConstraint.activate([
             self.baseView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.baseView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: self.calendar.bottomAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.changeScopeView.bottomAnchor, constant: 10),
             self.baseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
+        
+        // collectionView
+        NSLayoutConstraint.activate([
+            self.collectionView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 10),
+            self.collectionView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.collectionView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.collectionView.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
     
@@ -149,7 +275,7 @@ extension RenewalDispatchMonthlyViewController: EssentialViewMethods {
     }
     
     func setUpNavigationItem() {
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
         
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
@@ -184,10 +310,25 @@ extension RenewalDispatchMonthlyViewController {
     
     @objc func changeCalendarScope(_ gesture: UISwipeGestureRecognizer) {
         if gesture.direction == .up {
-            calendar.setScope(.week, animated: true)
+            self.calendar.setScope(.week, animated: true)
+            self.changeScopeImageView.image = .useCustomImage("calendar.down")
             
         } else if gesture.direction == .down {
-            calendar.setScope(.month, animated: true)
+            self.calendar.setScope(.month, animated: true)
+            self.changeScopeImageView.image = .useCustomImage("calendar.up")
+            
+        }
+        
+    }
+    
+    @objc func changeScopeButton(_ sender: UIButton) {
+        if self.calendar.scope == .week {
+            self.calendar.setScope(.month, animated: true)
+            self.changeScopeImageView.image = .useCustomImage("calendar.up")
+            
+        } else {
+            self.calendar.setScope(.week, animated: true)
+            self.changeScopeImageView.image = .useCustomImage("calendar.down")
             
         }
         
@@ -222,6 +363,34 @@ extension RenewalDispatchMonthlyViewController: FSCalendarDelegate, FSCalendarDa
     }
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        
+    }
+    
+}
+
+// MARK: - Extension for UICollectionViewDelegateFlowLayout, UICollectionViewDataSource
+extension RenewalDispatchMonthlyViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.categoryList.count
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DispatchDocumentKindCollectionViewCell", for: indexPath) as! DispatchDocumentKindCollectionViewCell
+        let category = self.categoryList[indexPath.row]
+        
+        cell.setCell(category: category)
+        
+        cell.categoryLabel.textColor = self.selectedIndex == indexPath.row ? .useRGB(red: 35, green: 35, blue: 35) : .useRGB(red: 151, green: 151, blue: 151)
+        cell.bottomView.isHidden = self.selectedIndex == indexPath.row ? false : true
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.selectedIndex = indexPath.row
+        
+        self.collectionView.reloadData()
         
     }
     

@@ -56,7 +56,7 @@ final class RenewalMainViewController: UIViewController {
     
     lazy var dispatchCheckButton: UIButton = {
         let button = UIButton()
-        button.setTitle("배차 확인", for: .normal)
+        button.setTitle("배차 관리", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.setTitleColor(.useRGB(red: 255, green: 255, blue: 255, alpha: 0.5), for: .highlighted)
         button.titleLabel?.font = .useFont(ofSize: 16, weight: .Medium)

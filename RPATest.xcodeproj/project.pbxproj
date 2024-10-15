@@ -125,6 +125,7 @@
 		2D2266F92CB0FDFE006D5AA9 /* DriverTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2266F82CB0FDFE006D5AA9 /* DriverTableViewCell.swift */; };
 		2D2266FC2CB1085A006D5AA9 /* DispatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2266FB2CB1085A006D5AA9 /* DispatchInfoView.swift */; };
 		2D4D26982B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */; };
+		2D55BB172CBBCA3400C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D55BB162CBBCA3300C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift */; };
 		2D7889DB2CABC02400367A66 /* RenewalMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */; };
 		2D7889DD2CABC3BB00367A66 /* RenewalLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */; };
 		2D7889E12CABCF6000367A66 /* CustomizedTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DF2CABCF6000367A66 /* CustomizedTabBarController.swift */; };
@@ -290,6 +291,7 @@
 		2D2266F82CB0FDFE006D5AA9 /* DriverTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverTableViewCell.swift; sourceTree = "<group>"; };
 		2D2266FB2CB1085A006D5AA9 /* DispatchInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchInfoView.swift; sourceTree = "<group>"; };
 		2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteSelectTimeViewController.swift; sourceTree = "<group>"; };
+		2D55BB162CBBCA3300C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchDocumentKindCollectionViewCell.swift; sourceTree = "<group>"; };
 		2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalMainViewController.swift; sourceTree = "<group>"; };
 		2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalLoginViewController.swift; sourceTree = "<group>"; };
 		2D7889DF2CABCF6000367A66 /* CustomizedTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizedTabBarController.swift; sourceTree = "<group>"; };
@@ -546,6 +548,7 @@
 			isa = PBXGroup;
 			children = (
 				05BEEA7E2CACE77900566B32 /* RenewalDispatchMonthlyViewController.swift */,
+				2D55BB162CBBCA3300C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift */,
 			);
 			path = Month;
 			sourceTree = "<group>";
@@ -1065,6 +1068,7 @@
 				056A345A2ABBE1D700829750 /* NoticeTableViewCell.swift in Sources */,
 				053C55D42AA9AB86006A6D93 /* OrganizationTableViewCell.swift in Sources */,
 				058BD9012CB7F1F90032F587 /* RenewalMorningCheckViewController.swift in Sources */,
+				2D55BB172CBBCA3400C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift in Sources */,
 				0582C5A82AB8218D0045CBCB /* DispatchSearchViewController.swift in Sources */,
 				059332742B4E179A0074C13A /* DispatchDrivingRegularlyTableViewCell.swift in Sources */,
 				5F1BB0B72A03D6B30081DBBE /* LoginModel.swift in Sources */,
