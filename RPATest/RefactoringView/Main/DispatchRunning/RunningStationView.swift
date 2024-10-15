@@ -7,6 +7,11 @@
 
 import UIKit
 
+class DispatchStation {
+    var station: String = ""
+    var number: Int = 0
+}
+
 class RunningStationView: UIView {
     
     lazy var tableView: UITableView = {
@@ -25,7 +30,7 @@ class RunningStationView: UIView {
         return tableView
     }()
     
-    var stationList: [String] = []
+    var stationList: [DispatchStation] = []
     var tableViewHeightAnchorLayoutConstraint: NSLayoutConstraint!
     
     init() {
@@ -66,7 +71,10 @@ extension RunningStationView {
     func reloadData(item: DailyDispatchDetailItem) {
         let routeList = item.detailedRoute!.split(separator: "-")
         for station in routeList {
-            self.stationList.append(String(station))
+            let dispatchStation = DispatchStation()
+            dispatchStation.station = String(station)
+            
+            self.stationList.append(dispatchStation)
             
         }
         print(self.stationList)
@@ -76,6 +84,17 @@ extension RunningStationView {
             self.tableView.reloadData()
             
         }
+        
+    }
+    
+    func calculatePeopleCount() {
+        var sum: Int = 0
+        for station in self.stationList {
+            sum += station.number
+            
+        }
+        
+        print("합계: \(sum)")
         
     }
     

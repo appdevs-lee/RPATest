@@ -211,6 +211,7 @@ extension RenewalDispatchRunningViewController {
     // FIXME: 운행과 관련된 API 및 로직 등 구현 보완 해야함.(값 저장 등)
     @objc func runningStartButton(_ sender: UIButton) {
         self.loadMonrningCheckDataRequest { submitCheck in
+            print(submitCheck)
             if submitCheck {
                 if self.isRunningStart {
                     if self.isDoneTyping {
@@ -225,8 +226,11 @@ extension RenewalDispatchRunningViewController {
                                     // 운행종료
                                     // 운행일보 작성
                                     // 도착시 계기 km를 작성해주셔야 배차가 완료됩니다.
+                                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
                                     guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
                                     cell.diaryView.isHidden = false
+                                    cell.stationView.isHidden = true
+                                    cell.stationView.calculatePeopleCount()
                                     
                                     self.tableView.reloadData()
                                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
@@ -239,6 +243,7 @@ extension RenewalDispatchRunningViewController {
                             } else {
                                 // '출발지' post
                                 // 운행중(정류장마다 인원체크)
+                                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
                                 guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
                                 if let _ = self.item.detailedRoute {
                                     cell.stationView.reloadData(item: self.item)
@@ -269,6 +274,7 @@ extension RenewalDispatchRunningViewController {
                     } else {
                         // 운행일보 저장
                         // 운행일보 post api 사용
+                        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
                         guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
                         cell.diaryView.isHidden = true
                         
@@ -281,6 +287,7 @@ extension RenewalDispatchRunningViewController {
                     
                 } else {
                     // 운행일보(출발 전)
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
                     guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
                     
                     cell.diaryView.isHidden = false

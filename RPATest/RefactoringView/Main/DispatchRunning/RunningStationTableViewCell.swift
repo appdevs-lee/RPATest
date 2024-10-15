@@ -67,6 +67,8 @@ final class RunningStationTableViewCell: UITableViewCell {
         return label
     }()
     
+    var station: DispatchStation?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -185,8 +187,9 @@ extension RunningStationTableViewCell {
 
 // MARK: - Extension for methods added
 extension RunningStationTableViewCell {
-    func setCell(station: String) {
-        self.stationLabel.text = station
+    func setCell(station: DispatchStation) {
+        self.station = station
+        self.stationLabel.text = station.station
         
     }
     
@@ -203,6 +206,7 @@ extension RunningStationTableViewCell {
         }
         
         self.numberLabel.text = "\(number)"
+        self.station?.number = number
     }
     
     @objc func plusButton(_ sender: UIButton) {
@@ -211,6 +215,7 @@ extension RunningStationTableViewCell {
         number += 1
         
         self.numberLabel.text = "\(number)"
+        self.station?.number = number
     }
     
 }
