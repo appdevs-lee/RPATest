@@ -24,6 +24,8 @@ final class NewDispatchModel {
     private(set) var sendDispatchCheckDataRequest: DataRequest?
     // 운행 API
     private(set) var sendRunningDataRequest: DataRequest?
+    // 월별 배차 정보 가져오는 API
+    private(set) var loadMonthlyDispatchRequest: DataRequest?
     
     func loadWhetherOrNotDispatchCheckRequest(date: String, success: ((DispatchCheckItem) -> ())?, failure: ((_ message: String) -> ())?) {
         let url = Server.server.URL + "/dispatch/daily/\(date)"
@@ -202,6 +204,49 @@ final class NewDispatchModel {
         
     }
     
+    func loadMonthlyDispatchRequest(month: String, success: ((MonthlyDispatchItem) -> ())?, failure: ((_ errorMessage: String) -> ())?) {
+        let url = Server.server.URL + "/dispatch/monthly/\(month)"
+        
+        let headers: HTTPHeaders = [
+            "access": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        self.loadMonthlyDispatchRequest = AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadMonthlyDispatchRequest?.responseData { response in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadMonthlyDispatchRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadMonthlyDispatchRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(MonthlyDispatch.self, from: data) {
+                    print("loadMonthlyDispatchRequest succeeded")
+                    success?(decodedData.data)
+                                        
+                } else {
+                    print("loadMonthlyDispatchRequest failure: API 성공, Parsing 실패")
+                    failure?("API 성공, Parsing 실패")
+                }
+                
+            case .failure(let error): // error
+                print("loadMonthlyDispatchRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
 }
 
 // MARK: 배차 확인 여부(당일 + 명일) API Model
@@ -304,3 +349,19 @@ struct DailyDispatchDetailItem: Codable {
     
 }
 
+// MARK: 월별 배차 API Model
+struct MonthlyDispatch: Codable {
+    let data: MonthlyDispatchItem
+}
+
+struct MonthlyDispatchItem: Codable {
+    let order: [Int]
+    let attendance: [Int]
+    let leaveWork: [Int]
+    
+    enum CodingKeys: String, CodingKey {
+        case order
+        case attendance = "regularly_c"
+        case leaveWork = "regularly_t"
+    }
+}

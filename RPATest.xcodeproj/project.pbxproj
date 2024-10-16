@@ -127,6 +127,7 @@
 		2D2266F92CB0FDFE006D5AA9 /* DriverTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2266F82CB0FDFE006D5AA9 /* DriverTableViewCell.swift */; };
 		2D2266FC2CB1085A006D5AA9 /* DispatchInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2266FB2CB1085A006D5AA9 /* DispatchInfoView.swift */; };
 		2D4D26982B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */; };
+		2D4E02592CBEBB7E0074A04B /* RenewalMonthlyDispatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E02582CBEBB7E0074A04B /* RenewalMonthlyDispatchTableViewCell.swift */; };
 		2D55BB172CBBCA3400C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D55BB162CBBCA3300C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift */; };
 		2D7889DB2CABC02400367A66 /* RenewalMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */; };
 		2D7889DD2CABC3BB00367A66 /* RenewalLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */; };
@@ -295,6 +296,7 @@
 		2D2266F82CB0FDFE006D5AA9 /* DriverTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverTableViewCell.swift; sourceTree = "<group>"; };
 		2D2266FB2CB1085A006D5AA9 /* DispatchInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchInfoView.swift; sourceTree = "<group>"; };
 		2D4D26972B31C4050040C0C6 /* DispatchNoteSelectTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchNoteSelectTimeViewController.swift; sourceTree = "<group>"; };
+		2D4E02582CBEBB7E0074A04B /* RenewalMonthlyDispatchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalMonthlyDispatchTableViewCell.swift; sourceTree = "<group>"; };
 		2D55BB162CBBCA3300C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchDocumentKindCollectionViewCell.swift; sourceTree = "<group>"; };
 		2D7889DA2CABC02400367A66 /* RenewalMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalMainViewController.swift; sourceTree = "<group>"; };
 		2D7889DC2CABC3BB00367A66 /* RenewalLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalLoginViewController.swift; sourceTree = "<group>"; };
@@ -554,6 +556,7 @@
 			isa = PBXGroup;
 			children = (
 				05BEEA7E2CACE77900566B32 /* RenewalDispatchMonthlyViewController.swift */,
+				2D4E02582CBEBB7E0074A04B /* RenewalMonthlyDispatchTableViewCell.swift */,
 				2D55BB162CBBCA3300C1D9C9 /* DispatchDocumentKindCollectionViewCell.swift */,
 			);
 			path = Month;
@@ -1018,6 +1021,7 @@
 				057E24842B5E4C2400633D2F /* CarManageTableViewCell.swift in Sources */,
 				056A346B2ABC193B00829750 /* InspectionCreateViewController.swift in Sources */,
 				0596A4472B2AD36000D2C3AA /* RenewalDispatchRegularlyTableViewCell.swift in Sources */,
+				2D4E02592CBEBB7E0074A04B /* RenewalMonthlyDispatchTableViewCell.swift in Sources */,
 				059332762B4E17A30074C13A /* DispatchDrivingOrderTableViewCell.swift in Sources */,
 				2D2266F72CB0FD4C006D5AA9 /* DriverView.swift in Sources */,
 				5FD49D192AA31BEE00208273 /* TemplateHeaderFooterView.swift in Sources */,

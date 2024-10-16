@@ -11,7 +11,7 @@ final class DispatchDocumentKindCollectionViewCell: UICollectionViewCell {
     
     lazy var baseView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -53,7 +53,7 @@ final class DispatchDocumentKindCollectionViewCell: UICollectionViewCell {
 // MARK: - Extension for essential methods
 extension DispatchDocumentKindCollectionViewCell: EssentialCellHeaderMethods {
     func setViewFoundation() {
-        self.backgroundColor = .white
+        self.backgroundColor = .useRGB(red: 245, green: 245, blue: 245)
     }
     
     func initializeObjects() {

@@ -472,6 +472,20 @@ extension SupportingMethods {
         }
     }
     
+    func isLaterThanTargetDate(_ date: Date = Date(), targetDate: Date, timeZone: TimeZone = TimeZone(abbreviation: "KST")!, locale: Locale = Locale(identifier: "ko_KR")) -> Bool {
+        var calendar = Calendar.current
+        calendar.locale = locale
+        calendar.timeZone = timeZone
+        
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: targetDate)
+        
+        let date = calendar.date(from: DateComponents(year: dateComponents.year!, month: dateComponents.month!, day: dateComponents.day!, hour: 0, minute: 0, second: 0))!
+        let targetDate = calendar.date(from: DateComponents(year: targetDateComponents.year!, month: targetDateComponents.month!, day: targetDateComponents.day!, hour: 0, minute: 0, second: 0))!
+        
+        return date > targetDate
+    }
+    
     // MARK: Manage contents (photo / movie)
     func gatherDataFromPickedContents(index: Int, pickerType: PickerType, pickedResults: [String:PHPickerResult], selectedIdentifiers: [String], contentsMetaData: [String:PHAsset], contentsData: [String:Data], success: ((_ pickedResults: [String:PHPickerResult], _ selectedIdentifiers: [String], _ contentsData: [String:Data], _ contentMetaData: [String:PHAsset]) -> ())?, failure: (() -> ())?) {
         var index = index

@@ -49,8 +49,8 @@ class DriverView: UIView {
     lazy var noDataLabel: UILabel = {
         let label = UILabel()
         label.text = "오늘은 운행이 없습니다.\n편안한 휴일 되세요!"
-        label.textColor = .useRGB(red: 168, green: 168, blue: 168)
-        label.font = .useFont(ofSize: 16, weight: .Bold)
+        label.textColor = .useRGB(red: 94, green: 94, blue: 94)
+        label.font = .useFont(ofSize: 16, weight: .Medium)
         label.numberOfLines = 0
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
