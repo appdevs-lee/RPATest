@@ -214,7 +214,8 @@ extension DriverTableViewCell {
             self.activeButton.leadingAnchor.constraint(equalTo: self.referenceLabel.trailingAnchor, constant: 10),
             self.activeButton.trailingAnchor.constraint(equalTo: self.moreSubView.trailingAnchor, constant: -16),
             self.activeButton.centerYAnchor.constraint(equalTo: self.moreSubView.centerYAnchor),
-//            self.activeButton.heightAnchor.constraint(equalToConstant: 36),
+            self.activeButton.heightAnchor.constraint(equalToConstant: 36),
+            self.activeButton.widthAnchor.constraint(equalToConstant: 60),
         ])
     }
 }

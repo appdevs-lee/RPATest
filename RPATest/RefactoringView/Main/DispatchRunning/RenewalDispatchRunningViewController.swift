@@ -52,7 +52,10 @@ final class RenewalDispatchRunningViewController: UIViewController {
     }()
     
     let vehicleModel = VehicleModel()
+    let dispatchModel = NewDispatchModel()
     var item: DailyDispatchDetailItem
+    var diaryItem: RunningDiaryItem?
+    var dispatchKindType: DispatchKindType
     var isRunningStart: Bool = false
     var isDoneTyping: Bool = false
     var isReadyDriving: Bool = false
@@ -61,8 +64,18 @@ final class RenewalDispatchRunningViewController: UIViewController {
     
     init(item: DailyDispatchDetailItem) {
         self.item = item
+        if let _ = item.checkRegularlyConnect {
+            self.dispatchKindType = .regularly
+            
+        } else if let _ = item.checkOrderConnect {
+            self.dispatchKindType = .order
+            
+        } else {
+            self.dispatchKindType = .regularly
+        }
         
         super.init(nibName: nil, bundle: nil)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -86,6 +99,7 @@ final class RenewalDispatchRunningViewController: UIViewController {
         super.viewWillAppear(animated)
         
         self.setViewAfterTransition()
+        self.setData()
     }
     
     //    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -183,16 +197,189 @@ extension RenewalDispatchRunningViewController: EssentialViewMethods {
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backButton")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
     }
+    
+    func setData() {
+        /*
+         기상 -> 운행일보 작성 + 아침점호 체크(departureKM 무조건 채워야 함)
+         wakeTime이 빈값이면 default 상태.
+         departureKM가 빈 값이면 isDoneTyping = false -> 버튼 : 작성 완료
+         departureKM가 채워져 있고, driveTime이 빈값이면 -> 버튼 : 탑승 및 출발 준비
+         departureKM가 채워져 있고, driveTime이 빈값이 아니면 + departureTime이 빈값이면 -> 버튼 : 첫 출발지 도착
+         departureKM가 채워져 있고, departureTime이 빈값이 아니면 -> 버튼 : 운행 종료
+         arrivalKM가 채워져 있으면 -> 종료된 배차입니다.
+         */
+        var connect: ConnectCheck?
+        if self.dispatchKindType == .regularly {
+            connect = self.item.checkRegularlyConnect
+            
+        } else {
+            connect = self.item.checkOrderConnect
+            
+        }
+        
+        SupportingMethods.shared.turnCoverView(.on)
+        if connect?.wakeTime != "" {
+            self.loadRunningDiaryDataRequest(id: self.item.id) { diaryItem in
+                self.diaryItem = diaryItem
+                SupportingMethods.shared.turnCoverView(.off)
+                if diaryItem.departureKM == "" {
+                    // 운행일보 작성 전
+                    // 버튼 : 작성 완료
+                    // isDoneTyping == false
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                    guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
+                    
+                    cell.diaryView.isHidden = false
+                    
+                    self.tableView.reloadData()
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                    self.runningStartButton.setTitle("작성 완료", for: .normal)
+                    self.isDoneTyping = false
+                    
+                } else {
+                    if connect?.driveTime == "" {
+                        // 운행일보 작성 후
+                        // 버튼 : 탑승 및 출발 준비
+                        // isDoneTyping == true, isReadyDriving == false
+                        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                        guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
+                        cell.diaryView.isHidden = true
+                        
+                        self.tableView.reloadData()
+                        
+                        self.runningStartButton.setTitle("탑승 및 출발 준비", for: .normal)
+                        self.isDoneTyping = true
+                        
+                    } else {
+                        if connect?.departureTime == "" {
+                            // 탑승 및 출발 준비 이후
+                            // 버튼 : 첫 출발지 도착
+                            // isDoneTyping == true, isReadyDriving == true, isDriving == false
+                            self.runningStartButton.setTitle("첫 출발지 도착", for: .normal)
+                            self.isDoneTyping = true
+                            self.isReadyDriving = true
+                            
+                        } else {
+                            if diaryItem.arrivalKM == "" {
+                                // 운행 중인 상태
+                                // 버튼 : 운행 종료
+                                // isDoneTyping == true, isReadyDriving == true, isDriving == true, isRunningDone == false
+                                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                                guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
+                                if let _ = self.item.detailedRoute {
+                                    cell.stationView.reloadData(item: self.item)
+                                    cell.diaryView.isHidden = false
+                                    cell.stationView.isHidden = false
+                                    
+                                    self.tableView.reloadData()
+                                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                                    
+                                } else {
+                                    cell.diaryView.isHidden = false
+                                    cell.stationView.isHidden = true
+                                    
+                                }
+                                
+                                self.tableView.reloadData()
+                                self.runningStartButton.setTitle("운행 종료", for: .normal)
+                                self.isDoneTyping = true
+                                self.isReadyDriving = true
+                                self.isDriving = true
+                                
+                            } else {
+                                // 운행이 종료된 상태
+                                // 버튼 : 종료된 배차입니다.
+                                // isDoneTyping == true, isReadyDriving == true, isDriving == true, isRunningDone == true
+                                
+                                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                                guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
+                                cell.diaryView.isHidden = false
+                                cell.stationView.isHidden = true
+                                
+                                self.tableView.reloadData()
+                                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                                
+                                self.runningStartButton.isEnabled = false
+                                self.runningStartButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                                self.runningStartButton.setTitle("종료된 배차입니다.", for: .normal)
+                                self.isDoneTyping = true
+                                self.isReadyDriving = true
+                                self.isDriving = true
+                                self.isRunningDone = true
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+        } else {
+            self.loadRunningDiaryDataRequest(id: self.item.id) { diaryItem in
+                self.diaryItem = diaryItem
+                
+                self.tableView.reloadData()
+                SupportingMethods.shared.turnCoverView(.off)
+                
+            }
+            
+        }
+        
+    }
 }
 
 // MARK: - Extension for methods added
 extension RenewalDispatchRunningViewController {
+    // 아침점호
     func loadMonrningCheckDataRequest(success: ((Bool) -> ())?) {
         self.vehicleModel.loadMonrningCheckDataRequest { morningCheck in
             success?(morningCheck.submitCheck)
             
         } failure: { message in
             print("loadMonrningCheckDataRequest API Error: \(message)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        }
+
+    }
+    
+    // 운행일보 Get
+    func loadRunningDiaryDataRequest(id: Int, success: ((RunningDiaryItem) -> ())?) {
+        self.dispatchModel.loadRunningDiaryDataRequest(regularlyId: self.dispatchKindType == .regularly ? "\(id)" : "", orderId: self.dispatchKindType == .order ? "\(id)" : "") { item in
+            success?(item)
+            
+        } failure: { message in
+            print("loadRunningDiaryDataRequest API Error: \(message)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        }
+
+    }
+
+    // 운행일보 Patch
+    func sendRunningDiaryDataRequest(id: Int, departureKM: String = "", arrivalKM: String = "", passengerNumber: String = "0", specialNotes: String = "", success: (() -> ())?) {
+        self.dispatchModel.sendRunningDiaryDataRequest(regularlyId: self.dispatchKindType == .regularly ? "\(id)" : "", orderId: self.dispatchKindType == .order ? "\(id)" : "", departureDate: self.item.departureDate, arrivalDate: self.item.arrivalDate, departureKM: departureKM, arrivalKM: arrivalKM, passengerNumber: passengerNumber, specialNotes: specialNotes) {
+            success?()
+            
+        } failure: { message in
+            print("loadRunningDiaryDataRequest API Error: \(message)")
+            SupportingMethods.shared.turnCoverView(.off)
+            
+        }
+
+    }
+    
+    // 배차확인 Patch
+    func sendRunningDataRequest(checkType: String, success: (() -> ())?) {
+        // checkType:  기상 -> 운행 -> 출발지
+        let regularlyId = self.dispatchKindType == .regularly ? "\(self.item.id)" : ""
+        let orderId = self.dispatchKindType == .order ? "\(self.item.id)" : ""
+        self.dispatchModel.sendRunningDataRequest(checkType: checkType, time: SupportingMethods.shared.convertDate(intoString: Date(), "HH:mm"), regularlyId: regularlyId, orderId: orderId) {
+            success?()
+            
+        } failure: { message in
+            print("sendRunningDataRequest API Error: \(message)")
             SupportingMethods.shared.turnCoverView(.off)
             
         }
@@ -210,104 +397,151 @@ extension RenewalDispatchRunningViewController {
     
     // FIXME: 운행과 관련된 API 및 로직 등 구현 보완 해야함.(값 저장 등)
     @objc func runningStartButton(_ sender: UIButton) {
-        self.loadMonrningCheckDataRequest { submitCheck in
-            print(submitCheck)
-            if submitCheck {
-                if self.isRunningStart {
+        var connect: ConnectCheck?
+        if self.dispatchKindType == .regularly {
+            connect = self.item.checkRegularlyConnect
+            
+        } else {
+            connect = self.item.checkOrderConnect
+            
+        }
+        
+        if connect?.wakeTime == "" {
+            // '기상' patch
+            // 운행일보(출발 전)
+            self.sendRunningDataRequest(checkType: "기상") {
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
+                
+                cell.diaryView.isHidden = false
+                
+                self.tableView.reloadData()
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                
+                self.runningStartButton.setTitle("작성 완료", for: .normal)
+                
+            }
+            
+        } else {
+            // 아침점호 check
+            self.loadMonrningCheckDataRequest { submitCheck in
+                if submitCheck {
                     if self.isDoneTyping {
                         if self.isReadyDriving {
                             if self.isDriving {
                                 if self.isRunningDone {
-                                    self.runningStartButton.isEnabled = false
-                                    self.runningStartButton.setTitle("종료된 배차입니다.", for: .normal)
-                                    self.runningStartButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                                    // arrivalKM 적고 운행일보 작성 완료 시 해당 부분 노출
+                                    guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
+                                    guard cell.diaryView.arrivalFigureTextField.text != "" else {
+                                        SupportingMethods.shared.showAlertNoti(title: "도착 시 계기 KM를 입력해주세요.")
+                                        return
+                                    }
+                                    self.sendRunningDiaryDataRequest(id: self.item.id, departureKM: cell.diaryView.departureFigureTextField.text ?? "", arrivalKM: cell.diaryView.arrivalFigureTextField.text ?? "", passengerNumber: cell.diaryView.passengerNumberTextField.text ?? "", specialNotes: cell.diaryView.additionalInfoTextView.text ?? "") {
+                                        self.runningStartButton.isEnabled = false
+                                        self.runningStartButton.setTitle("종료된 배차입니다.", for: .normal)
+                                        self.runningStartButton.backgroundColor = .useRGB(red: 189, green: 189, blue: 189)
+                                        
+                                    }
                                     
                                 } else {
-                                    // 운행종료
+                                    // 운행종료 클릭
                                     // 운행일보 작성
                                     // 도착시 계기 km를 작성해주셔야 배차가 완료됩니다.
                                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
                                     guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
-                                    cell.diaryView.isHidden = false
-                                    cell.stationView.isHidden = true
-                                    cell.stationView.calculatePeopleCount()
-                                    
-                                    self.tableView.reloadData()
-                                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
-                                    
-                                    self.runningStartButton.setTitle("작성 완료", for: .normal)
-                                    self.isRunningDone = true
+                                    cell.diaryView.passengerNumberTextField.text = cell.stationView.calculatePeopleCount()
+                                    self.sendRunningDiaryDataRequest(id: self.item.id, departureKM: cell.diaryView.departureFigureTextField.text ?? "", arrivalKM: cell.diaryView.arrivalFigureTextField.text ?? "", passengerNumber: cell.diaryView.passengerNumberTextField.text ?? "", specialNotes: cell.diaryView.additionalInfoTextView.text ?? "") {
+                                        self.loadRunningDiaryDataRequest(id: self.item.id) { diaryItem in
+                                            self.diaryItem = diaryItem
+                                            
+                                            cell.diaryView.isHidden = false
+                                            cell.stationView.isHidden = true
+                                            
+                                            self.tableView.reloadData()
+                                            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                                            
+                                            self.runningStartButton.setTitle("작성 완료", for: .normal)
+                                            self.isRunningDone = true
+                                        }
+                                        
+                                    }
                                     
                                 }
                                 
                             } else {
-                                // '출발지' post
+                                // 첫 출발지 도착 클릭
+                                // '출발지' patch
                                 // 운행중(정류장마다 인원체크)
-                                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
-                                guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
-                                if let _ = self.item.detailedRoute {
-                                    cell.stationView.reloadData(item: self.item)
-                                    cell.stationView.isHidden = false
+                                self.sendRunningDataRequest(checkType: "출발지") {
+                                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                                    guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
+                                    if let _ = self.item.detailedRoute {
+                                        cell.stationView.reloadData(item: self.item)
+                                        cell.stationView.isHidden = false
+                                        
+                                        self.tableView.reloadData()
+                                        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
+                                        
+                                    } else {
+                                        cell.stationView.isHidden = true
+                                        
+                                    }
                                     
                                     self.tableView.reloadData()
-                                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
-                                    
-                                } else {
-                                    cell.stationView.isHidden = true
+                                    self.runningStartButton.setTitle("운행 종료", for: .normal)
+                                    self.isDriving = true
                                     
                                 }
-                                
-                                self.tableView.reloadData()
-                                self.runningStartButton.setTitle("운행 종료", for: .normal)
-                                self.isDriving = true
                                 
                             }
                             
                         } else {
-                            // '운행' post
-                            // 탑승 및 출발 준비
-                            self.runningStartButton.setTitle("첫 출발지 도착", for: .normal)
-                            self.isReadyDriving = true
+                            // 탑승 및 출발 준비 클릭
+                            // '운행' patch
+                            self.sendRunningDataRequest(checkType: "운행") {
+                                self.runningStartButton.setTitle("첫 출발지 도착", for: .normal)
+                                self.isReadyDriving = true
+                                
+                            }
                             
                         }
                         
                     } else {
+                        // 작성 완료 클릭
                         // 운행일보 저장
                         // 운행일보 post api 사용
                         self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
                         guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
-                        cell.diaryView.isHidden = true
-                        
-                        self.tableView.reloadData()
-                        
-                        self.runningStartButton.setTitle("탑승 및 출발 준비", for: .normal)
-                        self.isDoneTyping = true
+                        guard cell.diaryView.departureFigureTextField.text != "" else {
+                            SupportingMethods.shared.showAlertNoti(title: "출발 시 계기 KM를 입력해주세요.")
+                            return
+                        }
+                        self.sendRunningDiaryDataRequest(id: self.item.id, departureKM: cell.diaryView.departureFigureTextField.text ?? "", arrivalKM: cell.diaryView.arrivalFigureTextField.text ?? "", passengerNumber: cell.diaryView.passengerNumberTextField.text ?? "", specialNotes: cell.diaryView.additionalInfoTextView.text ?? "") {
+                            self.loadRunningDiaryDataRequest(id: self.item.id) { diaryItem in
+                                self.diaryItem = diaryItem
+                                
+                                cell.diaryView.isHidden = true
+                                
+                                self.tableView.reloadData()
+                                
+                                self.runningStartButton.setTitle("탑승 및 출발 준비", for: .normal)
+                                self.isDoneTyping = true
+                            }
+                            
+                        }
                         
                     }
                     
                 } else {
-                    // 운행일보(출발 전)
-                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
-                    guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 4)) as? RunningInputTableViewCell else { return }
+                    let vc = RenewalMorningCheckViewController()
                     
-                    cell.diaryView.isHidden = false
-                    
-                    self.tableView.reloadData()
-                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .bottom, animated: true)
-                    
-                    self.runningStartButton.setTitle("작성 완료", for: .normal)
-                    self.isRunningStart = true
+                    self.navigationController?.pushViewController(vc, animated: true)
                     
                 }
                 
-            } else {
-                let vc = RenewalMorningCheckViewController()
-                
-                self.navigationController?.pushViewController(vc, animated: true)
-                
             }
-            
         }
+        
     }
     
 }
@@ -354,7 +588,7 @@ extension RenewalDispatchRunningViewController: UITableViewDelegate, UITableView
         } else if indexPath.section == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "RunningInputTableViewCell", for: indexPath) as! RunningInputTableViewCell
             
-            cell.setCell()
+            cell.setCell(diaryItem: self.diaryItem)
             
             return cell
             

@@ -274,7 +274,12 @@ extension RunningDiaryView {
 
 // MARK: - Extension for methods added
 extension RunningDiaryView {
-    
+    func reloadData(diaryItem: RunningDiaryItem?) {
+        self.departureFigureTextField.text = diaryItem?.departureKM ?? ""
+        self.arrivalFigureTextField.text = diaryItem?.arrivalKM ?? ""
+        self.passengerNumberTextField.text = diaryItem?.passengerNum ?? ""
+        self.additionalInfoTextView.text = diaryItem?.specialNotes ?? ""
+    }
 }
 
 // MARK: - Extension for selector added

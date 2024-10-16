@@ -125,8 +125,10 @@ extension RunningInputTableViewCell {
 
 // MARK: - Extension for methods added
 extension RunningInputTableViewCell {
-    func setCell() {
+    func setCell(diaryItem: RunningDiaryItem?) {
+        self.diaryView.reloadData(diaryItem: diaryItem)
         
     }
+    
 }
 

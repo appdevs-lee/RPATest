@@ -22,10 +22,15 @@ final class NewDispatchModel {
     private(set) var loadDailyDispatchRequest: DataRequest?
     // 배차 확인 및 거부 API
     private(set) var sendDispatchCheckDataRequest: DataRequest?
-    // 운행 API
-    private(set) var sendRunningDataRequest: DataRequest?
     // 월별 배차 정보 가져오는 API
     private(set) var loadMonthlyDispatchRequest: DataRequest?
+    // 배차확인 patch API
+    private(set) var sendRunningDataRequest: DataRequest?
+    // 운행일보 get API
+    private(set) var loadRunningDiaryDataRequest: DataRequest?
+    // 운행일보 patch API
+    private(set) var sendRunningDiaryDataRequest: DataRequest?
+    
     
     func loadWhetherOrNotDispatchCheckRequest(date: String, success: ((DispatchCheckItem) -> ())?, failure: ((_ message: String) -> ())?) {
         let url = Server.server.URL + "/dispatch/daily/\(date)"
@@ -173,7 +178,7 @@ final class NewDispatchModel {
             "order_id": orderId,
         ]
         
-        self.sendRunningDataRequest = AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        self.sendRunningDataRequest = AF.request(url, method: .patch, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
         
         self.sendRunningDataRequest?.responseData { (response) in
             switch response.result {
@@ -242,6 +247,102 @@ final class NewDispatchModel {
                 
             case .failure(let error): // error
                 print("loadMonthlyDispatchRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    func loadRunningDiaryDataRequest(regularlyId: String, orderId: String, success: ((RunningDiaryItem) -> ())?, failure: ((_ message: String) -> ())?) {
+        let url = Server.server.URL + "/dispatch/drivinghistory"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "regularly_connect_id": regularlyId,
+            "order_connect_id": orderId,
+        ]
+        
+        self.loadRunningDiaryDataRequest = AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+        
+        self.loadRunningDiaryDataRequest?.responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let statusCode = response.response?.statusCode else {
+                    print("loadRunningDiaryDataRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("loadRunningDiaryDataRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                if let decodedData = try? JSONDecoder().decode(RunningDiary.self, from: data) {
+                    print("loadRunningDiaryDataRequest succeeded")
+                    success?(decodedData.data)
+                    
+                } else {
+                    print("loadRunningDiaryDataRequest failure: API 성공, Parsing 실패")
+                    failure?("API 성공, Parsing 실패")
+                }
+                
+            case .failure(let error):
+                print("loadRunningDiaryDataRequest error: \(error.localizedDescription)")
+                failure?(error.localizedDescription)
+            }
+        }
+    }
+    
+    func sendRunningDiaryDataRequest(regularlyId: String = "", orderId: String = "", departureDate: String, arrivalDate: String, departureKM: String, arrivalKM: String, passengerNumber: String, specialNotes: String, success: (() -> ())?, failure: ((_ message: String) -> ())?) {
+        let url = Server.server.URL + "/dispatch/drivinghistory"
+        
+        let headers: HTTPHeaders = [
+            "accept": "application/json",
+            "Authorization": UserInfo.shared.access!
+        ]
+        
+        let parameters: Parameters = [
+            "regularly_connect_id": regularlyId,
+            "order_connect_id": orderId,
+            "departure_date": departureDate,
+            "arrival_date": arrivalDate,
+            "departure_km": departureKM,
+            "arrival_km": arrivalKM,
+            "passenger_num": passengerNumber,
+            "special_notes": specialNotes
+        ]
+        
+        self.sendRunningDiaryDataRequest = AF.request(url, method: .patch, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        
+        self.sendRunningDiaryDataRequest?.responseData { (response) in
+            switch response.result {
+            case .success(_):
+                guard let statusCode = response.response?.statusCode else {
+                    print("sendRunningDiaryDataRequest failure: statusCode nil")
+                    failure?("statusCodeNil")
+                    
+                    return
+                }
+                
+                guard statusCode >= 200 && statusCode < 300 else {
+                    print("sendRunningDiaryDataRequest failure: statusCode(\(statusCode))")
+                    failure?("statusCodeError")
+                    
+                    return
+                }
+                
+                print("sendRunningDiaryDataRequest succeeded")
+                success?()
+                
+            case .failure(let error):
+                print("sendRunningDiaryDataRequest error: \(error.localizedDescription)")
                 failure?(error.localizedDescription)
             }
         }
@@ -363,5 +464,56 @@ struct MonthlyDispatchItem: Codable {
         case order
         case attendance = "regularly_c"
         case leaveWork = "regularly_t"
+    }
+}
+
+// MARK: 운행 일보 API Model
+struct RunningDiary: Codable {
+    let data: RunningDiaryItem
+}
+
+struct RunningDiaryItem: Codable {
+    let date: String
+    let member: String
+    let regularlyId: Int?
+    let orderId: Int?
+    let departureKM: String
+    let arrivalKM: String
+    let passengerNum: String
+    let specialNotes: String
+    let departureDate: String
+    let arrivalDate: String
+    let connect: RunningDiaryConnect
+    let submitCheck: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case date
+        case member
+        case regularlyId = "regularly_connect_id"
+        case orderId = "order_connect_id"
+        case departureKM = "departure_km"
+        case arrivalKM = "arrival_km"
+        case passengerNum = "passenger_num"
+        case specialNotes = "special_notes"
+        case departureDate = "departure_date"
+        case arrivalDate = "arrival_date"
+        case connect
+        case submitCheck = "submit_check"
+    }
+}
+
+struct RunningDiaryConnect: Codable {
+    let bus: String
+    let departure: String
+    let arrival: String
+    let departureDate: String
+    let arrivalDate: String
+    
+    enum CodingKeys: String, CodingKey {
+        case bus
+        case departure
+        case arrival
+        case departureDate = "departure_date"
+        case arrivalDate = "arrival_date"
     }
 }

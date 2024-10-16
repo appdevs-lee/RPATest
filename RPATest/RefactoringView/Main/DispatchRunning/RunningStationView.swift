@@ -87,7 +87,7 @@ extension RunningStationView {
         
     }
     
-    func calculatePeopleCount() {
+    func calculatePeopleCount() -> String {
         var sum: Int = 0
         for station in self.stationList {
             sum += station.number
@@ -95,6 +95,7 @@ extension RunningStationView {
         }
         
         print("합계: \(sum)")
+        return "\(sum)"
         
     }
     
